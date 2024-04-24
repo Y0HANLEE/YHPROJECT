@@ -1,19 +1,21 @@
 package org.project.mapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.project.domain.Criteria;
+import org.project.domain.MyCriteria;
+import org.project.domain.Album.AlbumReplyVO;
 import org.project.domain.Album.AlbumVO;
+import org.project.domain.Board.BoardReplyVO;
 import org.project.domain.Board.BoardVO;
 import org.project.domain.User.AuthVO;
 import org.project.domain.User.UserVO;
@@ -31,162 +33,189 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/security-context.xml"})
 @Log4j
 public class UserMapperTests {
-
 	@Setter(onMethod_ = @Autowired)
 	private UserMapper umapper;
-	
-	@Setter(onMethod_ = @Autowired)
-	private BoardMapper bmapper;
-	
-	@Setter(onMethod_ = @Autowired)
-	private AlbumMapper amapper;	
-	
-	@Setter(onMethod_=@Autowired)
-    private BCryptPasswordEncoder pwencode;
 		
-	@Setter(onMethod_=@Autowired)
-	private DataSource ds;
-		
-	/*테스트더미 생성-users*/	
+	/* 회원 등록 테스트 */
 	@Test
-	public void testInsertUser() {		
-		String sql = "insert into users(userid, userpw, name) values (?,?,?)";
-		for(int i=0; i<100; i++) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			try {				
-				con = ds.getConnection();
-				pstmt = con.prepareStatement(sql);
-				
-				pstmt.setString(2, pwencode.encode("pw"+i));
-				
-				if(i<80) {
-					pstmt.setString(1, "mem"+i);
-					pstmt.setString(3, "회원"+i);					
-				} else if(i<90) {
-					pstmt.setString(1, "mgr"+i);
-					pstmt.setString(3, "운영자"+i);					
-				} else {
-					pstmt.setString(1, "ad"+i);					
-					pstmt.setString(3, "관리자"+i);					
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if(pstmt != null) {try {pstmt.close();} catch (Exception e) {} }
-				if(con != null) {try {con.close();} catch (Exception e) {} }
-			}
-			
-		}
-	}
-	
-	/*테스트더미 생성-auth*/	
-	@Test
-	public void testInsertAuth() {
-		String sql = "insert into auth(userid, auth) values (?,?)";
-		for(int i=0; i<100; i++) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			try {				
-				con = ds.getConnection();
-				pstmt = con.prepareStatement(sql);
-				
-				if(i<80) {
-					pstmt.setString(1, "mem"+i);
-					pstmt.setString(2, "3");
-				} else if(i<90) {
-					pstmt.setString(1, "mgr"+i);
-					pstmt.setString(2, "2");
-				} else {
-					pstmt.setString(1, "ad"+i);
-					pstmt.setString(2, "1");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if(pstmt != null) {try {pstmt.close();} catch (Exception e) {} }
-				if(con != null) {try {con.close();} catch (Exception e) {} }
-			}
-			
-		}
-	}
-	
-	@Test
-	public void testRegister() {
-		UserVO vo = new UserVO();
-		AuthVO auth = new AuthVO();
-		
-		String rawPassword = "13"; // 사용자가 제공한 비밀번호
-	    String encodedPassword = pwencode.encode(rawPassword);
-	    
-		vo.setUserid("13");
-		vo.setUserpw(encodedPassword);
-		vo.setName("13");
-		vo.setGender("M");
-		vo.setPhone("13");
-		vo.setEmail("13");
-		vo.setAddress("13");		
-		
-		auth.setUserid(vo.getUserid());
+	public void testInsertUser() {
+		UserVO user = new UserVO();	    
+		user.setUserid("13");
+		user.setUserpw("13"); //테스트를 위해 인코딩 생략
+		user.setName("13");
+		user.setGender("M");
+		user.setPhone("13");
+		user.setEmail("13");
+		user.setZonecode("13");
+		user.setAddress("13");
+		user.setAddressDetail("13");		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");		
         String dateString = "1221-11-11";
         try {
             Date date = sdf.parse(dateString);            
-            vo.setBirth(date); 
+            user.setBirth(date); 
         } catch (ParseException e) {          
         	e.printStackTrace();
         }       
 		
-		umapper.insertUser(vo);
+		umapper.insertUser(user);
+	}
+	
+	/* 회원 권한 부여 테스트 */
+	@Test
+	public void testInsertAuth() {
+		AuthVO auth = new AuthVO(); 
+		auth.setUserid("13");
+		auth.setAuth("ROLE_USER");		
 		umapper.insertAuth(auth);
 	}
 	
+	/* 회원 정보 조회 테스트 */
 	@Test
-	public void testCheckId() {
-		log.info("일치하는 아이디 "+umapper.checkId("14")+"건 발생");
+	public void testGetUserInfo() {
+		umapper.read("13");		
 	}
 	
+	/* 회원 권한 조회 테스트 */
 	@Test
-	public void testUpdate() {
-		UserVO vo = umapper.read("tester00");
-		
-		String rawPassword = "1234"; // 사용자가 제공한 비밀번호
-	    String encodedPassword = pwencode.encode(rawPassword);
-	    		
-		vo.setUserpw(encodedPassword);		
-		vo.setPhone("000-0000-0000");
-		vo.setEmail("abcd@naver.com");
-		vo.setAddress("광명시");		
-		
-		umapper.update(vo);		
-	}
-		
-	@Test
-	public void testRead() {
-		UserVO user = umapper.read("qwerty");
-		log.info(user);
-		user.getAuthList().forEach(authVO -> log.info(authVO));
-	}
-	
-	@Test
-	public void testDelete() {
-		log.info("--------------");
-		umapper.delete("tester00");
-		log.info("--------------");
+	public void testGetUserAuth() {
+		umapper.readAuth("13");
 	}	
 	
+	/* 아이디 중복 테스트 */
 	@Test
-	public void testSearch() {
-		Criteria c = new Criteria();		
-		c.setKeyword("청주");
-		c.setType("TCL");
-		String u = "qwerty";		
-		
-		List<BoardVO> blist = umapper.boardList(c, u);
-		List<AlbumVO> alist = umapper.albumList(c, u);
-		alist.forEach(album -> log.info(album));
-		blist.forEach(board -> log.info(board));		
+	public void testCheckId() {
+		log.info("일치하는 아이디 "+umapper.checkId("13")+"건 발생");
 	}
 	
+	/* 아이디 찾기 테스트 */
+	@Test
+	public void testFindId() {		
+		log.info("일치하는 아이디 : "+umapper.findId("13", "13"));
+	}
+	
+	/* 내가 쓴 일반게시판 게시글 찾기 */
+	@Test
+	public void testFindMyBoardList() {
+		MyCriteria cri = new MyCriteria();
+		cri.setPageNum(1);
+		cri.setAmount(100000);
+		cri.setKeyword("");
+		cri.setType("");
+		cri.setUserid("qwerty");
+		cri.setBoardType("1");
+		umapper.boardList(cri);
+	}
+	
+	/* 내가 쓴 사진게시판 게시글 찾기 */
+	@Test
+	public void testFindMyAlbumList() {
+		MyCriteria cri = new MyCriteria();
+		cri.setPageNum(1);
+		cri.setAmount(100000);
+		cri.setKeyword("");
+		cri.setType("");
+		cri.setUserid("admin1");
+		cri.setBoardType("2");
+		umapper.albumList(cri);
+	}
+	
+	/* 내가 쓴 일반게시판 댓글 찾기 */
+	@Test
+	public void testFindMyBoardReplyList() {
+		MyCriteria cri = new MyCriteria();
+		cri.setPageNum(1);
+		cri.setAmount(100000);
+		cri.setKeyword("");
+		cri.setType("");
+		cri.setUserid("qwerty");
+		cri.setBoardType("1.1");
+		umapper.boardReplyList(cri);
+	}
+	
+	/* 내가 쓴 사진게시판 댓글 찾기 */
+	@Test	
+	public void testFindMyAlbumReplyList() {
+		MyCriteria cri = new MyCriteria();
+		cri.setPageNum(1);
+		cri.setAmount(100000);
+		cri.setKeyword("");
+		cri.setType("");
+		cri.setUserid("qwerty");
+		cri.setBoardType("2.1");
+		umapper.albumReplyList(cri);
+	}
+	
+	/* 게시글,댓글 카운트 */
+	@Test
+	public void testGetCount() {
+		log.info("-----------------------[board]"+umapper.getBoardCnt("qwerty"));
+		log.info("-----------------------[album]"+umapper.getAlbumCnt("qwerty"));
+		log.info("-----------------------[boardReply]"+umapper.getBoardReplyCnt("qwerty"));
+		log.info("-----------------------[albumReply]"+umapper.getAlbumReplyCnt("qwerty"));
+	}
+		
+	/* 회원정보 수정 테스트 */
+	@Test
+	public void testUpdateUserInfo() {
+		UserVO user = umapper.read("13");		
+		user.setPhone("010-1234-4321");
+		umapper.update(user);		
+	}
+	
+	/* 회원 비밀번호 수정 테스트 */
+	@Test
+	public void testUpdatePw() {
+		umapper.updatePw("12", "13", "13");		
+	}
+	
+	/* 비밀번호 초기화 테스트 */
+	@Test
+	public void testRenewalPw() {
+		String ranPw = RandomStringUtils.randomAlphanumeric(8);
+		umapper.renewalPw(ranPw, "13", "13");
+	}
+	
+	/* 회원정보 삭제 테스트 */
+	@Test
+	public void testDeleteUser() {
+		umapper.delete("13");		
+	}
+	
+	/* 회원 권한 삭제 테스트 */
+	@Test
+	public void testDeleteUserAuth() {
+		umapper.deleteAuth("13");	
+	}
+	
+	/* 회원 세션 삭제 테스트 */
+	@Test
+	public void testDeleteUserSession() {
+		umapper.deleteSession("13");		
+	}
+	
+	/* 관리자 : 회원 목록 조회 테스트 */	
+	@Test
+	public void testGetUserList() {
+		Criteria cri = new Criteria();
+		cri.setAmount(10);
+		cri.setPageNum(1);
+		umapper.getUserList(cri);
+	}
+	
+	/* 관리자 : 총 회원수 파악 */
+	@Test
+	public void getTotalUserCnt() {
+		Criteria cri = new Criteria();
+		cri.setAmount(10);
+		cri.setPageNum(1);
+		umapper.getTotalUser(cri);
+	}
+	
+	/* 관리자 : 회원등급 조정 */
+	@Test
+	public void updateUserAuth() {
+		umapper.updateAuth("ROLE_ADMIN", "qwerty");
+	}	
 }

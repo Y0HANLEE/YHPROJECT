@@ -71,14 +71,8 @@ public class BoardReplyServiceTests {
 	
 	/* 게시글 목록 조회(페이징) */ 	
 	@Test
-	public void testPrintList() {		
-		rservice.getListPage(new Criteria(1,10), 32L).forEach(reply -> log.info(reply));	
-	}	
-	
-	/* 게시글 목록 조회(페이징) */	
-	@Test
-    public void testGetListPage() {        
-        log.info(rservice.getListPage(new Criteria(1,10), 32L));
-    }
+	public void testGetList() {
+		log.info(rservice.getListPage(new Criteria(1,10), 203L));
+	}		
 }
 

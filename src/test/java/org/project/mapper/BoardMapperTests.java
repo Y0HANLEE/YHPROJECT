@@ -9,12 +9,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.project.domain.Criteria;
 import org.project.domain.Board.BoardVO;
+import org.project.mapper.Album.AlbumMapper;
 import org.project.mapper.Board.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.mchange.v2.cfg.PropertiesConfigSource.Parse;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -23,9 +22,12 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
 public class BoardMapperTests {
-
+	//AlbumMapper의 경우 BoardMapper를 기반으로 작성했기 때문에 별도의 테스트를 진행하지 않음. > search의 경우에만 keyword가 추가되어 테스트 진행 
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper bmapper;
+	
+	@Setter(onMethod_ = @Autowired)
+	private AlbumMapper amapper;
 	
 	@Setter(onMethod_ = @Autowired)
 	private DataSource ds;
@@ -119,11 +121,21 @@ public class BoardMapperTests {
 		
 	/* 검색 기능 */
 	@Test
-	public void testSearch() {
+	public void testSearchBoard() {
 		Criteria cri = new Criteria();
 		cri.setKeyword("te");
 		cri.setType("T");
 		
 		bmapper.getListWithPaging(cri).forEach(board->log.info(board));;		
-	}	
+	}
+	
+	/* 사진게시판 검색 기능 */
+	@Test
+	public void testSearchAlbum() {
+		Criteria cri = new Criteria();
+		cri.setKeyword("오키나와");
+		cri.setType("L");
+		
+		amapper.getListWithPaging(cri).forEach(album->log.info(album));;		
+	}
 }
