@@ -13,12 +13,7 @@
 	<bean id="userDetail" class="org.project.security.CustomUserDetailsService"/>
 		
 	<sec:http auto-config="true" use-expressions="true">
-		<!-- 접근권한 -->
-		<sec:intercept-url pattern="/main/*" access="permitAll"/>
-		<sec:intercept-url pattern="/board/*" access="permitAll"/>
-		<sec:intercept-url pattern="/album/*" access="permitAll"/>
-		<sec:intercept-url pattern="/join/*" access="permitAll"/>
-		<sec:intercept-url pattern="/user/*" access="isAuthenticated()"/>
+		<!-- 접근권한 -->		
 		<sec:intercept-url pattern="/manager/*" access="hasRole('ROLE_MANAGER')"/>
 		<sec:intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>	
 					
