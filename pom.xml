@@ -81,6 +81,11 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-acl</artifactId>
 		    <version>5.2.7.RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		    <version>5.2.7.RELEASE</version>
 		</dependency>				
 		
 		<!-- AspectJ  AOP -->
