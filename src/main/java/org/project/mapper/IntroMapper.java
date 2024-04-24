@@ -6,5 +6,5 @@ public interface IntroMapper {
 	//조회
 	public IntroVO read(int boardtype);		
 	//수정
-	public int update(IntroVO main); 	
+	public int update(IntroVO intro); 	
 }
