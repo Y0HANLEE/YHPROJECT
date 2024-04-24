@@ -12,9 +12,9 @@
 		select * from album_attach where ano = #{ano}
 	</select>
 
-	<!-- 오래된(하루전) 파일들 가져오기 -->
+	<!-- 오래된(하루전) 파일들 가져오기 task를 이용하여 검사하기 위함. -->
 	<select id="getOldFiles" resultType="org.project.domain.Album.AlbumAttachVO">
-		select * from album_attach where uploadPath = to_char(sysdate-1, 'yyyy/mm/dd')
+		select * from album_attach where uploadPath = to_char(sysdate-1, 'yyyy\mm\dd')
 	</select>
 	
 	
