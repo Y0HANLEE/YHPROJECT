@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ProfileImageVO {
 	private String userid;
-	private String url;
-	//userVO¿Í ¿¬°á
+	private String fileName;
+	private String uploadPath;
+	private String fileType;	
 }

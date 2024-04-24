@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.project.mapper.ProfileImageMapper">
+	<!-- 프로필 이미지 등록 -->
+	<insert id="insert">
+		insert into profile (userid, filename, uploadpath, filetype) values (#{userid}, #{fileName}, #{uploadPath}, #{fileType})
+	</insert>
 	
+	<!-- 프로필 이미지 수정 -->
+	<update id="update">
+		update profile set filename=#{fileName}, uploadpath=#{uploadPath} where userid=#{userid}  
+	</update>
+	
+	<!-- 프로필 이미지 삭제 : 기본프로필로 설정 -->
+	<update id="delete">
+		update profile set filename='Default-Profile.png', uploadpath=#{uploadPath} where userid=#{userid}  
+	</update>
 </mapper>
