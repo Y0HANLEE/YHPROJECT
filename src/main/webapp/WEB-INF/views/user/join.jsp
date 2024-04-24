@@ -72,10 +72,10 @@
 				
 				<div class="col-lg-6" align="center" style="margin-top: 20px">
 					<div class="form-group" style="height:273.266px">
-						<label for="profileImage">프로필사진</label><br>
-    					<img id="profileImagePreview" src="/resources/img/Default-Profile.png" alt="프로필 이미지" style="max-width:150px; max-height:200px;"><br> <!-- 기본 프로필이미지 -->						
-						<input class="form-control" type="file" id="profileImage" name="profileImage" style="display: none;"> <!-- 파일 선택 -->
-						<button class="btn btn-default" id="findImage" style="margin-top:5px" >찾아보기</button>
+						<label for="profileImage">프로필사진</label><br>						
+    					<img id="defaultProfile" src="/resources/img/Default-Profile.png" alt="프로필 이미지" style="max-width:150px; max-height:200px;"><br> <!-- 기본 프로필이미지 -->						
+						<input id="profileImg" class="form-control" type="file" name="profileImg" style="display: none;"> <!-- 파일 선택 -->
+						<button class="btn btn-default" id="findImgBtn" style="margin-top:5px" >찾아보기</button>
 					</div>					
 					<div class="form-group" align="left" style="margin-top: 25px">
 						<label for="paper">홈페이지 가입약관 및 개인정보이용동의서</label><br>
@@ -86,12 +86,10 @@
 							<input type="checkbox" style="vertical-align: middle;" id="checkbox" value="N">
 							<label style="vertical-align: middle; margin-top:0px">동의합니다.</label>
 						</div>				
-					</div>
-					<!-- <img src=''> -->
-					
+					</div>					
 				</div>		
 				<div align="center">
-					<button class="btn btn-lg btn-success btn-block" style="width:300px; align-content: center;" id="join">회원가입</button>
+					<button class="btn btn-lg btn-success btn-block" style="width:300px; align-content: center;" id="joinBtn">회원가입</button>
 				</div>									
 				<!-- 보안:사이트간 요청 위조방지. spring security에서 post방식을 이용하는 경우 사용.-->
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> 
@@ -117,7 +115,7 @@
 		</div>
 	</div>
 </div>
-
+<!-- KAKAO 주소검색 -->
 <script>
 window.onload = function(){
     document.getElementById("searchAddressBtn").addEventListener("click", function(e){
@@ -145,38 +143,67 @@ window.onload = function(){
     });
 }
 </script>
-
+<!-- 애플리케이션 -->
 <script type="text/javascript">
 $(document).ready(function(){	
 	/* form 제출 */
-	$("#join").on("click", function(e){
-		e.preventDefault();		
-		var code = $("input[name=zonecode]")
-		alert()
+	$("#joinBtn").on("click", function(e){
+		e.preventDefault();
 		checkInfo();			
 	});
 	
 	
-	var regex = new RegExp("/(\.jpg|\.jpeg|\.png)$/i"); // 업로드 가능 확장자
-	var maxSize = 2097152; // 최대크기 2MB
-	var cloneObj = $(".uploadDiv").clone(); // 클론
+	/* 업로드 상세처리(확장자, 크기 등) */
+	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)"); // 업로드 가능 확장자
+	var maxSize = 2097152; // 2MB
+	var cloneObj = $("#defaultProfile").clone(); // 클론
 	
 	function checkFile(fileName, fileSize){
-		// 파일사이즈 검토
 		if(fileSize >= maxSize){
-			alert("파일 사이즈 초과 : 2MB 이하의 사진을 업로드해주세요");
+			alert("파일 사이즈 초과");
 			return false;
-		}
-		
-		// 파일이름(확장자) 검토
+		}		
 		if(!regex.test(fileName)){
 			alert("해당 확장자는 업로드 할 수 없습니다.");
 			return false;
-		}
-		
-		return true; // 성공시
+		}		
+		return true; 
 	}
 	
+	/* 등록버튼 없이 변화가 감지되면 처리할 기능 */
+	$("input[type='file']").change(function(e){
+		var formData = new FormData();
+		var inputFile = $("input[name='uploadFile']");//첨부된 파일
+		var files = inputFile[0].files;
+		
+		for(i=0; i<files.length; i++){
+			if(!checkFile(files[i].name, files[i].size)){
+				$("#defaultProfile").html(cloneObj.html()); // 제한에 걸릴 시, 초기상태("선택 파일 없음")로 보여지기 위해 초기화면을 clone으로 복사하여 붙여넣기함.
+				return false;
+			}
+			formData.append("uploadFile", files[i]);
+		}
+		
+		$.ajax({
+			type:'post',
+			url:'/uploadAjaxAction',
+			processData:false,
+			contentType:false,
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data:formData,
+			dataType:'json',
+			success:function(result){					
+				showUploadResult(result);
+			}
+		});
+	});
+	
+	
+	
+	
+	/*------------------------------------------------------------------------------------------------------------------------------------*/
 	/*프로필 이미지 찾기*/
 	$("#findImage").on("click", function(e){
 		e.preventDefault();
@@ -200,6 +227,8 @@ $(document).ready(function(){
 			reader.readAsDataURL(input.files[0]);
 		}
 	});   
+	/*------------------------------------------------------------------------------------------------------------------------------------*/
+	
 	
     /* 체크박스 : 약관, 동의서 동의여부 체크 */
 	$("#checkbox").on("change", function(){        
