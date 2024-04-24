@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.project.mapper.IntroMapper">	
+	<!-- 소개정보조회 -->
+	<select id="read" resultType="org.project.domain.IntroVO">
+		select * from mainboard where boardtype = #{boardtype}
+	</select>		
+	<!-- 소개정보 수정 -->
+	<update id="update">		
+		update mainboard set title_title=#{title_title}, title_intro=#{title_intro}, map_title=#{map_title}, map_intro=#{map_intro}, map_caption=#{map_caption}, map_address=#{map_address}, map_addressdetail=#{map_addressdetail}, intro=#{intro} where boardtype=#{boardtype}		
+	</update>	
+</mapper>

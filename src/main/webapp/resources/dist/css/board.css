@@ -1,0 +1,418 @@
+@charset "UTF-8";
+
+/* 네비게이션 */
+.navbar-brand.main{
+	font-size: 2.5em;
+    width: 200px;
+    height: 50px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    color: buttontext;
+}
+.navbar-brand.main>i{
+	color: darkcyan;	
+}
+
+/*업로드 결과*/
+.uploadResult{
+    display: block;
+    width: 100%;
+    height: 80px;
+    margin-bottom:20px;
+    padding: 5px 5px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;    
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);    
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    overflow-y: auto; 
+}
+.uploadResult ul{
+	display: flex;
+	flex-flow:column; /*row는 가로에 모든걸 넣고(1줄), column은 세로에 모든걸 넣는다.(n줄)*/
+	justify-content: center; /*수평*/
+	align-items: flex-start;/*수직*/
+	padding: 7px;
+}
+.uploadResult ul li{
+	list-style: none;
+	padding: 1px;
+}
+.uploadResult ul li img{
+	width: 14px;
+}
+
+/*사진보기*/
+.picWrap{
+	position: fixed; 
+	display: none;
+	justify-content: center;
+	align-content: center;
+	top: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: white;		
+	z-index: 100;
+	background: rgba(255,255,255,0.9);
+}	
+.pic{
+	position: fixed;
+	display:flex;
+	width:100%;	
+	justify-content: center;
+	align-items: center;
+}
+.pic img{
+	float:inherit;		
+	max-width:100%;
+	max-height:90%;
+}	
+
+/* Main board list table 세팅 */
+.HpanelHeading{display: flex; justify-content: space-between; align-items: center};
+.HpanelBody{}
+
+.HBbno{text-align:center; width:10%; max-width:48.4px}
+.HBtitle{text-align:center; width:50%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  max-width:242px;}
+.HBwriter{text-align:center; width:20%;  max-width:96.8px}							
+.HBregdate{text-align:center; width:20%; max-width:96.8px}
+
+.HAano{text-align:center; width:10%; max-width:57.5px}
+.HAthumb{text-align:center; width:12%; max-width:60px;}
+.HAthumb img{max-width: 40px; max-height:35px;}
+.HAtitle{text-align:center; width:48%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width:285px;}
+.HAwriter{text-align:center; width:15%;  max-width:86.25px}							
+.HAregdate{text-align:center; width:15%; max-width:86.25px}
+
+
+/* board list table 세팅 */
+.Bbno{text-align:center; width:10%}
+.Btitle{text-align:center; width:30%; max-width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.Bwriter{text-align:center; width:20%}
+.Breply{text-align:center; width:12.5%}
+.Bhit{text-align:center; width:12.5%}							
+.Bregdate{text-align:center; width:15%}
+
+/* album list table 세팅 */
+.Aano{text-align:center; width:5%;}							
+.Athumb{text-align:center; width:10%;}
+.Atitle{text-align:center; width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.Aloc{text-align:center; width:15%;}
+.Adue{text-align:center; width:15%;}
+.Awriter{text-align:center; width:10%;}
+.Areply{text-align:center; width:5%;}
+.Ahit{text-align:center; width:10%;}
+.Areg{text-align:center; width:10%;}
+
+/*album list 썸네일*/
+td.thumb{
+	vertical-align: middle; 
+	height:100px;
+}
+td.thumb img{
+	max-width: 80px;
+	max-height: 80px;
+}
+
+/*album get*/
+.mediaContents{
+	margin:-50px 0;	
+}
+.mediaContents ul{
+	display: flex;
+	flex-flow:column; /*row는 가로에 모든걸 넣고(1줄), column은 세로에 모든걸 넣는다.(n줄)*/
+	justify-content: center; /*수평*/
+	align-items: flex-start;/*수직*/
+	padding: 7px;
+}
+.mediaContents ul li{
+	list-style: none;
+	padding: 1px;
+	margin: 5px 0 0 0;
+}
+.mediaContents ul li img{
+	width: 99%;		
+}
+
+/*btn설정:업로드취소버튼*/
+.btn-circle.btn-xs {
+    width: 17px;
+    height: 17px;
+    padding: 0 0 0 0;
+    border-radius: 8.5px;
+    font-size: 9px;
+    line-height: 1.428571429;
+    align-items: center;
+}
+
+/*get의 content부분*/
+.textArea {
+	display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom:20px;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;    
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);    
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    /* overflow-y: auto; */    
+	min-height: 400px;
+	white-space: pre-wrap;
+}
+
+/*mycontents, mycomments 테이블 설정*/
+.tableList{
+	text-align:center; 
+	justify-content: center;
+}
+.con-type{
+	text-align:center; 
+	width:10%;
+}
+.con-num{
+	text-align:center; 
+	width:10%;
+}							
+.con-content{
+	text-align:center; 
+	width:30%;		
+}							
+.con-reg{
+	text-align:center; 
+	width:10%;
+}
+.con-update{
+	text-align:center; 
+	width:10%;
+}
+td.myContents{	
+	display: flex;
+	justify-content: flex-end;
+	max-height: 100px;	
+}
+td.myComments{	
+	display: flex;
+	justify-content: space-between;
+	align-items:center;
+	max-height: 100px;	
+}
+.contents {
+    display: flex;    
+    width: 95%;    
+    height: 84px;
+}
+.a {  	  
+	width: 75%;
+    height: 100%;
+    display: flex;
+    vertical-align:middle;
+    flex-direction: column;
+    justify-content: flex-start; /* Vertical alignment to the left */
+}
+.a-1 {    
+    width: 100%;
+    height: 66%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap; /* 긴 내용이 줄바꿈되지 않도록 설정 */
+    text-overflow: ellipsis; /* 일정 영역을 벗어나는 내용을 ...으로 표시 */
+}
+.a-1>h1 {
+	margin: 0px;
+}
+.a-2 {    
+    display: flex;
+    width: 100%;
+    height: 34%;
+    display: flex;    
+    text-align: left;    
+}
+.a-2-1 {    
+    height:100%;
+    width: 45%;
+    align-content: center;
+    overflow: hidden;
+    white-space: nowrap; /* 긴 내용이 줄바꿈되지 않도록 설정 */
+    text-overflow: ellipsis; /* 일정 영역을 벗어나는 내용을 ...으로 표시 */
+}
+.a-2-2 {    
+    height:100%;
+    width: 55%;
+    align-content: center;     
+}
+.b {    
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; 
+}
+.b-1,
+.b-2,
+.b-3 {    
+    height: 33%;
+    display: flex;
+    align-items: center;
+}
+.b-3 {
+    height: 34%;
+}
+
+
+@media screen and (max-width: 768px) {
+	/* board list */
+	.Btitle{max-width:200px;}
+	/* album list */	
+	.Aloc, .Adue, .Areply, .Ahit{display:none;}
+	/* mycontents/mycomments */	
+	.con-content{
+		max-width:300px;
+	}	
+	.myContents{
+		max-width:300px;
+	}	
+	.contents {
+	    display: flex;    
+	    width: 100%;
+	    height: 84px;
+	}
+	.a {    
+	    width: 66%;
+	    height: 100%;
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: flex-start; 
+	}	
+	.a.album{
+	    width: 73%;
+	}
+	.a-1 {    
+	    width: 100%;
+	    height: 66%;
+	    display: flex;
+	    align-items: center;
+	    overflow: hidden;
+	    white-space: nowrap; /* 줄바꿈x */
+	    text-overflow: ellipsis; /* 일정 영역을 벗어나는 글자를 ...으로 표시 */	    
+	}	
+	.a-1>h3{
+		font-size:20px;
+	}
+	.a-2 {    
+	    display: flex;
+	    width: 100%;
+	    height: 34%;
+	    display: flex;    
+	    text-align: left;    
+	}	
+	.a-2-1,    
+	.a-2-2 {
+	    font-size: 0.8em;            
+		align-content: center;
+	}
+	.a-2-1 {    
+	    height:100%;
+	    width: 40%;
+	    align-content: center;
+	    overflow: hidden;
+	    white-space: nowrap; 
+	    text-overflow: ellipsis;
+	}
+	.a-2-2 {    
+	    height:100%;
+	    width: 60%;
+	    align-content: center;     
+	}
+	.b {    
+	    width: 25%;
+	    height: 100%;
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: space-around; 
+	}	
+	.b-1,
+	.b-2,
+	.b-3 {    
+	    height: 33%;
+	    display: flex;
+	    align-items: center;
+	    font-size: 0.9em;
+	}	
+	.b-3 {
+	    height: 34%;
+	}    
+}
+
+/* textarea 작성시 띄어쓰기, 줄바꿈 적용 */
+.pre-wrap{
+	white-space: pre-wrap
+}
+
+/* 첨부파일 설명 */
+p.attachInfo{
+	color:rgba(255,0,0,0.5); 
+	font-size:12px; 
+	font-weight: bold; 
+	margin: 0 0 20px 5px;
+}
+
+/* board/album get화면 top/bottom이동 화살표 */
+.btn-nav-arrow {
+	display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    width: 40px;
+    height: 40px;
+    padding: 6px 0;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.428571429;
+    color: #fff;
+    background-color: rgba(91, 192, 222, 0.2);
+    border-color: rgba(70, 184, 218, 0.1);    
+}
+
+.btn-nav-arrow.up {
+	position: fixed;
+    bottom: 120px;
+    right: 8px;	
+}
+
+.btn-nav-arrow.down {
+	position: fixed;
+    bottom: 70px;
+    right: 8px;	
+}
+
+.btn-nav-arrow.back {
+	position: fixed;
+    bottom: 20px;
+    right: 8px;	
+}

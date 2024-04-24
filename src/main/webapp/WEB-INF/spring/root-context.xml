@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">		
+		<!-- Log4jdbc 사용시 -->
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" />
+		<!-- DB사용자 정보 -->
+		<property name="username" value="project" />
+		<property name="password" value="project" />
+	</bean>
+
+	<!-- HikariCP Configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+	
+	<!-- sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>		
+	</bean>
+	
+	<!-- mybatis-spring -->
+	<mybatis-spring:scan base-package="org.project.mapper"/>
+	<context:component-scan base-package="org.project.service"/>
+	<!-- <context:component-scan	base-package="org.project.persistence" /> -->
+	
+	<!-- transaction : tx -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<tx:annotation-driven/>
+	
+	<!-- Annotation  -->
+	<context:annotation-config/>
+	
+	<!-- AOP -->	
+	<!-- <context:component-scan base-package="org.project.aop"/>
+	<aop:aspectj-autoproxy/> -->
+
+	<!-- 스케쥴링 : Quartz라이브러리 사용(Spring-Batch를 사용하기도) 
+	<context:component-scan base-package="org.project.task"/>
+	<task:annotation-driven/>-->
+	
+	<!-- javaMail -->
+	<bean id="mailSender" class ="org.springframework.mail.javamail.JavaMailSenderImpl" >
+		<property name="host" value="smtp.gmail.com" /> <!-- google -->
+		<property name="port" value="587" /><!-- default -->
+		<property name="username" value="kevinyh18@gmail.com" />
+		<property name="password" value="nlul uldq wefw yzjj" /> <!-- 앱비밀번호 -->
+		<!-- 보안연결TLS -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

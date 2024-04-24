@@ -1,0 +1,31 @@
+package org.project.service;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@Log4j
+@AllArgsConstructor
+public class UserServiceTests {
+
+	@Setter(onMethod_ = @Autowired)
+	private UserService uservice;
+	
+	/* 회원 조회 */
+	@Test
+	public void testRead() {		
+		log.info("read---------"+uservice.read("ad90"));		
+	}	
+	
+	/* 회원 삭제 */
+	
+}
+

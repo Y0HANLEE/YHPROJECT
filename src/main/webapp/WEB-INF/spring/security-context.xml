@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- <import resource="root-context.xml" /> -->
+	<!-- 로그인 성공시 권한별 수행처리 -->
+	<bean id="loginHandler" class="org.project.security.LoginHandler"/>		
+	<!-- password 암호화 -->
+	<bean id="bcrypt" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	<!-- 사용자 정보 조회 및 처리에 관한 처리 -->
+	<bean id="userDetail" class="org.project.security.CustomUserDetailsService"/>
+		
+	<sec:http auto-config="true" use-expressions="true">
+		<!-- 접근권한 -->
+		<sec:intercept-url pattern="/main/*" access="permitAll"/>
+		<sec:intercept-url pattern="/board/*" access="permitAll"/>
+		<sec:intercept-url pattern="/album/*" access="permitAll"/>
+		<sec:intercept-url pattern="/join/*" access="permitAll"/>
+		<sec:intercept-url pattern="/user/*" access="isAuthenticated()"/>
+		<sec:intercept-url pattern="/manager/*" access="hasRole('ROLE_MANAGER')"/>
+		<sec:intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>	
+					
+		<!-- 로그인 : custom, 성공시 loginHandler의 규칙을 따름 -->
+		<sec:form-login login-page="/main/loginPage" authentication-success-handler-ref="loginHandler"/>
+		<!-- 로그아웃 : custom, 세션만료적용 -->
+		<sec:logout logout-url="/main/logoutPage" invalidate-session="true" delete-cookies="remember-me, JSESSION_ID"/>
+		<!-- 자동로그인 : jdbc(dataSource:root-context에서 선언된 bean_DB사용), 7일(60*60*24*7) 유지 -->		
+		<sec:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
+		<!-- 접근금지 에러 핸들러(권한없음) -->
+		<sec:access-denied-handler error-page="/main/accessError"/>
+		<!-- csrf토큰 활성화 -->
+		<sec:csrf disabled="false"/>
+		<!-- 중복로그인 방지(max-session="1"), 세션이끊겼거나 중복로그인시 loginPage로 이동-->
+		<sec:session-management invalid-session-url="/main/loginPage">	
+			<sec:concurrency-control max-sessions="1" expired-url="/main/loginPage"/> 
+		</sec:session-management>
+		
+	</sec:http>
+	
+	<!-- Spring security 동작 -->
+	<sec:authentication-manager>
+		<!-- 권한인증 -->
+		<sec:authentication-provider user-service-ref="userDetail">
+			<!-- password암호화 -->
+			<sec:password-encoder ref="bcrypt"/>			
+		</sec:authentication-provider>
+	</sec:authentication-manager>	
+
+</beans>
