@@ -110,8 +110,6 @@ public class UploadController {
 		return "result";
 	}
 	
-
-	
 	/* ajax방식 다중파일 저장 + 인증된 사용자(로그인) */	
 	@ResponseBody
 	@PostMapping(value="/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
