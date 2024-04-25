@@ -3,7 +3,7 @@
 <mapper namespace="org.project.mapper.ProfileImageMapper">
 	<!-- 프로필 이미지 등록 -->
 	<insert id="insert">
-		insert into profile (userid, filename, uploadpath, filetype) values (#{userid}, #{fileName}, #{uploadPath}, #{fileType})
+		insert into profile (userid, filename, uuid, uploadpath, filetype) values (#{userid}, #{fileName}, #{uuid}, #{uploadPath}, #{fileType})
 	</insert>
 	
 	<!-- 프로필 이미지 조회 -->
@@ -13,11 +13,15 @@
 	
 	<!-- 프로필 이미지 수정 -->
 	<update id="update">
-		update profile set filename=#{fileName}, uploadpath=#{uploadPath} where userid=#{userid}  
+		update profile set filename=#{fileName}, uploadpath=#{uploadPath}, uuid=#{uuid} where userid=#{userid}  
 	</update>
 	
-	<!-- 프로필 이미지 삭제 : 기본프로필로 설정 -->
-	<update id="delete">
-		update profile set filename='Default-Profile.png', uploadpath=#{uploadPath} where userid=#{userid}  
+	<!-- 프로필 이미지 초기화 : 기본프로필로 설정 -->
+	<update id="reset">
+		update profile set filename='Default-Profile.png', uuid=#{uuid}, uploadpath=#{uploadPath} where userid=#{userid}  
 	</update>
+	
+	<delete id="delete">
+		delete from profile where userid=#{userid}
+	</delete>
 </mapper>
