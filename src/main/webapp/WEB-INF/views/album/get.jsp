@@ -115,7 +115,7 @@
             <div class="modal-body">
             	<div class="form-group">
 					<label>Reply</label>
-					<textarea class="form-control" name='reply' value='New Reply'></textarea>
+					<textarea class="form-control" name='reply'></textarea>
 				</div>	
                 <div class="form-group">
 					<label>Replyer</label>
