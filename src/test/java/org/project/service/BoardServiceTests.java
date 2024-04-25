@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
 public class BoardServiceTests {
-
+	//AlbumService의 경우 BoardService를 기반으로 작성되어 별도의 테스트는 진행하지 않음.
 	@Setter(onMethod_ = @Autowired)
 	private BoardService bservice;
 	
@@ -43,9 +43,27 @@ public class BoardServiceTests {
 	
 	/* 게시글 조회 + 조회수 증가 */
 	@Test
-	public void testRead() {
+	public void testGet() {
 		bservice.upHit(8L);
 		log.info("read---------"+bservice.get(8L));		
+	}
+	
+	/* 게시글 목록 조회(페이징) */ 	
+	@Test
+	public void testGetList() {		
+		bservice.getList(new Criteria(1,50)).forEach(board -> log.info(board));	
+	}
+	
+	/* 게시글 첨부파일 목록 조회 */
+	@Test
+	public void testGetAttachList() {
+		bservice.getAttachList(1L);
+	}
+	
+	/* 총 게시물 수 계산 */
+	@Test
+	public void testTotalCount() {
+		log.info("Total : "+bservice.getTotal(new Criteria()));
 	}
 	
 	/* 게시글 수정 */
@@ -69,25 +87,6 @@ public class BoardServiceTests {
 	@Test
 	public void testRemove() {
 		log.info("REMOVE Result : "+bservice.remove(14L));
-	}
-	
-	/* 게시글 목록 조회(기본) 	
-	@Test
-	public void testPrintList() {
-		bservice.getList().forEach(board -> log.info(board));	
-	}
-	*/
-	
-	/* 게시글 목록 조회(페이징) */ 	
-	@Test
-	public void testPrintList() {		
-		bservice.getList(new Criteria(1,50)).forEach(board -> log.info(board));	
-	}
-	
-	/* 총 게시물 수 계산 */
-	@Test
-	public void testTotalCount() {
-		log.info("Total : "+bservice.getTotal(new Criteria()));
 	}
 }
 

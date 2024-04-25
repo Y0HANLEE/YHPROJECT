@@ -3,31 +3,21 @@ package org.project.mapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.project.domain.Criteria;
 import org.project.domain.MyCriteria;
-import org.project.domain.Album.AlbumReplyVO;
-import org.project.domain.Album.AlbumVO;
-import org.project.domain.Board.BoardReplyVO;
-import org.project.domain.Board.BoardVO;
 import org.project.domain.User.AuthVO;
 import org.project.domain.User.UserVO;
-import org.project.mapper.Album.AlbumMapper;
-import org.project.mapper.Board.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/security-context.xml"})

@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j;
 @WebAppConfiguration
 @Log4j
 public class BoardControllerTests {
-	
+	//AlbumController의 경우 BoardController를 기반으로 작성하였기 때문에 별도의 테스트를 진행하지 않음.
 	@Setter(onMethod_= {@Autowired})
 	private WebApplicationContext ctx;
 	
@@ -30,15 +30,6 @@ public class BoardControllerTests {
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-	}
-	
-	/* 게시글 목록화면(기본) */
-	@Test
-	public void testList() throws Exception{
-		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/list"))
-				.andReturn()
-				.getModelAndView()
-				.getModelMap());		
 	}
 	
 	/* 게시글 목록화면(페이징) */
@@ -68,6 +59,13 @@ public class BoardControllerTests {
 	@Test
 	public void testGet() throws Exception{
 		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/get").param("bno", "10"))
+				.andReturn().getModelAndView().getModelMap());		
+	}
+	
+	/* 작성 게시글 수정 화면 */
+	@Test
+	public void testModifyPage() throws Exception{
+		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/modify").param("bno", "10"))
 				.andReturn().getModelAndView().getModelMap());		
 	}
 	

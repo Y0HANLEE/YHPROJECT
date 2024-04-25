@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
 public class BoardReplyServiceTests {
-
+	//AlbumReplyService는 BoardReplyService를 기반으로 작성되어 별도의 테스트는 진행하지 않음.
 	@Setter(onMethod_ = @Autowired)
 	private BoardReplyService rservice;
 	
