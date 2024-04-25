@@ -23,7 +23,7 @@ public class ProfileImageMapperTests {
 		//테스트를 위해 임시로 작성
 		profile.setUserid("qwerty");
 		profile.setFileName("test2.jpg");
-		profile.setFileType("I");
+		profile.setFileType(true);
 		profile.setUploadPath("C:\\upload");
 		profile.setUuid("gengi;opehjiejafgqgoh");
 		pmapper.insert(profile);
@@ -40,7 +40,7 @@ public class ProfileImageMapperTests {
 	public void testUpdateProfile() {
 		ProfileImageVO profile = pmapper.getProfileByUserid("qwerty");		
 		profile.setFileName("testUpdate.png");
-		profile.setFileType("I");
+		profile.setFileType(true);
 		profile.setUploadPath("C:\\upload");
 		profile.setUuid("gengi;opehjiejafgqgohda");
 		pmapper.update(profile);
