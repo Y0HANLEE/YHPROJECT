@@ -13,13 +13,13 @@ import lombok.Data;
 
 @Data
 public class UserVO {
-	private String uno;
-	private String userid;
-	private String userpw;
-	private String name;
-	private String gender;
-	private String phone;
-	private String email;
+	private String uno;		//seq
+	private String userid;	//pk, not null
+	private String userpw;	//not null
+	private String name;	//not null
+	private String gender;	
+	private String phone;	
+	private String email;	//not null >> id/비번찾기 활용
 	private String zonecode;
 	private String address;
 	private String addressDetail;

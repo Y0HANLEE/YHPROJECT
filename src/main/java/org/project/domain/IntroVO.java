@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class IntroVO {
-	int boardtype;
-	String title_title;
+	int boardtype;				//1:main, 2:intro, not null
+	String title_title;			//not null
 	String title_intro;
 	String map_title;
 	String map_intro;

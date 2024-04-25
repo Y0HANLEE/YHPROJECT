@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 public class AlbumReplyVO {
-	private Long rno;
-	private Long ano;
-	private String reply;
-	private String replyer;
+	private Long rno;			//pk
+	private Long ano;			//fk(album), not null
+	private String reply;		//not null
+	private String replyer;		//fk(users), not null
 	private Date replyDate;
 	private Date updateDate;
 	private String boardType;
