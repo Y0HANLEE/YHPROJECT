@@ -6,59 +6,63 @@
 <%@ include file="../includes/header.jsp"%>
 <title>메인페이지</title>
 
-<!-- 페이지 설명 -->
-<div class="row">		
-	<div class="col-lg-12">
-		<h1 class="page-header">HomePage</h1>
+	<!-- 페이지 설명 -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div>
+				<h1 class="page-header">HomePage</h1>
+			</div>
+		    <p class="pull-right"><a href="#board"><i class="fa fa-edit fa-fw"></i>게시판</a>  <a href="#map" style="margin-left: 20px"><i class="fa fa-map-marker fa-fw"></i>지도</a></p>    			
+			<p class="mb-4">2024 YH 홈페이지제작 개인프로젝트 홈화면입니다.</p>
+					    
+		</div>
+		
 	</div>
-	<p class="mb-4">2024 YH 홈페이지제작 개인프로젝트 홈화면입니다.</p>
-    <p class="mb-4">현재 시각 : ${serverTime}</p>    			
-</div>
-
-<!-- 게시판 -->
-<div class="row">
-	<div id="board" class="col-lg-6">
-		<div class="panel panel-success">
-			<div class="panel-heading HpanelHeading">
-				<span><i class="fa fa-edit fa-fw"></i>Board</span><a href="/board/list"><i class="fa fa-compass fa-fw"></i>더보기</a>			
-			</div>			
-			<div class="panel-body" style="padding:8px; max-height: 244px;">
-				<table class="table table-striped table-bordered table-hover tableList">
-					<thead>					
-						<tr class="Htr">							
-							<th class="HBbno">No</th>
-							<th class="HBtitle">제목</th>
-							<th class="HBwriter">글쓴이</th>														
-							<th class="HBregdate">등록일</th>							
-						</tr>
-					</thead>
-					<tbody>						
-					<c:forEach items="${boardList}" var="board">						
-						<tr class="Htr">							
-							<td><c:out value="${board.bno}" /></td>
-							<td class="HBtitle" style="padding: 8px 15px;"><a href='/board/get?bno=<c:out value="${board.bno}"/>'><c:out value="${board.title}" /></a></td>	
-							<td><c:out value="${board.writer}" /></td>							
-							<td><fmt:formatDate pattern="YY.MM.dd" value="${board.regdate}"/></td>						
-						</tr>
-					</c:forEach>					
-					</tbody>
-				</table>
-			</div>			
-		</div>		
-	</div>
-	<div id="album" class="col-lg-6">
-		<div class="panel panel-info">
-			<div class="panel-heading HpanelHeading">
-				<span><i class="fa fa-camera-retro fa-fw"></i>Photo Album</span>
-				<sec:authorize access="isAuthenticated()">
-					<a href="/album/list"><i class="fa fa-compass fa-fw"></i>더보기</a>
-	   			</sec:authorize>
-				<sec:authorize access="isAnonymous()">
-	   				<a href="/user/join"><i class="fa fa-user fa-fw"></i>회원가입하러가기</a>
-				</sec:authorize>
-			</div>			
-			<div class="panel-body" style="padding:8px; max-height: 244px;">
-				<table class="table table-striped table-bordered table-hover tableList">
+	<!-- 게시판 -->
+	<h3 style="margin-top: 70px 0 10px 0;">최근 게시글</h3>	
+	<div class="row">
+		<div id="board" class="col-lg-6">
+			<div class="panel panel-success">
+				<div class="panel-heading HpanelHeading">
+					<span><i class="fa fa-edit fa-fw"></i>Board</span><a href="/board/list"><i class="fa fa-compass fa-fw"></i>더보기</a>			
+				</div>			
+				<div class="panel-body" style="padding:8px; max-height: 244px;">
+					<table class="table table-striped table-bordered table-hover tableList">
+						<thead>					
+							<tr class="Htr">							
+								<th class="HBbno">No</th>
+								<th class="HBtitle">제목</th>
+								<th class="HBwriter">글쓴이</th>														
+								<th class="HBregdate">등록일</th>							
+							</tr>
+						</thead>
+						<tbody>						
+							<c:forEach items="${boardList}" var="board">						
+								<tr class="Htr">							
+									<td><c:out value="${board.bno}" /></td>
+									<td class="HBtitle" style="padding: 8px 15px;"><a href='/board/get?bno=<c:out value="${board.bno}"/>'><c:out value="${board.title}" /></a></td>	
+									<td><c:out value="${board.writer}" /></td>							
+									<td><fmt:formatDate pattern="YY.MM.dd" value="${board.regdate}"/></td>						
+								</tr>
+							</c:forEach>					
+						</tbody>
+					</table>
+				</div>			
+			</div>		
+		</div>
+		<div id="album" class="col-lg-6">
+			<div class="panel panel-info">
+				<div class="panel-heading HpanelHeading">
+					<span><i class="fa fa-camera-retro fa-fw"></i>Photo Album</span>
+					<sec:authorize access="isAuthenticated()">
+						<a href="/album/list"><i class="fa fa-compass fa-fw"></i>더보기</a>
+		   			</sec:authorize>
+					<sec:authorize access="isAnonymous()">
+		   				<a href="/user/join"><i class="fa fa-user fa-fw"></i>회원가입하러가기</a>
+					</sec:authorize>
+				</div>			
+				<div class="panel-body" style="padding:8px; max-height: 244px;">
+					<table class="table table-striped table-bordered table-hover tableList">
 						<thead>
 							<tr class="Htr">
 								<th class="HAano">No</th>							
@@ -69,47 +73,109 @@
 							</tr>
 						</thead>
 						<tbody>					 
-						<c:forEach items="${albumList}" var="album">
-							<tr>
-								<td class="HAano"><c:out value="${album.ano}"/></td>
-								<td class="HAthumb" style="padding:1px" data-ano="${album.ano}"><!-- thumbnail --></td>
-								<td class="HAtitle" style="padding: 8px 15px;"><c:out value="${album.title}" /></td>
-								<td class="HAwriter"><c:out value="${album.writer}" /></td>								
-								<td class="HAregdate"><fmt:formatDate pattern="YY.MM.dd" value="${album.regdate}" /></td>																				
-							</tr>
-						</c:forEach>					
+							<c:forEach items="${albumList}" var="album">
+								<tr>
+									<td class="HAano"><c:out value="${album.ano}"/></td>
+									<td class="HAthumb" style="padding:1px" data-ano="${album.ano}"><!-- thumbnail --></td>
+									<td class="HAtitle" style="padding: 8px 15px;"><c:out value="${album.title}" /></td>
+									<td class="HAwriter"><c:out value="${album.writer}" /></td>								
+									<td class="HAregdate"><fmt:formatDate pattern="YY.MM.dd" value="${album.regdate}" /></td>																				
+								</tr>
+							</c:forEach>					
 						</tbody>
 					</table>
-			</div>
-		</div>		
+				</div>
+			</div>		
+		</div>
 	</div>
-</div>
-
-<!-- 회원가입 -->
-<sec:authorize access="isAnonymous()">
-<div class="row">
-	<div class="col-lg-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">회원가입이 하고싶으시다면</div>
-			<div class="panel-body">			    
-    			<a href="/user/join">Click here</a> to go to Join page.
+	
+	<!-- 댓글 -->
+	<h3 style="margin:30px 0 10px 0;">최근 댓글</h3>	
+	<div class="row">	
+		<div id="boardReply" class="col-lg-6">
+			<div class="panel panel-warning">
+				<div class="panel-heading HpanelHeading">
+					<span><i class="fa fa-wechat fa-fw"></i>Board Reply (No:게시글번호)</span><a href="/board/list"><i class="fa fa-compass fa-fw"></i>더보기</a>			
+				</div>			
+				<div class="panel-body" style="padding:8px; max-height: 244px;">
+					<table class="table table-striped table-bordered table-hover tableList">
+						<thead>					
+							<tr class="Htr">							
+								<th class="HBbno">No</th>
+								<th class="HBtitle">댓글</th>
+								<th class="HBwriter">글쓴이</th>														
+								<th class="HBregdate">등록일</th>							
+							</tr>
+						</thead>
+						<tbody>						
+							<c:forEach items="${boardReplyList}" var="boardReply">						
+								<tr class="Htr">							
+									<td><c:out value="${boardReply.bno}" /></td>									
+									<td class="HBtitle" style="padding: 8px 15px;"><c:out value="${boardReply.reply}" /></td>	
+									<td><c:out value="${boardReply.replyer}" /></td>							
+									<td><fmt:formatDate pattern="YY.MM.dd" value="${boardReply.replyDate}"/></td>						
+								</tr>
+							</c:forEach>					
+						</tbody>
+					</table>
+				</div>			
+			</div>		
+		</div>
+		<div id="albumReply" class="col-lg-6">
+			<div class="panel panel-danger">
+				<div class="panel-heading HpanelHeading">
+					<span><i class="fa fa-wechat fa-fw"></i>Photo Album Reply (No:게시글번호)</span>
+					<sec:authorize access="isAuthenticated()">
+						<a href="/album/list"><i class="fa fa-compass fa-fw"></i>더보기</a>
+		   			</sec:authorize>
+					<sec:authorize access="isAnonymous()">
+		   				<a href="/user/join"><i class="fa fa-user fa-fw"></i>회원가입하러가기</a>
+					</sec:authorize>
+				</div>			
+				<div class="panel-body" style="padding:8px; max-height: 244px;">
+					<table class="table table-striped table-bordered table-hover tableList">
+						<thead>					
+							<tr class="Htr">							
+								<th class="HBbno">No</th>
+								<th class="HBtitle">댓글</th>
+								<th class="HBwriter">글쓴이</th>														
+								<th class="HBregdate">등록일</th>							
+							</tr>
+						</thead>
+						<tbody>						
+							<c:forEach items="${albumReplyList}" var="albumReply">						
+								<tr class="Htr">							
+									<td><c:out value="${albumReply.ano}" /></td>
+									<td class="HBtitle" style="padding: 8px 15px;"><c:out value="${albumReply.reply}" /></td>	
+									<td><c:out value="${albumReply.replyer}" /></td>							
+									<td><fmt:formatDate pattern="YY.MM.dd" value="${albumReply.replyDate}"/></td>						
+								</tr>
+							</c:forEach>					
+						</tbody>
+					</table>
+				</div>			
+			</div>		
+		</div>
+	</div>
+		
+	<!-- 지도 -->
+	<div class="col-lg-12" style="padding: 0">	
+		<div class="form-group" style="margin: 80px 0 5px 0; width: 100%; display: flex; align-items: center;">
+			<label><i class="fa fa-bookmark fa-fw"></i><c:out value="${intro.map_title}"></c:out>&nbsp;_&nbsp;<i class="fa fa-map-marker fa-fw"></i>address: <c:out value="${intro.map_address}"/>. <c:out value="${intro.map_addressdetail}"/></label>					 
+		</div>	
+		<div id="map" style="border-radius:5px;  width:100%; height:350px;"></div>
+	</div>
+	<!-- 소개 -->
+	<div class="row">
+		<div class="col-lg-12" style="margin-top: 100px;">
+			<div class="panel panel-default">
+				<div class="panel-heading">누구냐고 물으신다면</div>
+				<div class="panel-body">			    
+	    			<a href="/main/intro">대답</a>해드리는게 인지상정!
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-</sec:authorize>
-
-<!-- 소개 -->
-<div class="row">
-	<div class="col-lg-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">누구냐고 물으신다면</div>
-			<div class="panel-body">			    
-    			<a href="/main/intro">대답</a>해드리는게 인지상정!
-			</div>
-		</div>
-	</div>
-</div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -127,6 +193,39 @@
 	</div>
 </div>
 
+<!-- 이동용 화살표 -->
+<a href="#top" class="btn-nav-arrow up" style="position:fixed; bottom:80px; right:10px;"><i class="fa fa-arrow-up"></i></a>
+<a href="#bottom" class="btn-nav-arrow down" style="position:fixed; bottom:30px; right:10px;"><i class="fa fa-arrow-down"></i></a>
+
+<!-- KAKAO MAP -->
+<script>	
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+		mapCenter = new kakao.maps.LatLng(37.5034138, 126.7660309),//(위도, 경도)
+    	mapOption = { center: mapCenter, level: 3 }; // 위치, 확대(1(대)~14(소))  
+	
+	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 객체	
+	var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
+	
+	
+	var inputAddress = $('#address_kakao').val();
+	var inputPlace = $("input[name='map_caption']").val();
+	var mapCaption = '<c:out value="${intro.map_caption}"/>',
+		mapAddress = '<c:out value="${intro.map_address}"/>';			
+
+	// 주소로 좌표를 검색합니다
+	geocoder.addressSearch(mapAddress, function(result, status) {	     
+		if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색이 완료됐으면				
+			var coords = new kakao.maps.LatLng(result[0].y, result[0].x);			
+			var marker = new kakao.maps.Marker({ map: map, position: coords });// 결과값으로 받은 위치를 마커로 표시합니다		
+			if(mapCaption != null){
+				var infowindow = new kakao.maps.InfoWindow({ content: '<div style="width:150px;text-align:center;padding:6px 0;">'+mapCaption+'</div>'});// 인포윈도우로 장소에 대한 설명을 표시합니다
+				infowindow.open(map, marker);
+			}
+			map.setCenter(coords);// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+	    } 
+	});	
+</script>
+<!-- 본문 -->
 <script>
 $(document).ready(function(){
 	var result = '<c:out value="${result}"/>';
@@ -189,6 +288,41 @@ $(document).ready(function(){
 		//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
 	});
 });
+</script>
+<script type="text/javascript">
+/* 첨부파일 조회화면 : 즉시실행함수*/
+(function(){
+	var ano = '<c:out value="${album.ano}"/>';
+	
+	$.getJSON("/album/getAttachList", {ano:ano}, function(arr){						
+		var uStr="";
+		var mStr="";
+		
+		
+		$(arr).each(function(i, attach){					
+			
+			if(attach.fileType){					
+				var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);						
+				uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
+				uStr += "<div><i class='fa fa-image'></i>"+" <a>"+attach.fileName+"</a></div> </li>"; // 첨부파일 이미지(썸네일)
+				
+				mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
+				mStr += "<img src='/display?fileName="+fileCallPath+"'> </li>"; // 첨부파일 이미지(썸네일)
+			} else {
+				var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);
+				uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
+				uStr += "<div><i class='fa fa-film'></i><a><span>"+" "+attach.fileName+"</span></a></div> </li>"; // 첨부파일 이미지
+				
+				mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
+				mStr += "<img src='/resources/img/attach.png'> </li>"; // 첨부파일 이미지		
+			}
+			
+			$(".uploadResult ul").html(uStr);	
+			$(".mediaContents ul").html(mStr);
+		});			
+	});
+})();
+
 </script>
 
 <%@ include file="../includes/footer.jsp"%>

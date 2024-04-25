@@ -1,5 +1,7 @@
 package org.project.service.Album;
 
+import java.util.List;
+
 import org.project.domain.Criteria;
 import org.project.domain.Album.AlbumReplyPageDTO;
 import org.project.domain.Album.AlbumReplyVO;
@@ -41,6 +43,12 @@ public class AlbumReplyServiceImpl implements AlbumReplyService{
 	public AlbumReplyPageDTO getListPage(Criteria cri, Long ano) {
 		return new AlbumReplyPageDTO(rmapper.getCountByAno(ano), rmapper.getListWithPaging(cri, ano));
 	}	
+	
+	/* 홈화면 출력 */
+	@Override
+	public List<AlbumReplyVO> getListAll(Criteria cri){
+		return rmapper.getListAll(cri);
+	}
 	
 	/* 댓글 수정 */
 	@Override

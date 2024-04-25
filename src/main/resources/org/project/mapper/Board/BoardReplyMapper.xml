@@ -29,6 +29,18 @@
 		select count(rno) from board_reply where bno=#{bno}	
 	</select>
 	
+	<!-- 전체 댓글 조회 -->
+	<select id="getListAll" resultType="org.project.domain.Board.BoardReplyVO">
+		<![CDATA[
+			select rno, bno, reply, replyer, replydate, updatedate 
+			from (
+				select /*+INDEX_desc(reply idx_board_reply)*/
+					rownum rn, rno, bno, reply, replyer, replydate, updatedate
+					from board_reply where rno>0 and rownum <= #{pageNum} * #{amount} order by replydate desc
+			) where rn > (#{pageNum} -1) * #{amount}		
+		]]>
+	</select>
+	
 	<!-- 댓글 수정 -->
 	<update id="update">
 		update board_reply set reply=#{reply}, updatedate=sysdate where rno=#{rno} 

@@ -14,6 +14,7 @@ public interface BoardReplyMapper {
 	public BoardReplyVO read(Long rno); // 특정 댓글 조회
 	public List<BoardReplyVO> getListWithPaging(@Param("cri") Criteria cri, @Param("bno") Long bno); // 특정 게시글에 달린 댓글의 목록 조회 | 페이징처리를 위해 Criteria사용 
 	public int getCountByBno(Long bno); // 특정 게시글에 달린 댓글 개수 파악
+	public List<BoardReplyVO> getListAll(Criteria cri); // 홈화면 댓글 출력 
 
 	//수정
 	public int update(BoardReplyVO reply); // 특정 댓글 수정

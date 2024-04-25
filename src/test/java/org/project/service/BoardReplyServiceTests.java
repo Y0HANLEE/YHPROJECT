@@ -73,6 +73,12 @@ public class BoardReplyServiceTests {
 	@Test
 	public void testGetList() {
 		log.info(rservice.getListPage(new Criteria(1,10), 203L));
-	}		
+	}
+	
+	/* 게시글 전체 목록 조회 */ 	
+	@Test
+	public void testGetListAll() {
+		rservice.getListAll(new Criteria(1,5));
+	}
 }
 

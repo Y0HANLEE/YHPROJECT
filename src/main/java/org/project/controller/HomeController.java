@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.project.domain.Criteria;
+import org.project.service.IntroService;
+import org.project.service.Album.AlbumReplyService;
 import org.project.service.Album.AlbumService;
+import org.project.service.Board.BoardReplyService;
 import org.project.service.Board.BoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +30,18 @@ public class HomeController {
 	@Setter(onMethod_=@Autowired)
 	private AlbumService alservice;
 	
+	@Setter(onMethod_=@Autowired)
+	private BoardReplyService brservice;
+	
+	@Setter(onMethod_=@Autowired)
+	private AlbumReplyService arservice;
+	
+	@Setter(onMethod_=@Autowired)
+	private IntroService iservice;
+	
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    /* 리턴타입_String*/    
+    /* 홈화면 */    
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Locale locale, Criteria cri, Model model) {
         logger.info("Welcome YH Project! The client locale is {}.", locale);        
@@ -40,6 +52,10 @@ public class HomeController {
         log.info("[HomeController]---------------------------------"+criteria);
         model.addAttribute("boardList", bservice.getList(criteria)); 
         model.addAttribute("albumList", alservice.getList(criteria));
+        model.addAttribute("boardReplyList", brservice.getListAll(criteria)); 
+        model.addAttribute("albumReplyList", arservice.getListAll(criteria));
+        model.addAttribute("home", iservice.read(1));
+    	model.addAttribute("intro", iservice.read(2));
         
         return "main/home";
     }     

@@ -29,6 +29,17 @@
 		select count(rno) from album_reply where ano=#{ano}	
 	</select>
 	
+	<!-- 전체 댓글 목록 -->
+	<select id="getListAll" resultType="org.project.domain.Album.AlbumReplyVO">
+		<![CDATA[
+			select rno, ano, reply, replyer, replydate, updatedate 
+			from (
+				select /*+INDEX_desc(reply idx_album_reply)*/
+					rownum rn, rno, ano, reply, replyer, replydate, updatedate
+					from album_reply where rno>0 and rownum <= #{pageNum} * #{amount} order by replydate desc
+			) where rn > (#{pageNum} -1) * #{amount}		
+		]]>
+	</select>
 	
 	<!-- 댓글 수정 -->
 	<update id="update">

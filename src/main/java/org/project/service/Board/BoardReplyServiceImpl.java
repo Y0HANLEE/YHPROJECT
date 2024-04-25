@@ -1,5 +1,7 @@
 package org.project.service.Board;
 
+import java.util.List;
+
 import org.project.domain.Criteria;
 import org.project.domain.Board.BoardReplyPageDTO;
 import org.project.domain.Board.BoardReplyVO;
@@ -40,6 +42,12 @@ public class BoardReplyServiceImpl implements BoardReplyService{
 	@Override
 	public BoardReplyPageDTO getListPage(Criteria cri, Long bno) {	
 		return new BoardReplyPageDTO(rmapper.getCountByBno(bno), rmapper.getListWithPaging(cri, bno));
+	}
+	
+	/* 홈화면 출력 */
+	@Override
+	public List<BoardReplyVO> getListAll(Criteria cri){
+		return rmapper.getListAll(cri);
 	}
 	
 	/* 댓글 수정 */

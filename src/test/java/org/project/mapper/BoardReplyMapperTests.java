@@ -43,7 +43,7 @@ public class BoardReplyMapperTests {
 	public void testRead() {
 		log.info(rmapper.read(2L));		
 	}
-	
+		
 	/* 댓글 수정*/
 	@Test
 	public void testUpdate() {
@@ -81,5 +81,11 @@ public class BoardReplyMapperTests {
 	@Test
 	public void testGetCount() {
 		log.info("count replies--------"+rmapper.getCountByBno(32L));
+	}
+	
+	/* 전체 댓글 목록 조회 */
+	@Test
+	public void testGetListAll() {
+		rmapper.getListAll(new Criteria(1,5));
 	}
 }
