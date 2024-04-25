@@ -21,12 +21,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,8 +61,58 @@ public class UploadController {
 		
 	}*/
 	
-	/* ajax방식 파일 저장 + 인증된 사용자(로그인) */
-	@PreAuthorize("isAuthenticated()")
+	/* 단일파일 저장 */
+	@PostMapping("/uploadSingle")
+	public String singleFileUpload(@RequestParam("profileImg")MultipartFile profileImg) {
+		
+		// 1. 전송받은 파일 및 파일설명 값 가져오기
+		log.info("singleFile : " + profileImg);
+		
+		
+		// 2. 저장할 경로 가져오기
+		String uploadFolder = "C:\\upload"; // 업로드 할 폴더 경로
+		File uploadPath = new File(uploadFolder, getFolder()); // 새 폴더는 오늘 날짜 이름으로 한다.			
+		
+		// 같은 이름의 폴더가 없다면 새 폴더를 생성한다.
+		if(uploadPath.exists() == false) {
+			uploadPath.mkdirs();
+		}			
+		
+		// 업로드할 폴더 설정
+		String uploadFileName = profileImg.getOriginalFilename();
+		UUID uuid = UUID.randomUUID(); // UUID(고유ID_난수)
+
+		//IE브라우저 파일 경로
+		FileDTO file = new FileDTO();
+		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+		file.setFileName(uploadFileName);
+		
+		//중복방지를 위한 UUID적용
+		uploadFileName = uuid.toString()+"_"+uploadFileName;
+				
+		// 파일업로드
+		try {
+			File saveFile = new File(uploadPath, uploadFileName);
+			profileImg.transferTo(saveFile);
+			
+			if(checkImg(saveFile)) {
+				file.setImg(true);					
+				FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_"+uploadFileName)); //썸네일은 "s_uuid_파일명"으로 저장(outputstream-출력)					
+				Thumbnailator.createThumbnail(profileImg.getInputStream(), thumbnail, 100, 100);//썸네일파일명, 100*100사이즈로 썸네일 생성(inputstream-입력)					
+				thumbnail.close();
+			}
+			log.info("파일 업로드 성공");
+		} catch (IllegalStateException | IOException e) {
+			log.info("파일 업로드 실패");
+			e.printStackTrace();
+		}
+		
+		return "result";
+	}
+	
+
+	
+	/* ajax방식 다중파일 저장 + 인증된 사용자(로그인) */	
 	@ResponseBody
 	@PostMapping(value="/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<FileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
@@ -171,8 +221,7 @@ public class UploadController {
 		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
 	}
 	
-	/* 파일삭제 */
-	@PreAuthorize("isAuthenticated()")
+	/* 파일삭제 */	
 	@ResponseBody
 	@PostMapping("/deleteFile")
 	public ResponseEntity<String> deleteFile(String fileName, String type){
@@ -185,6 +234,8 @@ public class UploadController {
 				String largeFileName = file.getAbsolutePath().replace("s_", ""); // 절대경로에서 s_를 지워버림.
 				file = new File(largeFileName); // largeFileName을 새 File객체로 생성
 				file.delete(); // 파일삭제 : 원본파일 + largeFile(s_를 지운 썸네일) 모두 삭제
+				log.info("[UploadController]---------------------------경로"+file);
+				log.info("[UploadController]---------------------------삭제성공");
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

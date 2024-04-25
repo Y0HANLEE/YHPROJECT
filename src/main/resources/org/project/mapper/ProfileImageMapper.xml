@@ -6,6 +6,11 @@
 		insert into profile (userid, filename, uploadpath, filetype) values (#{userid}, #{fileName}, #{uploadPath}, #{fileType})
 	</insert>
 	
+	<!-- 프로필 이미지 조회 -->
+	<select id="getProfileByUserid" resultType="ProfileImageVO">
+		select * from profile where userid=#{userid}  
+	</select>
+	
 	<!-- 프로필 이미지 수정 -->
 	<update id="update">
 		update profile set filename=#{fileName}, uploadpath=#{uploadPath} where userid=#{userid}  

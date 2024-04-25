@@ -3,11 +3,10 @@ package org.project.controller;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.project.domain.MyCriteria;
 import org.project.domain.PageDTO;
+import org.project.domain.ProfileImageVO;
 import org.project.domain.User.AuthVO;
 import org.project.domain.User.UserVO;
 import org.project.service.MailService;
@@ -15,6 +14,7 @@ import org.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -189,5 +189,12 @@ public class UserController {
 		model.addAttribute("albumReplyPage", new PageDTO(cri, uservice.getAlbumReplyCnt(user)));		
 	}	
 	
+	
+	/* 첨부파일 관련 화면처리 : json으로 데이터 반환*/ 
+	@GetMapping(value="/getProfileImg", produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<ProfileImageVO> getProfileImg(String userid) {
+		return new ResponseEntity<>(uservice.getProfileByUserid(userid), HttpStatus.OK);
+	}	
 }
 

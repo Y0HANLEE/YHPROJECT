@@ -8,11 +8,8 @@
 <!-- 페이지 제목 -->
 <div class="row">		
 	<div class="col-lg-12">
-		<h1 class="page-header">Join us!!</h1>
-	</div>
-	<p class="mb-4" style="padding-left: 20px">
-		회원가입을 하시면 더 많은 컨텐츠를 즐길 수 있습니다.
-	</p>	
+		<h1 class="page-header">회원가입페이지</h1>
+	</div>		
 </div>
 
 <!-- 본문-->
@@ -20,80 +17,86 @@
 	<div class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">Form</div>
-			<div class="panel-body">				
-				<form role="form" method="post" action="/user/join">					
-				<div class="col-lg-6">				
-					<div class="form-group">						
-						<p><label for="userid">아이디</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="idCheck" value="N">CHECK</button></p>
-						<input class="form-control" type="text" name="userid" id="userid" placeholder="ID" autofocus>							
-					</div>						
-					<div class="form-group">
-						<label for="userpw">비밀번호</label>
-						<input class="form-control" type="password" name="userpw" id="userpw" placeholder="Password">
-					</div>
-					<div class="form-group">
-						<div><label for="pwconfirm">비밀번호확인</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="pwCheck" value="N">CHECK</button></div>
-						<input class="form-control" type="password" name="pwconfirm" id="pwconfirm" placeholder="Password Again">
-					</div>
-					<div class="form-group">
-						<label for="name">이름</label>
-						<input class="form-control" type="text" name="name" placeholder="Name">
-					</div>
-					<div class="form-group">
-						<label for="gender">성별</label>
-						<select class="form-control" id="gender" name="gender">
-							<option value="" selected disabled>성별을 선택해주세요.</option>
-							<option value="M">남자</option>
-							<option value="W">여자</option>																
-						</select>
-					</div>
-					<div class="form-group">
-						<label for="phone">전화번호</label>
-						<input class="form-control" type="text" id="phone" name="phone" placeholder="Phone Number">
-					</div>
-					<div class="form-group">
-						<label for="email">이메일</label>
-						<input class="form-control" type="email" id="email" name="email" placeholder="Email Address">
-					</div>
-					<div class="form-group">
-							<label for="address">주소</label>
-						<div style="display:flex; margin-bottom: 5px;">
-							<input class="form-control" name="zonecode" id="zonecode" placeholder="우편번호" style="width:30%" readonly>&nbsp;&nbsp;
-							<button id="searchAddressBtn" class="btn btn-default" style="width:20%; height:34px">주소찾기</button>						
+			<div class="panel-body">			
+				<div class="col-lg-6" align="center" style="margin-top: 17px">
+					<label for="profileImg">프로필사진</label><br>		
+					<div class="uploadProfile" style="max-width:150px; max-height:200px;">									
+    					<!-- profile image -->    					
+   					</div>						
+					<form action="/uploadSingle" method="post" id="profileForm" enctype="multipart/form-data">										
+						<div class="form-group" style="margin: 0px">
+							<input id="profileImg" class="form-control" type="file" name="profileImg" style="display: none;"> <!-- 파일 선택 -->
+							<button id="findImgBtn" class="btn btn-default" style="margin-top:5px" >찾아보기</button>
+							<button id="resetImgBtn" class="btn btn-default" style="margin-top:5px" >초기화</button>
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 						</div>
-						<input style="margin-bottom: 5px;" class="form-control" type="text" id="address_kakao" name="address" placeholder="주소" readonly>
-						<input class="form-control" type="text" name="addressDetail" placeholder="상세주소">
-					</div>
-					<div class="form-group">
-						<label for="birth">생년월일</label>
-						<input class="form-control" type="date" id="birth" name="birth">
-					</div>
-				</div>
-				
-				<div class="col-lg-6" align="center" style="margin-top: 20px">
-					<div class="form-group" style="height:273.266px">
-						<label for="profileImage">프로필사진</label><br>						
-    					<img id="defaultProfile" src="/resources/img/Default-Profile.png" alt="프로필 이미지" style="max-width:150px; max-height:200px;"><br> <!-- 기본 프로필이미지 -->						
-						<input id="profileImg" class="form-control" type="file" name="profileImg" style="display: none;"> <!-- 파일 선택 -->
-						<button class="btn btn-default" id="findImgBtn" style="margin-top:5px" >찾아보기</button>
-					</div>					
-					<div class="form-group" align="left" style="margin-top: 25px">
+					</form>
+					<div class="form-group" align="left" style="margin-top: 50px">
 						<label for="paper">홈페이지 가입약관 및 개인정보이용동의서</label><br>
-						<textarea class="form-control" rows="14" cols="60" id="paper" name="paper" readonly>
+						<textarea class="form-control" rows="18" cols="60" id="paper" name="paper" readonly>
 <%@ include file="agree.jsp"%>
 						</textarea>
-						<div>
-							<input type="checkbox" style="vertical-align: middle;" id="checkbox" value="N">
-							<label style="vertical-align: middle; margin-top:0px">동의합니다.</label>
+						<div style="display:flex; align-items: center; justify-content: flex-end;">
+							<input type="checkbox" id="checkbox" value="N">
+							<label style="margin:4px 0 0 5px">동의합니다.</label>
 						</div>				
 					</div>					
 				</div>		
-				<div align="center">
-					<button class="btn btn-lg btn-success btn-block" style="width:300px; align-content: center;" id="joinBtn">회원가입</button>
-				</div>									
-				<!-- 보안:사이트간 요청 위조방지. spring security에서 post방식을 이용하는 경우 사용.-->
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> 
-			</form>		
+					
+				<form role="form" method="post" id="joinForm" action="/user/join">					
+					<div class="col-lg-6">				
+						<div class="form-group">						
+							<p><label for="userid">아이디</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="idCheck" value="N">CHECK</button></p>
+							<input class="form-control" type="text" name="userid" id="userid" placeholder="ID" autofocus>							
+						</div>						
+						<div class="form-group">
+							<label for="userpw">비밀번호</label>
+							<input class="form-control" type="password" name="userpw" id="userpw" placeholder="Password">
+						</div>
+						<div class="form-group">
+							<div><label for="pwconfirm">비밀번호확인</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="pwCheck" value="N">CHECK</button></div>
+							<input class="form-control" type="password" name="pwconfirm" id="pwconfirm" placeholder="Password Again">
+						</div>
+						<div class="form-group">
+							<label for="name">이름</label>
+							<input class="form-control" type="text" name="name" placeholder="Name">
+						</div>
+						<div class="form-group">
+							<label for="gender">성별</label>
+							<select class="form-control" id="gender" name="gender">
+								<option value="" selected disabled>성별을 선택해주세요.</option>
+								<option value="M">남자</option>
+								<option value="W">여자</option>																
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="phone">전화번호</label>
+							<input class="form-control" type="text" id="phone" name="phone" placeholder="Phone Number">
+						</div>
+						<div class="form-group">
+							<label for="email">이메일</label>
+							<input class="form-control" type="email" id="email" name="email" placeholder="Email Address">
+						</div>
+						<div class="form-group">
+								<label for="address">주소</label>
+							<div style="display:flex; margin-bottom: 5px;">
+								<input class="form-control" name="zonecode" id="zonecode" placeholder="우편번호" style="width:30%" readonly>&nbsp;&nbsp;
+								<button id="searchAddressBtn" class="btn btn-default" style="width:20%; height:34px">주소찾기</button>						
+							</div>
+							<input style="margin-bottom: 5px;" class="form-control" type="text" id="address_kakao" name="address" placeholder="주소" readonly>
+							<input class="form-control" type="text" name="addressDetail" placeholder="상세주소">
+						</div>
+						<div class="form-group">
+							<label for="birth">생년월일</label>
+							<input class="form-control" type="date" id="birth" name="birth">
+						</div>
+					</div>						
+					<!-- 보안:사이트간 요청 위조방지. spring security에서 post방식을 이용하는 경우 사용.-->
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> 
+				</form>		
+				<div class="pull-right">
+					<button class="btn btn-lg btn-success btn-block" style="width:300px; align-content: center; margin-right: 16px" id="joinBtn">회원가입</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -151,18 +154,17 @@ $(document).ready(function(){
 		e.preventDefault();
 		checkInfo();			
 	});
-	
-	
+
 	/* 업로드 상세처리(확장자, 크기 등) */
-	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)"); // 업로드 가능 확장자
-	var maxSize = 2097152; // 2MB
-	var cloneObj = $("#defaultProfile").clone(); // 클론
+	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)$"); // 업로드 가능 확장자
+	var maxSize = 5242880; // 5MB
+	var cloneObj = $(".uploadProfile").clone(); // 클론
 	
 	function checkFile(fileName, fileSize){
 		if(fileSize >= maxSize){
 			alert("파일 사이즈 초과");
 			return false;
-		}		
+		}
 		if(!regex.test(fileName)){
 			alert("해당 확장자는 업로드 할 수 없습니다.");
 			return false;
@@ -170,65 +172,107 @@ $(document).ready(function(){
 		return true; 
 	}
 	
-	/* 등록버튼 없이 변화가 감지되면 처리할 기능 */
-	$("input[type='file']").change(function(e){
-		var formData = new FormData();
-		var inputFile = $("input[name='uploadFile']");//첨부된 파일
-		var files = inputFile[0].files;
-		
-		for(i=0; i<files.length; i++){
-			if(!checkFile(files[i].name, files[i].size)){
-				$("#defaultProfile").html(cloneObj.html()); // 제한에 걸릴 시, 초기상태("선택 파일 없음")로 보여지기 위해 초기화면을 clone으로 복사하여 붙여넣기함.
-				return false;
-			}
-			formData.append("uploadFile", files[i]);
-		}
-		
-		$.ajax({
-			type:'post',
-			url:'/uploadAjaxAction',
-			processData:false,
-			contentType:false,
-			beforeSend:function(xhr){
-				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
-			},
-			data:formData,
-			dataType:'json',
-			success:function(result){					
-				showUploadResult(result);
-			}
-		});
+	// 찾아보기 버튼 클릭 이벤트 처리
+	$("#findImgBtn").click(function(e){
+		e.preventDefault();	    
+	    $("#profileImg").click();// 파일 선택 input 클릭	    
 	});
 	
-	
-	
-	
-	/*------------------------------------------------------------------------------------------------------------------------------------*/
-	/*프로필 이미지 찾기*/
-	$("#findImage").on("click", function(e){
-		e.preventDefault();
-		var inputFile = $("input[id='profileImage']");//첨부된 파일
-		var file = inputFile.files;
-		if(!checkFile(file.name, file.size)){
-			//$(".uploadDiv").html(cloneObj.html()); // 제한에 걸릴 시, 초기상태("선택 파일 없음")로 보여지기 위해 초기화면을 clone으로 복사하여 붙여넣기함.
-			return false;
-		}
-		$("#profileImage").click(); // 파일 선택 input을 클릭하여 파일 선택 창 열기
+	$("#profileImg").change(function(){
+        var file = this.files[0];
+        var fileName = file.name;
+        var fileSize = file.size;
+        var formData = new FormData();
+        formData.append('profileImg', file);
+        
+        // 파일 검증
+        if(!checkFile(fileName, fileSize)) {
+            // 검증 실패 시 input[type=file] 초기화
+            $(this).val("");
+            return;
+        }
+        
+        var reader = new FileReader();
+        reader.onload = function(e){
+            // 이미지 출력            
+            $(".uploadProfile").html('<img src="' + e.target.result + '" style="max-width:150px; max-height:200px;">');
+        }
+        reader.readAsDataURL(file);
+     
+        $(".uploadProfile").css('background-image', 'none');
+        
+     	// 파일을 서버로 전송
+        $.ajax({
+            url: '/uploadSingle',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+            success: function(response) {
+                console.log('프로필 사진 업로드 완료');                
+            },
+            error: function(xhr, status, error) {
+                console.error('프로필 사진 업로드 실패:', error);
+            }
+        });
     });
 	
-    // 파일 선택 input의 change 이벤트를 감지하여 선택된 파일의 미리보기
-	$("#profileImage").on("change", function(){
-		var input = this;
-		if (input.files && input.files[0]) {
-			var reader = new FileReader();
-			reader.onload = function (e) {
-				$('#profileImagePreview').attr('src', e.target.result); // 파일의 미리보기 이미지를 설정
-			}
-			reader.readAsDataURL(input.files[0]);
-		}
-	});   
-	/*------------------------------------------------------------------------------------------------------------------------------------*/
+	/* 업로드 취소-파일삭제 */
+	$("#resetImgBtn").on("click", function(e){
+	    e.preventDefault();
+	    
+	    // 프로필 이미지 초기화
+	    $(".uploadProfile").html('<img src="/resources/img/Default-Profile.png" style="max-width:150px; max-height:200px;">'); // 이미지 출력 부분 초기화
+	    
+	    // 서버로 파일 삭제 요청 보내기
+	    var fileName = $("#profileImg").val(); // 삭제할 파일 이름 가져오기
+	    var type = "image"; // 파일 타입 지정 (이미지 타입인 경우)
+	    $.ajax({
+	        type: 'POST',
+	        url: '/deleteFile',
+	        data: {fileName: fileName, type: type}, // 파일 이름과 타입 함께 전송
+	        beforeSend:function(xhr){
+	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+	        },
+	        success: function(result){
+	            console.log('파일 삭제 성공');
+	        },
+	        error: function(xhr, status, error) {
+	            console.error('파일 삭제 실패:', error);
+	        }
+	    });
+	});
+
 	
+	/* 첨부파일 클릭시 이벤트 처리 */
+	$(".uploadResult").on("click", "li", function(e){
+		var element = $(e.target);
+		var liObj = $(this);
+		var path = encodeURIComponent(liObj.data("path")+"/"+liObj.data("uuid")+"_"+liObj.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
+		
+		//span이나 img일경우만 이벤트 >> x버튼은 삭제만 처리
+		if(element.is("span") || element.is("img")){
+			if(liObj.data("type")){
+				showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
+			}
+		}
+	});
+	
+	// 원본사진 확대보기 on
+	function showImage(fileCallPath){			
+		$(".picWrap").css("display","flex").show(); // none > flex 설정 변경
+		$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행 
+	}
+	
+	// 원본사진 확대보기 off 
+	$(".picWrap").on("click", function(e){
+		$(".pic").animate({width:'0%', height:'0%'}, 0); // (0%*0%) 로 0.3초 후 크기변경
+		setTimeout(() => {$(this).hide();}, 0);	// chrome의 ES6화살표함수
+		//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
+	});
 	
     /* 체크박스 : 약관, 동의서 동의여부 체크 */
 	$("#checkbox").on("change", function(){        

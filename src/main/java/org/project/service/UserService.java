@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.project.domain.Criteria;
 import org.project.domain.MyCriteria;
+import org.project.domain.ProfileImageVO;
 import org.project.domain.Album.AlbumReplyVO;
 import org.project.domain.Album.AlbumVO;
 import org.project.domain.Board.BoardReplyVO;
@@ -30,7 +31,7 @@ public interface UserService {
 	public int getAlbumCnt(String userid);
 	public int getBoardReplyCnt(String userid);
 	public int getAlbumReplyCnt(String userid);
-	
+	public ProfileImageVO getProfileByUserid(String userid); //프로필사진조회	
 	//수정
 	public int modify(UserVO user);
 	public void updatePw(String newPw, String userid, String oldPw); // 비밀번호 수정 | 기존비번 → 새비번

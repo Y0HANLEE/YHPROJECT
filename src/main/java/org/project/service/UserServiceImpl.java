@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.project.domain.Criteria;
 import org.project.domain.MyCriteria;
+import org.project.domain.ProfileImageVO;
 import org.project.domain.Album.AlbumReplyVO;
 import org.project.domain.Album.AlbumVO;
 import org.project.domain.Board.BoardReplyVO;
 import org.project.domain.Board.BoardVO;
 import org.project.domain.User.AuthVO;
 import org.project.domain.User.UserVO;
+import org.project.mapper.ProfileImageMapper;
 import org.project.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ import lombok.Setter;
 public class UserServiceImpl implements UserService{	
 	@Setter(onMethod_ = @Autowired)
 	private UserMapper umapper;
+	
+	@Setter(onMethod_ = @Autowired)
+	private ProfileImageMapper pmapper;
 		
 	/* 신규 사용자 등록 */
 	@Transactional
@@ -30,8 +35,21 @@ public class UserServiceImpl implements UserService{
 	public void join(UserVO user, AuthVO auth) {
 		umapper.insertUser(user); // 사용자 정보 등록
 		umapper.insertAuth(auth); // 권한 등록
+		
+		ProfileImageVO profile = user.getProfileImg();
+		
+		if(profile == null) { //프로필사진x
+			ProfileImageVO img = user.getProfileImg();
+			img.setUserid(user.getUserid()); // profile의 userid를 user의 userid로 입력
+			img.setUploadPath("/resources/img");    // 프로필을 따로 선택하지 않았다면
+			img.setFileName("Default-Profile.png"); // 기본프로필이미지로 등록
+			pmapper.insert(img); // 지정된 userid값으로 프로필사진 등록
+		} else { //프로필사진o
+			profile.setUserid(user.getUserid()); 
+			pmapper.insert(profile); 
+		}
 	}
-	
+		
 	/* 사용자 정보 조회*/
 	@Override
 	public UserVO read(String userid) {
@@ -90,6 +108,12 @@ public class UserServiceImpl implements UserService{
 	/* 내가 쓴 댓글 개수 */
 	public int getAlbumReplyCnt(String userid){
 		return umapper.getAlbumReplyCnt(userid);
+	}	
+	
+	/* 프로필사진 조회 */
+	@Override
+	public ProfileImageVO getProfileByUserid(String userid){	
+		return pmapper.getProfileByUserid(userid);
 	}
 	
 	/* 사용자 정보 수정 */
@@ -119,7 +143,7 @@ public class UserServiceImpl implements UserService{
 			umapper.deleteSession(userid); // 자동로그인 기록삭제
 		}
 	}	
-	
+		
 	/* Admin_사용자목록조회 */
 	public List<UserVO> getUserList(Criteria cri){
 		return umapper.getUserList(cri);
