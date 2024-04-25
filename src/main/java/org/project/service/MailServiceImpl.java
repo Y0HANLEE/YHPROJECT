@@ -18,7 +18,7 @@ public class MailServiceImpl implements MailService{
 	@Autowired
     private JavaMailSender mailSender;
 	
-	/* 메일전송 */
+	/* 기본메일전송 - 보류 
 	public String sendMail(Mail mail) {
 		log.info("-------------------------mail:"+mail);
 		try {
@@ -37,6 +37,7 @@ public class MailServiceImpl implements MailService{
         }
         return "success";    
 	}
+	*/
 	
 	public String renewalPwMail(String email, String ranPw) {
 		Mail mail = new Mail();

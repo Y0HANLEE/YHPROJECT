@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 
 @Service
 @AllArgsConstructor
-@Log4j
 public class IntroServiceImpl implements IntroService{
 	
 	@Setter(onMethod_ = @Autowired)

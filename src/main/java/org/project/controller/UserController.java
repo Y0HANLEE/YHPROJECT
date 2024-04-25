@@ -131,7 +131,7 @@ public class UserController {
 	    }
 	    return result;   
 	}
-
+	   
 	/* 비밀번호 수정 */
 	@PostMapping("/updatePw")
 	public String updatePassword(Principal principal, @RequestParam("newPw") String newPw, @RequestParam("userid") String userid, @RequestParam("oldPw") String oldPw, RedirectAttributes rttr) {

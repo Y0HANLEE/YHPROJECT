@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService{
 	public void join(UserVO user, AuthVO auth) {
 		umapper.insertUser(user); // 사용자 정보 등록
 		umapper.insertAuth(auth); // 권한 등록
-		
+		/*
 		ProfileImageVO profile = user.getProfileImg();
 		
 		if(profile == null) { //프로필사진x
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
 		} else { //프로필사진o
 			profile.setUserid(user.getUserid()); 
 			pmapper.insert(profile); 
-		}
+		}*/
 	}
 		
 	/* 사용자 정보 조회*/
