@@ -20,7 +20,7 @@
 		<!-- 로그인 : custom, 성공시 loginHandler의 규칙을 따름 -->
 		<sec:form-login login-page="/main/loginPage" authentication-success-handler-ref="loginHandler"/>
 		<!-- 로그아웃 : custom, 세션만료적용 -->
-		<sec:logout logout-url="/main/logoutPage" invalidate-session="true" delete-cookies="remember-me, JSESSION_ID"/>
+		<sec:logout logout-url="/main/logoutPage" invalidate-session="true" delete-cookies="remember-me, JSESSION_ID" logout-success-url="/main/home"/>
 		<!-- 자동로그인 : jdbc(dataSource:root-context에서 선언된 bean_DB사용), 7일(60*60*24*7) 유지 -->		
 		<sec:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 		<!-- 접근금지 에러 핸들러(권한없음) -->
