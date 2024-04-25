@@ -76,7 +76,10 @@
 								<li><a href="../user/contents?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>&boardType=1"><i class="fa fa-th-list fa-fw"></i> MyContent</a></li>								
 								<li><a href="../user/comments?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>&boardType=1.1"><i class="fa fa-comment fa-fw"></i> MyComment</a></li>
 								<li class="divider"></li>
-								<li><a href="../main/logoutPage"><i class="fa fa-lock fa-fw"></i> Logout</a></li>
+								<li><form action="../main/logoutPage" method="post" id="logoutForm" style="height: 40px; display: flex;align-items: center;">
+									<a href="#" id="logout"><i class="fa fa-lock fa-fw"></i> Logout</a>
+									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+								</form></li>
 							</sec:authorize>
 							<!-- 로그아웃/ 로그인하지 않은 모든 사용자 -->
 							<sec:authorize access="isAnonymous()">
@@ -120,42 +123,14 @@
 			</div>
 		</div>	
 	</nav>
-<!-- 
 	<script>
-		function logout(event) {
-		    event.preventDefault(); // 이벤트의 기본 동작 방지
+		$("#logout").on("click", function(e){
+		    e.preventDefault(); // 이벤트의 기본 동작 방지
 		    console.log("click");
-		    alert("로그아웃되었습니다.");
-		    document.getElementById("form-logout").submit();
-		}
+		    confirm("로그아웃하시겠습니까?");
+		    $("#logoutForm").submit();
+		});
 	</script>
- --> 	
- <!-- 
-	<script>
-		/* Spring security 적용 후 게시물 등록시 첨부파일 처리 >> post방식이므로 csrf 적용 */
-		var csrfHeaderName = "${_csrf.headerName}";
-		var csrfToken = "${_csrf.token}";
-		
-		function logout(event) {
-		 	event.preventDefault(); // 이벤트의 기본 동작 방지
-			alert("로그아웃되었습니다.");
-		    $.ajax({
-		        type: 'POST',
-		        url: '/main/logout',
-		        beforeSend:function(xhr){
-					xhr.setRequestHeader(csrfHeaderName, csrfToken)
-				},
-		        success: function(data) {		           
-				    
-		            return "redirect:/";
-		        },
-		        error: function(xhr, status, error) {
-		           
-		        }
-		    });
-		}
-	</script> 
- -->	
 	<!-- 본문화면 -->
-	<div id="page-wrapper" style="min-height:639px;">
-	<div id="top"></div>
+	<div id="page-wrapper" style="min-height:639px">
+		<div id="top"></div>
