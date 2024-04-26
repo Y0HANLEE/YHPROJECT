@@ -1,11 +1,31 @@
 package org.project.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.security.Principal;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.project.domain.User.UserVO;
+import org.project.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,27 +35,47 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(MockitoExtension.class)
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml", "file:src/main/webapp/WEB-INF/spring/security-context.xml"})
 @WebAppConfiguration
 @Log4j
+@SuppressWarnings("deprecation")
 public class UserControllerTest {
 	@Setter(onMethod_= {@Autowired})
 	private WebApplicationContext ctx;
+	
+	@Autowired
+	private BCryptPasswordEncoder pwEncoder;
+	
+	@InjectMocks
+    private UserController userController;
+
+    @Mock
+    private UserServiceImpl uservice; 
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @WithMockUser(username = "kevinyh", roles="USER")
+    public @interface UserInfo { 
+    	//@WithMockUser(username = "mgr1234", roles = "USER") 대신 @WithUser를 사용
+    }
 	
 	private MockMvc mockMvc;
 	
 	/* 목업테스트를 위한 셋업 */
 	@Before
 	public void setup() {		        
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();		
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
+        MockitoAnnotations.initMocks(this);
 	}	
-
-	/* 회원가입 화면 */	
+	
+	/* 회원가입 처리 화면 */	
 	@WithAnonymousUser
 	@Test
 	public void testJoin() throws Exception {
@@ -54,11 +94,29 @@ public class UserControllerTest {
 		log.info(resultPage);
 	}
 	
-	/* 회원정보 수정 */
+	/* 회원정보 화면 */		
+	@UserInfo
+	@Test
+	public void testProfile() throws Exception {
+		mockMvc.perform(get("/user/profile")
+				.param("userid", "kevinyh"))						
+				.andReturn().getModelAndView().getViewName();
+	}
+	
+	/* 회원정보 화면 */
+	@WithMockUser(value="mgr1234")	
+	@Test
+	public void testUpdatePage() throws Exception {
+		mockMvc.perform(get("/user/update")
+				.param("userid", "mgr1234"))						
+				.andReturn().getModelAndView().getViewName();
+	}
+	
+	/* 회원정보 수정처리 */
 	@WithMockUser(username="mgr1234", roles= {"USER"})	
 	@Test
-	public void testUpdate() throws Exception {		
-		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/user/update")								
+	public void testUpdatePost() throws Exception {		
+		String resultPage = mockMvc.perform(post("/user/update")								
 								.param("userid", "mgr1234")								
 								//.param("userpw", "qwe12#$")								
 								//.param("name", "이요한")
@@ -97,30 +155,62 @@ public class UserControllerTest {
 		log.info(resultPage);
 	}
 	
-	/* 비밀번호 수정 - 일단 개발 진행, mockMVC 테스트에 대해 잘 모르기 떄문에 진행하기엔 너무 오래걸림 */
+	/* 회원 탈퇴 */
 	@Test
-	public void testUpdatePw() throws Exception {		
-	    // Principal 객체를 생성하여 사용자 정보를 설정합니다.
+	public void testDelete() throws Exception {		
+		String resultPage = mockMvc.perform(post("/user/delete")								
+							   .param("userid", "mgr1234")
+							).andReturn().getModelAndView().getViewName();
+		log.info(resultPage);
+	}
+	
+	/* 아이디 중복 검사 */
+	@Test
+	public void testCheckId() throws Exception {
+	    mockMvc.perform(post("/user/checkId")	            
+	            .param("userid", "kevinyh"))
+	            .andExpect(status().is(200));
+	}
+			
+	
+	/* 비밀번호 수정 - 주입이 제대로 되지 않아 nullpointer오류 발생 
+	@Test
+	public void testUpdatePw() throws Exception {	
+		UserVO user = new UserVO();
+        user.setUserid("test00");
+        user.setUserpw(pwEncoder.encode("test00"));
+        
 	    Principal principal = () -> "mgr1234";
 
 	    // 비밀번호 변경 요청을 수행합니다.
-	    String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/user/updatePw")
+	    mockMvc.perform(post("/user/updatePw")
 	            .param("newPw", "asd12#$")
 	            .param("userid", "mgr1234")
 	            .param("oldPw", "qwe12#$")
 	            .principal(principal) // Principal 객체를 설정합니다.
 	    ).andReturn().getModelAndView().getViewName();
+	}
+	*/	
 
-	    // 결과 페이지를 출력합니다.
-	    log.info(resultPage);
-	}
-	
+	/* 본인확인 : 비밀번호 검증 → uservice의 의존성주입이 되지 않아 null로 리턴되어 오류 발생		
 	@Test
-	public void testDelete() throws Exception {		
-		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/user/delete")								
-							   .param("userid", "mgr1234")
-							).andReturn().getModelAndView().getViewName();
-		log.info(resultPage);
-	}
+    public void testCheckUser() throws Exception {
+        UserVO user = new UserVO();
+        user.setUserid("test00");
+        user.setUserpw(pwEncoder.encode("test00")); 
+       
+        Principal principal = () -> "test00";
+
+        String requestBody = "{\"userid\": \"test00\", \"userpw\": \"test00\"}";
+
+        when(uservice.read("test00")).thenReturn(user);
+        log.info("------------------------"+uservice.read("kevinyh"));
+
+        mockMvc.perform(post("/user/checkUser")
+                .principal(principal)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isOk());                
+    }   */
 }
 

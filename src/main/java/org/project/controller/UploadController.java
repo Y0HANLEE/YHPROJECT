@@ -61,7 +61,7 @@ public class UploadController {
 		
 	}*/
 	
-	/* 단일파일 저장 */
+	/* 단일파일 저장 *//*
 	@PostMapping("/uploadSingle")
 	public String singleFileUpload(@RequestParam("profileImg")MultipartFile profileImg) {
 		
@@ -108,6 +108,54 @@ public class UploadController {
 		}
 		
 		return "result";
+	}*/
+	
+	/* 단일파일 저장 */
+	@ResponseBody
+	@PostMapping(value="/uploadSingle", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<FileDTO> singleFileUpload(@RequestParam("singleFile")MultipartFile singleFile) {
+		
+		// 1. 전송받은 파일 및 파일설명 값 가져오기
+		log.info("singleFile : " + singleFile);
+		String uploadFolder = "C:\\upload"; // 업로드 할 폴더 경로
+		File uploadPath = new File(uploadFolder, getFolder()); // 새 폴더는 오늘 날짜 이름으로 한다.
+		String uploadFolderPath = getFolder(); // 업로드폴더 이름				
+
+		// 같은 이름의 폴더가 없다면 새 폴더를 생성한다.
+		if(uploadPath.exists() == false) {
+			uploadPath.mkdirs();
+		}
+		
+		FileDTO file = new FileDTO();// FileDTO객체 생성
+		String uuid = UUID.randomUUID().toString(); // uuid생성
+		try {
+	        String originalFilename = singleFile.getOriginalFilename(); //파일명
+	        String uploadFileName = uuid+ "_" + originalFilename;		//업로드명 : uuid_파일명
+	        
+	        //IE브라우저 파일 경로
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1); // IE의 경우 이름을 다르게			
+			file.setFileName(uploadFileName); // file의 fileName으로 uploadFileName지정
+
+	        File saveFile = new File(uploadPath, uploadFileName);//저장경로, 업로드명	
+	        singleFile.transferTo(saveFile);// 업로드된 파일을 지정된 경로에 저장
+	        
+	        file.setUuid(uuid); // file의 uuid저장
+			file.setUploadPath(uploadFolderPath); //file의 uploadpath저장
+			
+			//img check
+			if(checkImg(saveFile)) {
+				file.setImg(true);					
+				FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_"+uploadFileName)); //썸네일은 "s_uuid_파일명"으로 저장(outputstream-출력)					
+				Thumbnailator.createThumbnail(singleFile.getInputStream(), thumbnail, 100, 100);//썸네일파일명, 100*100사이즈로 썸네일 생성(inputstream-입력)					
+				thumbnail.close();
+			}	
+			log.info("[UploadController]-----------------fileName:"+file.getFileName()+", uuid:"+file.getUuid()+", path:"+file.getUploadPath()+", type? : "+file.isImg());
+	        // 업로드된 파일 정보 저장 등 추가 작업 가능
+	        return new ResponseEntity<>(file, HttpStatus.OK); // file객체 리턴
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 	
 	/* ajax방식 다중파일 저장 + 인증된 사용자(로그인) */	

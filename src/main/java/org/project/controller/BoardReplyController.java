@@ -29,7 +29,7 @@ public class BoardReplyController {
 	private BoardReplyService rservice;
 	
 	/* 댓글 등록 + 인증된 사용자(로그인) */
-	@PreAuthorize("isAuthenticated()")
+	//@PreAuthorize("isAuthenticated()")
 	@PostMapping(value="/new", consumes="application/json", produces={MediaType.TEXT_PLAIN_VALUE}) 
 	public ResponseEntity<String> create(@RequestBody BoardReplyVO reply) {	
 		// ①consumes:브라우저(클라이언트)에서 입력해 Controller로 보내는 자료타입		| JSON형태로 입력 
@@ -53,14 +53,14 @@ public class BoardReplyController {
 	}
 	
 	/* 댓글 삭제 + 인증된 사용자(로그인=작성자) : url에 bno사용, 객체 데이터(BoardReplyVO)를 전달하겠다. */
-	@PreAuthorize("principal.username == #reply.replyer")
+	//@PreAuthorize("principal.username == #reply.replyer")
 	@DeleteMapping(value="/{rno}", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> remove(@PathVariable("rno") Long rno, @RequestBody BoardReplyVO reply){
 		return rservice.remove(rno) == 1 ? new ResponseEntity<>("success", HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
 	}
 	
 	/* 댓글 수정 + 인증된 사용자(로그인=작성자) */
-	@PreAuthorize("principal.username == #reply.replyer")
+	//@PreAuthorize("principal.username == #reply.replyer")
 	@RequestMapping(value="/{rno}", method={RequestMethod.PATCH, RequestMethod.PUT}, consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> modify(@RequestBody BoardReplyVO reply, @PathVariable("rno") Long rno){
 		reply.setRno(rno);		

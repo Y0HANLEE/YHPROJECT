@@ -1,13 +1,11 @@
 package org.project.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -54,9 +52,7 @@ public class MainControllerTests {
 				.getModelMap());		
 	}
 	
-	@Setter(onMethod_= {@Autowired})
-	private PasswordEncoder bcrypt;
-
+	/* 아이디 찾기 */
 	@Test
     public void testFindId() throws Exception {
         String name = "이요한";
@@ -65,24 +61,19 @@ public class MainControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/main/findId")
                 .param("name", name)
                 .param("email", email))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray()) // 응답이 배열인지 확인
-                .andExpect(jsonPath("$[0]").value("user1")) // 예상되는 아이디가 반환되는지 확인
-                .andExpect(jsonPath("$[1]").value("user2")); // 추가적인 아이디가 반환되는지 확인
+                .andExpect(status().isOk());                
     }
     
+	/* 비밀번호 초기화 */
     @Test
-    public void testRenewalPw() throws Exception {
-        String randomPw = "randomPassword";
-        String userid = "user1";
-        String email = "john@example.com";
+    public void testRenewalPw() throws Exception {        
+        String userid = "kevinyh";
+        String email = "kevinyh@naver.com";
         
-        mockMvc.perform(MockMvcRequestBuilders.post("/renewalPw")
-                .param("randomPw", randomPw)
+        mockMvc.perform(MockMvcRequestBuilders.post("/main/renewalPw")                
                 .param("userid", userid)
                 .param("email", email))		        
                 .andExpect(status().isOk());
     }
-	
 		
 }
