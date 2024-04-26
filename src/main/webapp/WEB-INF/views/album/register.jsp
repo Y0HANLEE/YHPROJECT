@@ -177,7 +177,7 @@ $(document).ready(function(e){
 	/* 업로드 상세처리(확장자, 크기 등) */
 	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif|avi|mp4|mp3|zip)"); // 업로드 가능 확장자
 	var maxSize = 1073741824; // 1GB
-	var cloneObj = $(".uploadDiv").clone(); // 클론
+	var cloneObj = $(".uploadResult").clone(); // 클론
 	
 	function checkFile(fileName, fileSize){
 		// 파일사이즈 검토
