@@ -158,23 +158,7 @@ public class AlbumController {
 	/* 첨부파일 관련 화면처리 : json으로 데이터 반환 */
 	@GetMapping(value="/getAttachList", produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<List<AlbumAttachVO>> getAttachList(Long ano) {		
+	public ResponseEntity<List<AlbumAttachVO>> getAttachList(Long ano) {	
 		return new ResponseEntity<>(alservice.attachList(ano), HttpStatus.OK);
-	}
-		
-	@GetMapping("/display")
-	@ResponseBody
-	public ResponseEntity<byte[]> getFile(String fileName){
-		File file = new File("C:\\upload\\"+fileName);
-		ResponseEntity<byte[]> result = null; // byte[]는 실제 파일을 넘기기 위함.
-		
-		try {
-			HttpHeaders header = new HttpHeaders();
-			header.add("Content-Type", Files.probeContentType(file.toPath()));
-			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		return result;
-	}
+	}	
 }

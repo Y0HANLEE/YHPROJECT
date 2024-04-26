@@ -1,9 +1,12 @@
 package org.project.controller;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -16,7 +19,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
+@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/security-context.xml", "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
 @WebAppConfiguration
 @Log4j
 public class BoardControllerTests {
@@ -89,4 +92,13 @@ public class BoardControllerTests {
 							).andReturn().getModelAndView().getViewName();
 		log.info(resultPage);
 	}
+	
+	/* 첨부파일 관련 화면처리 : json으로 데이터 반환 */
+	@WithMockUser(username="kevinyh")
+	@Test
+	public void testGetAttachList() throws Exception {
+		mockMvc.perform(get("/board/getAttachList")
+				.param("bno", "204"))				
+				.andExpect(status().isOk());
+	}	
 }

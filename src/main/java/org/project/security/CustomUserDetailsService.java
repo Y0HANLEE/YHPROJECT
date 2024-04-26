@@ -4,6 +4,7 @@ import org.project.domain.User.UserVO;
 import org.project.mapper.UserMapper;
 import org.project.security.domain.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,5 +25,5 @@ public class CustomUserDetailsService implements UserDetailsService{
 		UserVO user = umapper.read(username);    
 		log.warn("[CustomUserDetailsService]로그인유저----------------------------------"+username+",  "+user);
         return user == null ? null : new CustomUser(user);  
-	}
+	}	
 }

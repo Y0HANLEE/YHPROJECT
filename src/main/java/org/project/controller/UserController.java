@@ -148,6 +148,8 @@ public class UserController {
 			return "redirect:/user/update?userid="+userid; 
 		}
 	}
+	
+	
 		
 	/* È¸¿øÅ»Åğ */	
 	@Transactional
