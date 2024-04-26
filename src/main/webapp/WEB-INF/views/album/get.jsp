@@ -237,7 +237,7 @@ $(document).ready(function(){
 	
 	// 댓글 추가버튼>>modal
 	$("#addReplyBtn").on("click", function(e){
-		modal.find("input").val("");
+		modal.find("textarea").val("");
 		modal.find("input[name='replyer']").val(replyer);
 		modalInputReplyDate.closest("div").hide();
 		modal.find("button[id!='modalCloseBtn']").hide();
@@ -255,7 +255,7 @@ $(document).ready(function(){
 		
 		replyService.add(reply, function(result){
 			alert(result); // 결과 알림창
-			modal.find("input").val(""); // input내용 비우고,
+			modal.find("textarea").val(""); // input내용 비우고,
 			modal.modal("hide");         // modal창 숨기기.
 			
 			showList(-1); // 새 댓글은 마지막에 추가됨.
