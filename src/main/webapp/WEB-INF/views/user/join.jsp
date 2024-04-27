@@ -19,26 +19,26 @@
 			<div class="panel-heading">Form</div>
 			<div class="panel-body">			
 				<div class="col-lg-6" align="center" style="margin-top: 17px">
-					<label for="profileImg">프로필사진</label><br>		
-					<div class="uploadProfile" style="max-width:150px; max-height:200px;">									
-    					<!-- profile image -->    					
+					<label for="singleFile">프로필사진</label><br>		
+					<div class="uploadProfile" style="width:200px; height:200px; border-radius: 100px; overflow: hidden;  display:flex;justify-content: center;align-items: center; margin: 11px;">
+   						<!-- profile image -->    					
    					</div>						
 					<form action="/uploadSingle" method="post" id="profileForm" enctype="multipart/form-data">										
 						<div class="form-group" style="margin: 0px">
-							<input id="profileImg" class="form-control" type="file" name="profileImg" style="display: none;"> <!-- 파일 선택 -->
+							<input id="singleFile" class="form-control" type="file" name="singleFile" style="display: none;"> <!-- 파일 선택 -->
 							<button id="findImgBtn" class="btn btn-default" style="margin-top:5px" >찾아보기</button>
 							<button id="resetImgBtn" class="btn btn-default" style="margin-top:5px" >초기화</button>
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 						</div>
 					</form>
-					<div class="form-group" align="left" style="margin-top: 50px">
+					<div class="form-group" align="left" style="margin-top: 38px">
 						<label for="paper">홈페이지 가입약관 및 개인정보이용동의서</label><br>
 						<textarea class="form-control" rows="18" cols="60" id="paper" name="paper" readonly>
 <%@ include file="agree.jsp"%>
 						</textarea>
 						<div style="display:flex; align-items: center; justify-content: flex-end;">
 							<input type="checkbox" id="checkbox" value="N">
-							<label style="margin:4px 0 0 5px">동의합니다.</label>
+							<label style="margin:4px 0 0 5px" id="agree">동의합니다.</label>
 						</div>				
 					</div>					
 				</div>		
@@ -46,19 +46,19 @@
 				<form role="form" method="post" id="joinForm" action="/user/join">					
 					<div class="col-lg-6">				
 						<div class="form-group">						
-							<p><label for="userid">아이디</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="idCheck" value="N">CHECK</button></p>
+							<p><label for="userid">아이디<sup style="color:red; font-size:10px">*</sup></label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="idCheck" value="N">CHECK</button></p>
 							<input class="form-control" type="text" name="userid" id="userid" placeholder="ID" autofocus>							
 						</div>						
 						<div class="form-group">
-							<label for="userpw">비밀번호</label>
+							<label for="userpw">비밀번호<sup style="color:red; font-size:10px">*</sup></label>
 							<input class="form-control" type="password" name="userpw" id="userpw" placeholder="Password">
 						</div>
 						<div class="form-group">
-							<div><label for="pwconfirm">비밀번호확인</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="pwCheck" value="N">CHECK</button></div>
+							<div><label for="pwconfirm">비밀번호확인<sup style="color:red; font-size:10px">*</sup></label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="pwCheck" value="N">CHECK</button></div>
 							<input class="form-control" type="password" name="pwconfirm" id="pwconfirm" placeholder="Password Again">
 						</div>
 						<div class="form-group">
-							<label for="name">이름</label>
+							<label for="name">이름<sup style="color:red; font-size:10px">*</sup></label>
 							<input class="form-control" type="text" name="name" placeholder="Name">
 						</div>
 						<div class="form-group">
@@ -74,7 +74,7 @@
 							<input class="form-control" type="text" id="phone" name="phone" placeholder="Phone Number">
 						</div>
 						<div class="form-group">
-							<label for="email">이메일</label>
+							<label for="email">이메일<sup style="color:red; font-size:10px">*</sup></label>
 							<input class="form-control" type="email" id="email" name="email" placeholder="Email Address">
 						</div>
 						<div class="form-group">
@@ -92,7 +92,12 @@
 						</div>
 					</div>						
 					<!-- 보안:사이트간 요청 위조방지. spring security에서 post방식을 이용하는 경우 사용.-->
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> 
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<!-- 프로필사진 정보 -->
+					<input type="hidden" name="profileImg.fileName">
+					<input type="hidden" name="profileImg.uuid">
+					<input type="hidden" name="profileImg.uploadPath">
+					<input type="hidden" name="profileImg.fileType">
 				</form>		
 				<div class="pull-right">
 					<button class="btn btn-lg btn-success btn-block" style="width:300px; align-content: center; margin-right: 16px" id="joinBtn">회원가입</button>
@@ -146,7 +151,7 @@ window.onload = function(){
     });
 }
 </script>
-<!-- 애플리케이션 -->
+<!-- 본문 -->
 <script type="text/javascript">
 $(document).ready(function(){	
 	/* form 제출 */
@@ -154,11 +159,23 @@ $(document).ready(function(){
 		e.preventDefault();
 		checkInfo();			
 	});
+	
+	//"동의합니다" 클릭이벤트
+	$("#agree").on("click", function(e){
+		e.preventDefault();
+		var check = $("#checkbox");
+		
+		if(check.prop("checked")){ //prop:property(속성) checked가 true/false를 변화시킴
+			check.prop("checked", false); // 만일 체크되어있으면 해제
+		} else {
+			check.prop("checked", true);  // 아니면 체크
+		}
+	});
 
-	/* 업로드 상세처리(확장자, 크기 등) */
+	/* 프로필사진 업로드 */
+	// 업로드 상세처리(확장자, 크기 등) 
 	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)$"); // 업로드 가능 확장자
-	var maxSize = 5242880; // 5MB
-	var cloneObj = $(".uploadProfile").clone(); // 클론
+	var maxSize = 5242880; // 5MB	
 	
 	function checkFile(fileName, fileSize){
 		if(fileSize >= maxSize){
@@ -171,36 +188,28 @@ $(document).ready(function(){
 		}		
 		return true; 
 	}
-	
-	// 찾아보기 버튼 클릭 이벤트 처리
+			
+	// 찾아보기 버튼 클릭 이벤트 처리 
 	$("#findImgBtn").click(function(e){
 		e.preventDefault();	    
-	    $("#profileImg").click();// 파일 선택 input 클릭	    
+	    $("input[type='file']").click();// 파일 선택 input 클릭	    
 	});
 	
-	$("#profileImg").change(function(){
-        var file = this.files[0];
+	// 파일업로드 : 상태가 변하면 전송 
+	$("input[type='file']").change(function(){
+        var formData = new FormData();
+        var inputFile = $("input[name='singleFile']");
+        var file = inputFile[0].files[0];
         var fileName = file.name;
         var fileSize = file.size;
-        var formData = new FormData();
-        formData.append('profileImg', file);
-        
+        formData.append('singleFile', file);
+                
         // 파일 검증
-        if(!checkFile(fileName, fileSize)) {
-            // 검증 실패 시 input[type=file] 초기화
+        if(!checkFile(fileName, fileSize)) {            
             $(this).val("");
             return;
         }
-        
-        var reader = new FileReader();
-        reader.onload = function(e){
-            // 이미지 출력            
-            $(".uploadProfile").html('<img src="' + e.target.result + '" style="max-width:150px; max-height:200px;">');
-        }
-        reader.readAsDataURL(file);
-     
-        $(".uploadProfile").css('background-image', 'none');
-        
+       
      	// 파일을 서버로 전송
         $.ajax({
             url: '/uploadSingle',
@@ -211,29 +220,64 @@ $(document).ready(function(){
             beforeSend:function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
 			},
-            success: function(response) {
-                console.log('프로필 사진 업로드 완료');                
+            success: function(result) {        
+            	console.log(result);
+	            // XML을 jQuery 객체로 변환
+                var Img = $(result);
+                // XML에서 필요한 데이터를 가져옴
+                var uploadPath = Img.find('uploadPath').text();
+                var uuid = Img.find('uuid').text();
+                var fileName = Img.find('fileName').text();
+                var fileType = (Img.find('img').text() === "true") ? true : false;
+                // 화면출력
+                var reader = new FileReader();                                
+                reader.onload = function(){
+					var fileCallPath = encodeURIComponent(uploadPath+"/"+uuid+"_"+fileName);
+					var DeleteFilePath = encodeURIComponent(uploadPath+"/s_"+uuid+"_"+fileName); // 기존의 /deleteFile는 썸네일을 지우는 용도, 파일명 쪼개서 "s_"를 붙이는거보단 지우는게 쉽다.
+				
+					var ImgTag = fileType === true ? '<img id="profile" src="/display?fileName='+fileCallPath+'" style="width:300px; height:300px;">' : '<img src="/resources/img/Default-Profile.png" style="width:300px; height:300px;">';
+                    $(".uploadProfile").attr({"data-path":uploadPath, "data-uuid":uuid, "data-filename":fileName, "data-type":fileType, "data-file":fileCallPath});
+                    $(".uploadProfile").html(ImgTag);
+                    $("#resetImgBtn").attr({"data-file": DeleteFilePath, "data-type": fileType});
+                    
+                 // 업로드된 이미지 정보 가져오기
+            		var profileData = $(".uploadProfile");        		
+            		// hidden input에 이미지 정보 설정
+            		$("input[name='profileImg.fileName']").val(profileData.data("path"));
+            		$("input[name='profileImg.uuid']").val(profileData.data("uuid"));
+            		$("input[name='profileImg.uploadPath']").val(profileData.data("filename"));
+            		$("input[name='profileImg.fileType']").val(profileData.data("type"));
+            		console.log(profileData.data("path"));
+            		console.log(profileData.data("uuid"));
+            		console.log(profileData.data("filename"));
+            		console.log(profileData.data("type"));
+                }
+                reader.readAsDataURL(file);
+             
+                $(".uploadProfile").css('background-image', 'none');//기본프로필사진 화면에서 삭제
+                            
+        	 	
             },
             error: function(xhr, status, error) {
                 console.error('프로필 사진 업로드 실패:', error);
             }
         });
-    });
+    });	
 	
-	/* 업로드 취소-파일삭제 */
+	// 업로드 취소-업로드파일삭제
 	$("#resetImgBtn").on("click", function(e){
 	    e.preventDefault();
 	    
 	    // 프로필 이미지 초기화
-	    $(".uploadProfile").html('<img src="/resources/img/Default-Profile.png" style="max-width:150px; max-height:200px;">'); // 이미지 출력 부분 초기화
+	    $(".uploadProfile").html('<img src="/resources/img/Default-Profile.png" style="width:300px; height:300px;">'); 
 	    
 	    // 서버로 파일 삭제 요청 보내기
-	    var fileName = $("#profileImg").val(); // 삭제할 파일 이름 가져오기
-	    var type = "image"; // 파일 타입 지정 (이미지 타입인 경우)
+	    var fileName = $(this).data("file"); // 삭제할 파일 이름 가져오기, 사진은 원본이지만 이름은 썸네일	    
+	    
 	    $.ajax({
 	        type: 'POST',
 	        url: '/deleteFile',
-	        data: {fileName: fileName, type: type}, // 파일 이름과 타입 함께 전송
+	        data: {fileName: fileName, type: "image"}, 
 	        beforeSend:function(xhr){
 	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
 	        },
@@ -244,21 +288,14 @@ $(document).ready(function(){
 	            console.error('파일 삭제 실패:', error);
 	        }
 	    });
-	});
-
+	});	
 	
-	/* 첨부파일 클릭시 이벤트 처리 */
-	$(".uploadResult").on("click", "li", function(e){
-		var element = $(e.target);
-		var liObj = $(this);
-		var path = encodeURIComponent(liObj.data("path")+"/"+liObj.data("uuid")+"_"+liObj.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
-		
-		//span이나 img일경우만 이벤트 >> x버튼은 삭제만 처리
-		if(element.is("span") || element.is("img")){
-			if(liObj.data("type")){
-				showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
-			}
-		}
+	// 프로필사진 더블클릭시 이벤트 처리 
+	$(".uploadProfile").on("dblclick", function(e){				
+		var img = $(this);
+		console.log(img);
+		var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
+		showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
 	});
 	
 	// 원본사진 확대보기 on
@@ -273,6 +310,36 @@ $(document).ready(function(){
 		setTimeout(() => {$(this).hide();}, 0);	// chrome의 ES6화살표함수
 		//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
 	});
+	
+	// 프로필사진 오프셋 조정
+	var profile = $('#profile');
+    var offsetX = 0;
+    var offsetY = 0;
+    var isDragging = false;
+
+    // 마우스를 눌렀을 때 이벤트 처리
+    profile.mousedown(function(e) {
+    	console.log("push");
+        isDragging = true;
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;        
+    });
+
+    // 마우스를 뗐을 때 이벤트 처리
+    $(document).mouseup(function() {
+    	console.log("up");
+        isDragging = false;
+    });
+
+    // 마우스를 움직였을 때 이벤트 처리
+    $(document).mousemove(function(e) {
+        if (isDragging) {
+        	console.log("drag");
+            var x = e.clientX - offsetX;
+            var y = e.clientY - offsetY;
+            $profileImage.css({ left: x + 'px', top: y + 'px' });
+        }
+    });
 	
     /* 체크박스 : 약관, 동의서 동의여부 체크 */
 	$("#checkbox").on("change", function(){        
@@ -290,7 +357,7 @@ $(document).ready(function(){
 		setTimeout(function() { $(element).focus(); }, 900);
 	}
 	
-	/* 빈칸 및 형식 체크 후 제출 */			
+	/* 유효성 체크 후 제출 */			
 	function checkInfo() {		
 		//입력칸 
 		var userid = $("input[name='userid']").val();
@@ -363,7 +430,7 @@ $(document).ready(function(){
 			modal("input[name='name']");
 		    return;				
 		}
-		
+		/*
 		if (gender === null || gender === "") {				
 			$(".modal-body").html("<p>성별을 체크해주세요</p>");
 			modal("select[name='gender']");
@@ -375,7 +442,7 @@ $(document).ready(function(){
 			modal("input[name='phone']");
 		    return;				
 		}
-		
+		*/
 		//이메일
 		if (email === "") {				
 			$(".modal-body").html("<p>이메일을 입력해주세요</p>");
@@ -386,7 +453,7 @@ $(document).ready(function(){
 			modal("input[name='email']"); 	        
 		   	return;
 		}
-		
+		/*
 		if (address === "") {				
 			$(".modal-body").html("<p>주소를 입력해주세요</p>");
 			modal("input[name='address']"); 
@@ -398,7 +465,7 @@ $(document).ready(function(){
 			modal("input[name='birth']"); 
 		    return;				
 		}	   
-	    
+	    */
 		// 생년월일이 오늘 이후인지 확인
 	    var birthDay = new Date(birth);
 	    var today = new Date();
@@ -414,7 +481,7 @@ $(document).ready(function(){
 			$(".modal-body").html("<p>가입약관 및 개인정보이용동의서를 확인해주세요</p>");
 			modal("#checkbox"); 
 		    return;					
-		}
+		}	 	
 	    
 		$("form").submit(); // 제출
 	}		
@@ -465,13 +532,13 @@ $(document).ready(function(){
 		});		
 	});
 	
-	/* 비밀번호 확인(형식 체크 및 일치 체크) */
+	/* 비밀번호 확인(유효성 및 일치여부 확인) */
 	$("#pwCheck").on("click", function() {		    
 	    var userpw = $("input[name='userpw']").val();
 	    var pwconfirm = $("input[name='pwconfirm']").val();
 	    var reg_pw = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*?[!@#$%^&*]).{6,12}/; 
 	    
-	    // 비밀번호 빈칸 & 형식체크
+	    // 비밀번호 빈칸 & 형식
 	    if(userpw === ""){
 	    	$(".modal-body").html("<p>비밀번호를 입력해주세요</p>");		
 			modal("input[name='userpw']");
@@ -483,7 +550,7 @@ $(document).ready(function(){
 	        return;
     	}   	
 	    
-	 	// 비밀번호 확인 빈칸 & 형식체크
+	 	// 비밀번호 확인 빈칸 & 형식
 	    if (pwconfirm === "") {
     		$(".modal-body").html("<p>비밀번호 확인란을 입력해주세요</p>");		
 			modal("input[name='pwconfirm']");
@@ -495,7 +562,7 @@ $(document).ready(function(){
 	        return;
     	}	    
 	    
-	 // 비밀번호 일치여부 확인
+		// 비밀번호 일치여부 확인
     	if (userpw === pwconfirm) {
     		$(".modal-body").html("<p>비밀번호가 일치합니다</p>");
     		modal("input[name='pwconfirm']");
