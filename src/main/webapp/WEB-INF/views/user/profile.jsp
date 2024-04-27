@@ -11,6 +11,12 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><i class="fa fa-user fa-fw"></i><strong><c:out value="${user.name}"/></strong><c:choose><c:when test="${auth.auth == '1'}">(관리자)</c:when><c:when test="${auth.auth == '2'}">(운영자)</c:when><c:when test="${auth.auth == '3'}">(일반회원)</c:when></c:choose>님의 회원정보</div>
 			<div class="panel-body">
+				<div class="col-lg-6" align="center" style="margin-top: 17px">
+					<label for="ProfileImg" style="font-size: 25px; margin:20px 0 20px 0">Profile</label><br>		
+					<div class="ProfileImg" style="width:400px; height:400px; border-radius: 200px; border:2px #ccc solid; box-shadow: 0px 0px 12px 0px rgb(193 181 181); overflow: hidden;  display:flex;justify-content: center;align-items: center; margin: 11px;">
+   						<!-- profile image -->    					
+   					</div>						
+				</div>
 				<div class="col-lg-6">				
 					<div class="form-group">						
 						<p><label for="userid">아이디</label></p>
@@ -50,7 +56,7 @@
 						</sec:authorize>				
 						<button class="btn btn-lg btn-default btn-lg" style="width:32%" id="backBtn" onclick="history.back()">뒤로가기</button>						
 					</div>
-				</div>
+				</div>	
 			</div>
 		</div>
 	</div>
@@ -219,8 +225,40 @@ $(document).ready(function(){
 	    if ($(e.target).hasClass("modal")) {
 	    	e.preventDefault();
 		    $("input[name='inputPw']").val("");		    
-	    }
+	    }	
 	});
+	
+	/* 첨부파일 조회화면 : 즉시실행함수*/
+	(function(){
+		var userid = '<c:out value="${user.userid}"/>';
+		$.getJSON("/user/getProfileImg", {userid:userid}, function(result){
+			var fileCallPath = encodeURIComponent(result.uploadPath+"/"+result.uuid+"_"+result.fileName);			            
+			$(".ProfileImg").html("<img src='/display?fileName="+fileCallPath+"' style='width:600px; height:600px;' data-path='"+result.uploadPath+"', data-uuid='"+result.uuid+"', data-filename='"+result.fileName+"', data-type='"+result.fileType+"'>");
+		});
+	})();
+	
+	// 프로필사진 클릭시 이벤트 처리 
+	$(".ProfileImg").on("click", "img", function(e){				
+		var img = $(this);
+		var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));
+		console.log(path);
+		showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
+	});
+	
+	// 원본사진 확대보기 on
+	function showImage(fileCallPath){	
+		console.log(fileCallPath);
+		$(".picWrap").css("display","flex").show(); // none > flex 설정 변경
+		$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행 
+	}
+	
+	// 원본사진 확대보기 off 
+	$(".picWrap").on("click", function(e){
+		$(".pic").animate({width:'0%', height:'0%'}, 0); // (0%*0%) 로 0.3초 후 크기변경
+		setTimeout(() => {$(this).hide();}, 0);	// chrome의 ES6화살표함수
+		//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
+	});
+	
 });	
 </script>
 
