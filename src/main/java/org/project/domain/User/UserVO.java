@@ -8,6 +8,7 @@ import org.project.domain.Album.AlbumReplyVO;
 import org.project.domain.Album.AlbumVO;
 import org.project.domain.Board.BoardReplyVO;
 import org.project.domain.Board.BoardVO;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
@@ -23,6 +24,7 @@ public class UserVO {
 	private String zonecode;
 	private String address;
 	private String addressDetail;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birth;
 	private Date regdate;
 	private Date updateDate;

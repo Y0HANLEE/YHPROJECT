@@ -79,7 +79,7 @@
 	<!-- 회원등록-정보 -->
 	<insert id="insertUser" parameterType="org.project.domain.User.UserVO">
 		insert into users (uno, userid, userpw, name, phone, email, address, birth, regdate, updatedate, enabled, gender, zonecode, addressdetail) 
-    	values (seq_users.nextval, #{userid}, #{userpw}, #{name}, #{phone}, #{email}, #{address}, #{birth}, sysdate, sysdate, #{enabled}, #{gender}, #{zonecode}, #{addressDetail})
+    	values (seq_users.nextval, #{userid}, #{userpw}, #{name}, #{phone}, #{email}, #{address}, #{birth, jdbcType=DATE}, sysdate, sysdate, #{enabled}, #{gender}, #{zonecode}, #{addressDetail})
 	</insert>
 	<!-- 회원등록-권한 : 기본_일반회원(3)-->
 	<insert id="insertAuth" parameterType="org.project.domain.User.UserVO">	    
