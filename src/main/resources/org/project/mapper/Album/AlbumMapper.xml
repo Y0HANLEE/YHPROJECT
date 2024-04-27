@@ -6,7 +6,7 @@
 		<selectKey keyProperty="ano" order="BEFORE"	resultType="long"> 
 			select seq_album.nextval from dual 
 		</selectKey> 
-		insert into album (ano, location, title, content, writer, startdate, enddate) values (#{ano}, #{location}, #{title}, #{content}, #{writer}, #{startDate, jdbcType=DATE}, #{endDate, jdbcType=DATE})<!--  #{startDate}, #{endDate}) -->
+		insert into album (ano, location, title, content, writer, startdate, enddate) values (#{ano}, #{location}, #{title}, #{content}, #{writer}, #{startDate, jdbcType=DATE}, #{endDate, jdbcType=DATE})
 	</insert>
 	
 	

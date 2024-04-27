@@ -40,10 +40,10 @@
 							<input type="checkbox" name="remember-me" class="checkbox">&nbsp;<label id="remember-me"> Remember me</label>
 						</div>
 						<a href="/" class="btn btn-lg btn-success btn-block" id="loginBtn">로그인</a>
-						<div class="col-lg-12 text-center mt-3">
+						<%-- <div class="col-lg-12 text-center mt-3">
 						    <button class="btn btn-block waves-effect waves-light btn-rounded btn-outline-info mb-3">로그인하기</button>
 						    <img alt="카카오로그인" src="${pageContext.request.contextPath}/resources/assets/img/kakao_login_medium_wide.png" onclick="loginWithKakao()">
-						</div>
+						</div> --%>
 						<a href="/user/join" class="btn btn-lg btn-default btn-block">회원가입</a>
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					</fieldset>

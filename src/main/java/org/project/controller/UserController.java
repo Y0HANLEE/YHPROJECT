@@ -1,8 +1,6 @@
 package org.project.controller;
 
 import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.project.domain.MyCriteria;
 import org.project.domain.PageDTO;
@@ -12,7 +10,6 @@ import org.project.domain.User.UserVO;
 import org.project.service.MailService;
 import org.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,12 +46,12 @@ public class UserController {
 	@Setter(onMethod_=@Autowired)
 	private MailService mservice;
 	
-	/*날짜 수집 관련*/
+	/*날짜 수집 관련
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");	    
 	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
-	}
+	}*/
 	
 	/* 회원가입 화면 */
 	@PreAuthorize("isAnonymous()")
@@ -69,7 +64,7 @@ public class UserController {
 	@Transactional
 	@PostMapping("/join")
 	public String join(UserVO user, AuthVO auth, RedirectAttributes rttr) {
-		user.setUserpw(pwEncoder.encode(user.getUserpw()));			
+		user.setUserpw(pwEncoder.encode(user.getUserpw()));
 		uservice.join(user, auth);
 		rttr.addFlashAttribute("result", user.getUserid()+"님 회원가입을 축하드립니다.");
 		log.info("[controller]------------------------------"+user);
