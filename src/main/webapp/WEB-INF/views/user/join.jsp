@@ -94,10 +94,10 @@
 					<!-- 보안:사이트간 요청 위조방지. spring security에서 post방식을 이용하는 경우 사용.-->
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<!-- 프로필사진 정보 -->
-					<input type="hidden" name="profileImg.fileName">
-					<input type="hidden" name="profileImg.uuid">
-					<input type="hidden" name="profileImg.uploadPath">
-					<input type="hidden" name="profileImg.fileType">
+					<input type="hidden" name="profileImg.uploadPath" value="2024\\04\\27">
+					<input type="hidden" name="profileImg.uuid" value="ed87212c-4e79-4813-be6c-8c73ac58ac33">
+					<input type="hidden" name="profileImg.fileName" value="Default-Profile.png">
+					<input type="hidden" name="profileImg.fileType" value="true">
 				</form>		
 				<div class="pull-right">
 					<button class="btn btn-lg btn-success btn-block" style="width:300px; align-content: center; margin-right: 16px" id="joinBtn">회원가입</button>
@@ -160,15 +160,26 @@ $(document).ready(function(){
 		checkInfo();			
 	});
 	
-	//"동의합니다" 클릭이벤트
-	$("#agree").on("click", function(e){
-		e.preventDefault();
-		var check = $("#checkbox");
-		
-		if(check.prop("checked")){ //prop:property(속성) checked가 true/false를 변화시킴
-			check.prop("checked", false); // 만일 체크되어있으면 해제
+	// 체크박스 : 약관, 동의서 동의여부 체크
+	$("#checkbox").on("change", function(){        
+		if (checkbox.checked) {
+			checkbox.value = "Y"; 	        
 		} else {
-			check.prop("checked", true);  // 아니면 체크
+			checkbox.value = "N";
+		} 
+	});
+	
+	//"동의합니다" 클릭이벤트
+	$("#agree").on("mousedown", function(e){
+		e.preventDefault();
+		var checkbox = $("#checkbox");
+		
+		if(checkbox.prop("checked")){ //prop:property(속성) checked가 true/false를 변화시킴
+			checkbox.prop("checked", false); // 만일 체크되어있으면 해제
+			checkbox.val("N");
+		} else {
+			checkbox.prop("checked", true);  // 아니면 체크
+			checkbox.val("Y");
 		}
 	});
 
@@ -243,14 +254,9 @@ $(document).ready(function(){
                  // 업로드된 이미지 정보 가져오기
             		var profileData = $(".uploadProfile");        		
             		// hidden input에 이미지 정보 설정
-            		$("input[name='profileImg.fileName']").val(profileData.data("path"));
+            		$("input[name='profileImg.uploadPath']").val(profileData.data("path"));
             		$("input[name='profileImg.uuid']").val(profileData.data("uuid"));
-            		$("input[name='profileImg.uploadPath']").val(profileData.data("filename"));
-            		$("input[name='profileImg.fileType']").val(profileData.data("type"));
-            		console.log(profileData.data("path"));
-            		console.log(profileData.data("uuid"));
-            		console.log(profileData.data("filename"));
-            		console.log(profileData.data("type"));
+            		$("input[name='profileImg.fileName']").val(profileData.data("filename"));            		           		
                 }
                 reader.readAsDataURL(file);
              
@@ -272,7 +278,7 @@ $(document).ready(function(){
 	    $(".uploadProfile").html('<img src="/resources/img/Default-Profile.png" style="width:300px; height:300px;">'); 
 	    
 	    // 서버로 파일 삭제 요청 보내기
-	    var fileName = $(this).data("file"); // 삭제할 파일 이름 가져오기, 사진은 원본이지만 이름은 썸네일	    
+	    var fileName = $(this).data("file"); // 삭제할 파일 이름 가져오기, 사진은 원본이지만 이름은 썸네일
 	    
 	    $.ajax({
 	        type: 'POST',
@@ -283,6 +289,9 @@ $(document).ready(function(){
 	        },
 	        success: function(result){
 	            console.log('파일 삭제 성공');
+	            $("input[name='profileImg.uploadPath']").val("2024\\04\\27");	            
+	            $("input[name='profileImg.uuid']").val("ed87212c-4e79-4813-be6c-8c73ac58ac33");
+	            $("input[name='profileImg.fileName']").val("Default-Profile.png");	            
 	        },
 	        error: function(xhr, status, error) {
 	            console.error('파일 삭제 실패:', error);
@@ -340,16 +349,7 @@ $(document).ready(function(){
             $profileImage.css({ left: x + 'px', top: y + 'px' });
         }
     });
-	
-    /* 체크박스 : 약관, 동의서 동의여부 체크 */
-	$("#checkbox").on("change", function(){        
-		if (checkbox.checked) {
-			checkbox.value = "Y"; 	        
-		} else {
-			checkbox.value = "N";
-		} 
-	});
-    
+	       
 	/* modal창 설정 */
 	function modal(element){
 		$("#myModal").modal("show");
