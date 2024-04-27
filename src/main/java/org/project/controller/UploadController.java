@@ -54,109 +54,60 @@ public class UploadController {
 		}		
 		return false; // 기본적으로는 이미지 파일이 아닌 것으로 판단
 	}
-	
-	/* ajax방식 파일 업로드페이지 
-	@GetMapping("/uploadAjax")
-	public void uploadAjax() {
-		
-	}*/
-	
-	/* 단일파일 저장 *//*
-	@PostMapping("/uploadSingle")
-	public String singleFileUpload(@RequestParam("profileImg")MultipartFile profileImg) {
-		
-		// 1. 전송받은 파일 및 파일설명 값 가져오기
-		log.info("singleFile : " + profileImg);
-		
-		
-		// 2. 저장할 경로 가져오기
-		String uploadFolder = "C:\\upload"; // 업로드 할 폴더 경로
-		File uploadPath = new File(uploadFolder, getFolder()); // 새 폴더는 오늘 날짜 이름으로 한다.			
-		
-		// 같은 이름의 폴더가 없다면 새 폴더를 생성한다.
-		if(uploadPath.exists() == false) {
-			uploadPath.mkdirs();
-		}			
-		
-		// 업로드할 폴더 설정
-		String uploadFileName = profileImg.getOriginalFilename();
-		UUID uuid = UUID.randomUUID(); // UUID(고유ID_난수)
 
-		//IE브라우저 파일 경로
-		FileDTO file = new FileDTO();
-		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
-		file.setFileName(uploadFileName);
-		
-		//중복방지를 위한 UUID적용
-		uploadFileName = uuid.toString()+"_"+uploadFileName;
-				
-		// 파일업로드
-		try {
-			File saveFile = new File(uploadPath, uploadFileName);
-			profileImg.transferTo(saveFile);
-			
-			if(checkImg(saveFile)) {
-				file.setImg(true);					
-				FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_"+uploadFileName)); //썸네일은 "s_uuid_파일명"으로 저장(outputstream-출력)					
-				Thumbnailator.createThumbnail(profileImg.getInputStream(), thumbnail, 100, 100);//썸네일파일명, 100*100사이즈로 썸네일 생성(inputstream-입력)					
-				thumbnail.close();
-			}
-			log.info("파일 업로드 성공");
-		} catch (IllegalStateException | IOException e) {
-			log.info("파일 업로드 실패");
-			e.printStackTrace();
-		}
-		
-		return "result";
-	}*/
-	
-	/* 단일파일 저장 */
+	/* 단일 파일 업로드 */	
 	@ResponseBody
-	@PostMapping(value="/uploadSingle", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<FileDTO> singleFileUpload(@RequestParam("singleFile")MultipartFile singleFile) {
-		
-		// 1. 전송받은 파일 및 파일설명 값 가져오기
-		log.info("singleFile : " + singleFile);
-		String uploadFolder = "C:\\upload"; // 업로드 할 폴더 경로
-		File uploadPath = new File(uploadFolder, getFolder()); // 새 폴더는 오늘 날짜 이름으로 한다.
-		String uploadFolderPath = getFolder(); // 업로드폴더 이름				
+	@PostMapping("/uploadSingle")
+	public ResponseEntity<FileDTO> singleFileUpload(@RequestParam("singleFile") MultipartFile singleFile) {
+	    // 파일 정보를 저장할 객체 생성
+	    FileDTO file = new FileDTO();
+	    
+	    try {
+	        // 업로드할 폴더 설정
+	        String uploadFolder = "C:\\upload";
+	        File uploadPath = new File(uploadFolder, getFolder());
+	        String uploadFolderPath = getFolder();
 
-		// 같은 이름의 폴더가 없다면 새 폴더를 생성한다.
-		if(uploadPath.exists() == false) {
-			uploadPath.mkdirs();
-		}
-		
-		FileDTO file = new FileDTO();// FileDTO객체 생성
-		String uuid = UUID.randomUUID().toString(); // uuid생성
-		try {
-	        String originalFilename = singleFile.getOriginalFilename(); //파일명
-	        String uploadFileName = uuid+ "_" + originalFilename;		//업로드명 : uuid_파일명
-	        
-	        //IE브라우저 파일 경로
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1); // IE의 경우 이름을 다르게			
-			file.setFileName(uploadFileName); // file의 fileName으로 uploadFileName지정
+	        // 같은 이름의 폴더가 없다면 새 폴더를 생성
+	        if (!uploadPath.exists()) {
+	            uploadPath.mkdirs();
+	        }
 
-	        File saveFile = new File(uploadPath, uploadFileName);//저장경로, 업로드명	
-	        singleFile.transferTo(saveFile);// 업로드된 파일을 지정된 경로에 저장
-	        
-	        file.setUuid(uuid); // file의 uuid저장
-			file.setUploadPath(uploadFolderPath); //file의 uploadpath저장
-			
-			//img check
-			if(checkImg(saveFile)) {
-				file.setImg(true);					
-				FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_"+uploadFileName)); //썸네일은 "s_uuid_파일명"으로 저장(outputstream-출력)					
-				Thumbnailator.createThumbnail(singleFile.getInputStream(), thumbnail, 100, 100);//썸네일파일명, 100*100사이즈로 썸네일 생성(inputstream-입력)					
-				thumbnail.close();
-			}	
-			log.info("[UploadController]-----------------fileName:"+file.getFileName()+", uuid:"+file.getUuid()+", path:"+file.getUploadPath()+", type? : "+file.isImg());
-	        // 업로드된 파일 정보 저장 등 추가 작업 가능
-	        return new ResponseEntity<>(file, HttpStatus.OK); // file객체 리턴
+	        // UUID 생성
+	        String uuid = UUID.randomUUID().toString();
+
+	        // 업로드할 파일명 설정
+	        String originalFilename = singleFile.getOriginalFilename();
+	        String uploadFileName = uuid + "_" + originalFilename;
+
+	        // IE 브라우저 파일 경로 처리
+	        uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+
+	        // 파일 저장
+	        File saveFile = new File(uploadPath, uploadFileName);
+	        singleFile.transferTo(saveFile);
+
+	        // 파일 정보 설정
+	        file.setFileName(originalFilename);
+	        file.setUuid(uuid);
+	        file.setUploadPath(uploadFolderPath);
+
+	        // 이미지인지 확인 후 썸네일 생성_프로필이미지이므로 더 작게
+	        if (checkImg(saveFile)) {
+	            file.setImg(true);
+	            File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
+	            FileOutputStream thumbnail = new FileOutputStream(thumbnailFile);
+	            Thumbnailator.createThumbnail(singleFile.getInputStream(), thumbnail, 30, 30);
+	            thumbnail.close();
+	        }
+
+	        return new ResponseEntity<>(file, HttpStatus.OK);
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+
 	
 	/* ajax방식 다중파일 저장 + 인증된 사용자(로그인) */	
 	@ResponseBody
@@ -271,6 +222,8 @@ public class UploadController {
 	@ResponseBody
 	@PostMapping("/deleteFile")
 	public ResponseEntity<String> deleteFile(String fileName, String type){
+		//기본사진이 썸네일인 경우 : 게시판의 첨부파일목록에 있는 사진들. (register, modify에서 사용)
+		log.info("[UploadController]Delete file-------------"+fileName);
 		File file;
 		
 		try {
@@ -288,6 +241,5 @@ public class UploadController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}		
 		return new ResponseEntity<>("deleted", HttpStatus.OK);
-	}
-	
+	}	
 }
