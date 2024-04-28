@@ -1,6 +1,6 @@
 package org.project.mapper;
 
-import org.project.domain.ProfileImageVO;
+import org.project.domain.User.ProfileImageVO;
 
 public interface ProfileImageMapper {
 	//µî·Ï

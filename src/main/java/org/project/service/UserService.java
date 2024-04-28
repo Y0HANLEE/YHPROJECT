@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.project.domain.Criteria;
 import org.project.domain.MyCriteria;
-import org.project.domain.ProfileImageVO;
 import org.project.domain.Album.AlbumReplyVO;
 import org.project.domain.Album.AlbumVO;
 import org.project.domain.Board.BoardReplyVO;
 import org.project.domain.Board.BoardVO;
 import org.project.domain.User.AuthVO;
+import org.project.domain.User.ProfileImageVO;
 import org.project.domain.User.UserVO;
 import org.springframework.stereotype.Service;
 

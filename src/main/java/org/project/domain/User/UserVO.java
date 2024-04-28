@@ -3,7 +3,6 @@ package org.project.domain.User;
 import java.util.Date;
 import java.util.List;
 
-import org.project.domain.ProfileImageVO;
 import org.project.domain.Album.AlbumReplyVO;
 import org.project.domain.Album.AlbumVO;
 import org.project.domain.Board.BoardReplyVO;

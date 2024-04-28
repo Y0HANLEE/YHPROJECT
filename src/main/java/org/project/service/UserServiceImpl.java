@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.project.domain.Criteria;
 import org.project.domain.MyCriteria;
-import org.project.domain.ProfileImageVO;
 import org.project.domain.Album.AlbumReplyVO;
 import org.project.domain.Album.AlbumVO;
 import org.project.domain.Board.BoardReplyVO;
 import org.project.domain.Board.BoardVO;
 import org.project.domain.User.AuthVO;
+import org.project.domain.User.ProfileImageVO;
 import org.project.domain.User.UserVO;
 import org.project.mapper.ProfileImageMapper;
 import org.project.mapper.UserMapper;
@@ -37,17 +37,8 @@ public class UserServiceImpl implements UserService{
 		umapper.insertAuth(auth); // 권한 등록
 		
 		ProfileImageVO profile = user.getProfileImg();
-		
-		if(profile == null) { //프로필사진x
-			ProfileImageVO img = user.getProfileImg();
-			img.setUserid(user.getUserid()); // profile의 userid를 user의 userid로 입력
-			img.setUploadPath("/resources/img");    // 프로필을 따로 선택하지 않았다면
-			img.setFileName("Default-Profile.png"); // 기본프로필이미지로 등록
-			pmapper.insert(img); // 지정된 userid값으로 프로필사진 등록
-		} else { //프로필사진o
-			profile.setUserid(user.getUserid()); 
-			pmapper.insert(profile); 
-		}
+		profile.setUserid(user.getUserid()); 
+		pmapper.insert(profile);		
 	}
 		
 	/* 사용자 정보 조회*/
