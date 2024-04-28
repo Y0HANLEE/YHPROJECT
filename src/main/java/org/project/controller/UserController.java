@@ -4,8 +4,8 @@ import java.security.Principal;
 
 import org.project.domain.MyCriteria;
 import org.project.domain.PageDTO;
-import org.project.domain.ProfileImageVO;
 import org.project.domain.User.AuthVO;
+import org.project.domain.User.ProfileImageVO;
 import org.project.domain.User.UserVO;
 import org.project.service.MailService;
 import org.project.service.UserService;
@@ -46,18 +46,10 @@ public class UserController {
 	@Setter(onMethod_=@Autowired)
 	private MailService mservice;
 	
-	/*날짜 수집 관련
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");	    
-	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
-	}*/
-	
 	/* 회원가입 화면 */
 	@PreAuthorize("isAnonymous()")
 	@GetMapping("/join")
-	public void join() {		
-	}
+	public void join() {}
 	
 	/* 회원가입 처리 */
 	@PreAuthorize("isAnonymous()")
@@ -111,7 +103,8 @@ public class UserController {
 		return result;
 	}	
 			
-	/* 본인확인 : 비밀번호 검증 */		
+	/* 본인확인 : 비밀번호 검증 */	
+	@PreAuthorize("principal.username == #user.userid")
 	@ResponseBody	
 	@PostMapping("/checkUser")
 	public int checkUser(Principal principal, @RequestBody UserVO user) throws Exception {
@@ -128,6 +121,7 @@ public class UserController {
 	}
 	   
 	/* 비밀번호 수정 */
+	@PreAuthorize("principal.username == #userid")
 	@PostMapping("/updatePw")
 	public String updatePassword(Principal principal, @RequestParam("newPw") String newPw, @RequestParam("userid") String userid, @RequestParam("oldPw") String oldPw, RedirectAttributes rttr) {
 		 	UserVO user = uservice.read(principal.getName()); // DB에서 가져오는 객체 user
@@ -143,10 +137,9 @@ public class UserController {
 			return "redirect:/user/update?userid="+userid; 
 		}
 	}
-	
-	
-		
-	/* 회원탈퇴 */	
+			
+	/* 회원탈퇴 */
+	@PreAuthorize("principal.username == #userid")
 	@Transactional
 	@PostMapping("/delete")
 	public String deleteUser(@RequestParam("userid") String userid, RedirectAttributes rttr) throws Exception {		
@@ -157,6 +150,7 @@ public class UserController {
 	}
 	
 	/* 내가 쓴 게시글(일반/사진) 조회 */	
+	@PreAuthorize("principal.username == #cri.userid")
 	@GetMapping("/contents")
 	public void getMyContentList(MyCriteria cri, Model model) {
 		cri.setAmount(10000);
@@ -171,7 +165,8 @@ public class UserController {
 		model.addAttribute("albumPage", new PageDTO(cri, uservice.getAlbumCnt(user)));
 	}
 	
-	/* 내가 쓴 댓글(일반/사진) 조회 */	
+	/* 내가 쓴 댓글(일반/사진) 조회 */
+	@PreAuthorize("principal.username == #cri.userid")
 	@GetMapping("/comments")
 	public void getMyCommentList(MyCriteria cri, Model model) {
 		cri.setAmount(10000);
