@@ -24,6 +24,7 @@
 		<collection property="albumReplyList" resultMap="albumReplyMap"/>
 		<collection property="boardList" resultMap="boardMap"/>
 		<collection property="boardReplyList" resultMap="boardReplyMap"/>
+		<collection property="profileImg" resultMap="profileMap"/>
 	</resultMap>
 	
 	<resultMap type="org.project.domain.User.AuthVO" id="authMap">
@@ -76,6 +77,14 @@
 		<result property="boardType" column="boardtype"/>		
 	</resultMap>
 	
+	<resultMap type="ProfileImageVO" id="profileMap">		
+		<result property="userid" column="userid"/>		
+		<result property="uuid" column="uuid"/>
+		<result property="fileName" column="filename"/>
+		<result property="uploadPath" column="uploadpath"/>
+		<result property="fileType" column="filetype"/>		
+	</resultMap>
+	
 	<!-- 회원등록-정보 -->
 	<insert id="insertUser" parameterType="org.project.domain.User.UserVO">
 		insert into users (uno, userid, userpw, name, phone, email, address, birth, regdate, updatedate, enabled, gender, zonecode, addressdetail) 
@@ -89,8 +98,9 @@
 		
 	<!-- 회원정보조회 -->
 	<select id="read" resultMap="UserMap">
-		select u.userid, userpw, name, gender, phone, email, zonecode, address, addressdetail, birth, regdate, updatedate, auth 
+		select u.userid, userpw, name, gender, phone, email, zonecode, address, addressdetail, birth, regdate, updatedate, auth, p.uuid, p.filename, p.uploadpath, p.filetype 
 		from users u left outer join auth a on u.userid=a.userid
+					 left outer join profile p on u.userid=p.userid
 		where u.userid = #{userid}
 	</select>	
 	<!-- 회원등급조회 -->
