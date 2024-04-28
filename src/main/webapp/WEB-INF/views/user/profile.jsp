@@ -2,68 +2,74 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<title>회원정보조회</title>
 <%@ include file="../includes/header.jsp"%>
-<title>회원정보페이지</title>
 
 <!-- 본문-->
 <div class="row">
-	<div class="col-lg-12" style="margin-top:30px">
+	<div id="userCol12" class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading"><i class="fa fa-user fa-fw"></i><strong><c:out value="${user.name}"/></strong><c:choose><c:when test="${auth.auth == '1'}">(관리자)</c:when><c:when test="${auth.auth == '2'}">(운영자)</c:when><c:when test="${auth.auth == '3'}">(일반회원)</c:when></c:choose>님의 회원정보</div>
 			<div class="panel-body">
-				<div class="col-lg-6" align="center" style="margin-top: 17px">
-					<label for="ProfileImg" style="font-size: 25px; margin:20px 0 20px 0">Profile</label><br>		
-					<div class="ProfileImg" style="width:400px; height:400px; border-radius: 200px; border:2px #ccc solid; box-shadow: 0px 0px 12px 0px rgb(193 181 181); overflow: hidden;  display:flex;justify-content: center;align-items: center; margin: 11px;">
+				<div id="userCol6left" class="col-lg-6" align="center">
+					<label id="profile_ProfileLabel" for="ProfileImg">Profile</label><br>		
+					<div id="profile_ProfileFrame" class="ProfileImg">
    						<!-- profile image -->    					
    					</div>						
 				</div>
 				<div class="col-lg-6">				
 					<div class="form-group">						
 						<p><label for="userid">아이디</label></p>
-						<input class="form-control" type="text" name="userid" id="userid" value="${user.userid}" readonly>							
+						<input id="userid" class="form-control" name="userid" value="${user.userid}" readonly>							
 					</div>			
 					<div class="form-group">
 						<label for="name">이름</label>
-						<input class="form-control" type="text" name="name" value="${user.name}" readonly>						
+						<input class="form-control" name="name" value="${user.name}" readonly>						
 					</div>
 					<div class="form-group">
 						<label for="gender">성별</label>
-						<input class="form-control" type="text" name="gender" value="${user.gender=='M'?'남자':'여자'}" readonly>
+						<input class="form-control" name="gender" value="${user.gender=='M'?'남자':'여자'}" readonly>
 					</div>
 					<div class="form-group">
 						<label for="phone">전화번호</label>
-						<input class="form-control" type="text" name="phone" value="${user.phone}" readonly>
+						<input class="form-control" name="phone" value="${user.phone}" readonly>
 					</div>
 					<div class="form-group">
 						<label for="email">이메일</label>
-						<input class="form-control" type="email" name="email" value="${user.email}" readonly>
+						<input class="form-control" name="email" type="email" value="${user.email}" readonly>
 					</div>
 					<div class="form-group">
 						<label for="address">주소</label>
-						<input class="form-control" type="text" name="address" value="(${user.zonecode}) ${user.address}. ${user.addressDetail}" readonly>
+						<c:choose>
+							<c:when test="${user.zonecode ne null || useraddressDetail ne null}">
+								<input class="form-control" name="address" value="(${user.zonecode}) ${user.address}. ${user.addressDetail}" readonly>
+							</c:when>
+							<c:when test="${user.zonecode eq null || useraddressDetail eq null }">
+								<input class="form-control" name="address" value="" readonly>
+							</c:when>
+						</c:choose>
 					</div>
 					<div class="form-group">
 						<label for="birth">생년월일</label>
-						<input class="form-control" type="text" name="birth" value="<fmt:formatDate pattern="yyyy-MM-dd" value='${user.birth}'/>" readonly>
+						<input class="form-control" name="birth" value="<fmt:formatDate pattern="yyyy-MM-dd" value='${user.birth}'/>" readonly>
 					</div>		
-					<div class="form-group" style="margin-top: 30px;">		
+					<div id="buttonZone" class="form-group">		
 						<sec:authentication property="principal" var="principal"/>					
 						<sec:authorize access="isAuthenticated()">
 							<c:if test="${principal.username eq user.userid}">
-								<button class="btn btn-lg btn-info btn-lg" style="width:33%" id="updateBtn">수정하기</button>						
-								<button class="btn btn-lg btn-default btn-lg " style="width:33%;" id="deleteBtn" >회원탈퇴</button>
+								<button id="updateBtn" class="btn btn-lg btn-info btn-lg">수정하기</button>						
+								<button id="deleteBtn" class="btn btn-lg btn-default btn-lg ">회원탈퇴</button>
 							</c:if>
 						</sec:authorize>				
-						<button class="btn btn-lg btn-default btn-lg" style="width:32%" id="backBtn" onclick="history.back()">뒤로가기</button>						
+						<button id="backBtn" class="btn btn-lg btn-default btn-lg" onclick="history.back()">뒤로가기</button>						
 					</div>
 				</div>	
 			</div>
 		</div>
 	</div>
 </div>	
-
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -82,7 +88,7 @@
 		</div>
 	</div>
 </div>
- 
+<!-- 본문 script -->
 <script type="text/javascript">
 $(document).ready(function(){		
 	var result = '<c:out value="${result}"/>';	
@@ -99,7 +105,7 @@ $(document).ready(function(){
 		}				
 		$(".modal-title").html("Success");
 		$(".modal-body").html(result);
-		$(".modal-footer").html('<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+		$(".modal-footer").html('<button class="btn btn-default" data-dismiss="modal">Close</button>');
 		$("#myModal").modal("show");
 		setTimeout(function() { $("#myModal").modal("hide"); }, 800);		
 	} 	
@@ -116,8 +122,8 @@ $(document).ready(function(){
 	function checkPwModal(){
 		var userid =  "${user.userid}";
 		$(".modal-title").html('<h4 class="modal-title">본인확인</h4>');			
-		$(".modal-body").html('<input class="form-control" type="password" name="inputPw" id="inputPw" placeholder="비밀번호를 입력해주세요">');
-		$(".modal-footer").html('<button type="button" class="btn btn-default" id="checkPwBtn">확인</button><button type="button" class="btn btn-default" id="closeBtn">닫기</button>');
+		$(".modal-body").html('<input id="inputPw" class="form-control" name="inputPw" type="password" placeholder="비밀번호를 입력해주세요">');
+		$(".modal-footer").html('<button class="btn btn-default" id="checkPwBtn">확인</button><button id="closeBtn" class="btn btn-default">닫기</button>');
 		$("#myModal").modal("show");
 	}	
 	

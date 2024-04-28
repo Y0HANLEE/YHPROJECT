@@ -175,26 +175,121 @@ td.thumb img{
 	white-space: pre-wrap;
 }
 
-/*join 프로필*/
+/*join.jsp*/
+#userCol12{
+	margin-top:30px;
+}
+#userCol6left{
+	margin-top:17px;
+}
 .uploadProfile {    
     background-image: url('/resources/img/Default-Profile.png');    
-	width: 150px;
-    height: 200px;    
+	width: 300px;
+    height: 300px;    
     background-size: cover;    
     background-position: center;    
     background-size: contain;/* 기본 이미지의 최대 너비와 높이를 설정합니다. */    
     background-position: center;/* 배경 이미지가 가운데 정렬되도록 설정합니다. */    
     background-repeat: no-repeat;/* 배경 이미지가 반복되지 않도록 설정합니다. */
     display: flex;
-    align-items: center;
+    align-items: center;    
 }
 .uploadProfile img {
     display: block; /* 이미지를 블록 요소로 설정하여 가운데 정렬을 용이하게 합니다. */
     margin: 0 auto; /* 가운데 정렬을 설정합니다. */
 }
+.essential{
+	color:red; 
+	font-size:10px
+}
+#joinBtn{
+	width:300px; align-content: center; margin-right: 16px;
+}
+#searchAddressBtn{
+	width:20%; height:34px;
+}
+#address_kakao{
+	margin-bottom: 5px;
+}
+#zonecode{
+	 width:30%;
+}
+#agreeZone{
+	display:flex; align-items: center; justify-content: flex-end;
+}
+#agree{
+	margin:4px 0 0 5px; 
+}
+#paperZone{
+	 margin-top: 38px;
+}
+#addressZone{
+	display:flex; margin-bottom: 5px;
+}
+#join_ProfileFrame{
+	width:200px; height:200px; 
+	border-radius:100px; overflow: hidden;  
+	display:flex; justify-content: center; align-items: center; 
+	margin: 11px;
+	border: 5px solid white; box-sizing: border-box; /* 프레임. 테두리를 기준으로 크기 조정 */
+}
+#singleFile{
+	display: none;
+}
+#profile{
+	width:300px; height:300px;
+}
+#profileZone{
+	margin:0px;
+}
 
+/*profile.jsp*/
+#profile_ProfileLabel{
+	 font-size: 25px; margin:20px 0 20px 0;
+}
+#profile_ProfileFrame, #update_ProfileFrame{
+	width:400px; height:400px; 
+	border-radius: 200px; 
+	border:15px white solid; box-sizing:border-box; /* 테두리 */
+	box-shadow: 0px 0px 12px 0px rgb(193 181 181); overflow: hidden;  
+	display:flex; justify-content: center; align-items: center; 
+	margin: 11px;
+}
+#buttonZone{
+	margin-top: 30px;
+	display: flex; justify-content:space-between;
+}
+#updateBtn,#deleteBtn,#backBtn{
+	width: 32.5%;
+}
+
+/* update.jsp */
+#update_PRofileLabel{
+	margin:30px 0; font-size: 25px;
+}
+#findImgBtn,#resetImgBtn,#removeImgBtn{
+	margin-top:30px;
+}
+#passBtn{
+	width: 32.5%;	
+}
+#profile_big {
+	width:600px; height:600px;
+}
 
 /*mycontents, mycomments 테이블 설정*/
+#myContent{
+	display: flex; justify-content: space-between;
+}
+.myComDiv{
+	height:90%
+}
+.myComHr{
+	margin:0px;
+}
+.myComDiv2{
+	height: 10%;
+}
 .tableList{
 	text-align:center; 
 	justify-content: center;

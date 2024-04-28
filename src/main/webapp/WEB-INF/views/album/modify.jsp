@@ -1,19 +1,12 @@
-<%@page import="org.project.service.Album.AlbumService"%>
-<%@page import="org.project.service.UserService"%>
-<%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
-<%@page import="org.springframework.security.core.Authentication"%>
-<%@page import="org.project.domain.Album.AlbumVO"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<title>게시글수정</title>
 <%@ include file="../includes/header.jsp"%>
-<title>게시글수정 no.<c:out value="${album.ano}"/></title>
-
 <!-- 본문-->
 <div class="row">
-	<div class="col-lg-12" style="margin-top: 30px">
+	<div id="userCol12" class="col-lg-12">
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
 			<div class="panel-heading">	Album Modify Page</div>			
@@ -38,9 +31,9 @@
 					        <i class="fa fa-map-marker fa-fw"></i><label>여행지</label><br>
 					        <input class="form-control" name="location" value="${album.location}">
 					    </div>
-				        <div class="col-lg-6" style="max-width: 470px;">
+				        <div id="tripDateZone" class="col-lg-6" style="max-width: 470px;">
 					        <i class="fa fa-calendar fa-fw"></i> <label>여행일정</label><br>
-					        <div style="display: flex">
+					        <div id="tripDate_dateZone" style="display: flex">
 					        	<input class="form-control" type="date" name="startDate" id="startDate" style="max-width:250px" max="${today}" value="${start}">
 						        <span style="margin: 5px 10px;">-</span>
 						        <input class="form-control" type="date" name="endDate" id="endDate" style="max-width:250px" max="${today}" value="${end}">						        
@@ -60,7 +53,7 @@
 					<hr>
 					<div class="form-group">
 						<i class="fa fa-pencil fa-fw"></i><label>Content</label>
-						<textarea class="form-control" rows="10" name="content"><c:out value="${album.content}"/></textarea>						
+						<textarea class="form-control" name="content" rows="10"><c:out value="${album.content}"/></textarea>						
 					</div>
 					<div class="pull-right">
 						<!-- 작성자 = 로그인된 사용자인 경우만 Modify, Remove버튼 활성화 -->
@@ -72,7 +65,7 @@
 							</c:if>					
 						</sec:authorize>
 						<button type="submit" data-oper="list" class="btn btn-default">목록으로</button>
-						<button type="button" class="btn btn-default" onclick="history.back()">뒤로가기</button>
+						<button class="btn btn-default" onclick="history.back()">뒤로가기</button>
 					</div>
 					
 					<!-- AlbumController get()_modify의 @ModelAttribute("cri")로 인해 수집된 정보 -->
@@ -83,18 +76,17 @@
 					<input type="hidden" name="keyword" value='<c:out value="${cri.keyword}"/>'>
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 					<!-- 폼 전달용 -->
-					<input type="hidden" class="form-control" name="regdate" value='<fmt:formatDate pattern="YY/MM/dd" value="${album.regdate}"/>' readonly="readonly">
-					<input type="hidden" class="form-control" name="updateDate" value='<fmt:formatDate pattern="YY/MM/dd" value="${album.updatedate}"/>' readonly="readonly">
-					<input type="hidden" class="form-control" name="ano" value="<c:out value="${album.ano}"/>" readonly="readonly">													
-					<input type="hidden" class="form-control" name="writer" value="<c:out value="${album.writer}"/>" readonly="readonly">
+					<input type="hidden" class="form-control" name="regdate" value='<fmt:formatDate pattern="YY/MM/dd" value="${album.regdate}"/>' readonly>
+					<input type="hidden" class="form-control" name="updateDate" value='<fmt:formatDate pattern="YY/MM/dd" value="${album.updatedate}"/>' readonly>
+					<input type="hidden" class="form-control" name="ano" value="<c:out value="${album.ano}"/>" readonly>													
+					<input type="hidden" class="form-control" name="writer" value="<c:out value="${album.writer}"/>" readonly>
 				</form>		
 			</div>
 		</div>			
 	</div>
 </div>
-
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header"> 
@@ -104,12 +96,12 @@
 				<!--checkBlank()-->
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">확인</button>
+				<button class="btn btn-default" data-dismiss="modal">확인</button>
 			</div>
 		</div>
 	</div>
 </div>
-
+<!-- 본문 script -->
 <script>
 var formObj = $("form");
 
