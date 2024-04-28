@@ -88,6 +88,8 @@ public class UserController {
 	@Transactional
 	@PostMapping("/update")
 	public String updateUser(UserVO user, RedirectAttributes rttr) {
+		log.info("[UserController]------------------user : "+user);
+		log.info("[UserController]------------------profile : "+user.getProfileImg());
 		int result = uservice.modify(user);
 		if(result>0) {        	
             rttr.addFlashAttribute("result", user.getUserid()+"님의 회원정보가 수정되었습니다.");
@@ -189,4 +191,5 @@ public class UserController {
 		return new ResponseEntity<>(uservice.getProfileByUserid(userid), HttpStatus.OK);
 	}	
 }
+
 

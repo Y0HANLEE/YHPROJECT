@@ -68,17 +68,14 @@ public class UserServiceImpl implements UserService{
 	public List<BoardVO> findBoardByUserid(MyCriteria cri){
 		return umapper.boardList(cri);
 	}
-	
 	/* 내가 쓴 게시글(album) 찾기 */ 
 	public List<AlbumVO> findAlbumByUserid(MyCriteria cri){
 		return umapper.albumList(cri);
 	}
-	
 	/* 내가 쓴 댓글(board) 찾기 */ 
 	public List<BoardReplyVO> findBoardReplyByUserid(MyCriteria cri){
 		return umapper.boardReplyList(cri);
 	}
-	
 	/* 내가 쓴 댓글(album) 찾기 */ 
 	public List<AlbumReplyVO> findAlbumReplyByUserid(MyCriteria cri){
 		return umapper.albumReplyList(cri);
@@ -110,7 +107,11 @@ public class UserServiceImpl implements UserService{
 	/* 사용자 정보 수정 */
 	@Override
 	public int modify(UserVO user) {
-		return umapper.update(user);		
+		ProfileImageVO profile = user.getProfileImg();
+		profile.setUserid(user.getUserid());
+		pmapper.update(profile);
+		
+		return umapper.update(user);
 	}
 	
 	/* 비밀번호 수정 */
