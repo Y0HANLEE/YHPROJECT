@@ -1,4 +1,4 @@
-package org.project.domain;
+package org.project.domain.User;
 
 import lombok.Data;
 
