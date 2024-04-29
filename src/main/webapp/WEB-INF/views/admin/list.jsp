@@ -6,37 +6,35 @@
 
 <!-- 본문-->
 <div class="row">
-	<div class="col-lg-12" style="margin-top:30px;">
+	<div id="userCol12" class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				User List Page
-				<!-- <button type="button" id="regBtn" class="btn btn-primary btn-xs pull-right">register</button> -->
+				<!-- <button id="regBtn" class="btn btn-primary btn-xs pull-right">register</button> -->
 			</div>
 			<!-- 본문 및 부가기능 -->
 			<div class="panel-body">
 				<!-- 본문 -->
 				<!-- <table width="100%"	class="table table-striped table-bordered table-hover" id="dataTables-example"> sort기능 -->
-				<table class="table table-striped table-bordered table-hover" style="text-align:center; justify-content: center;">
+				<table class="table table-striped table-bordered table-hover tableList">
 					<thead>					
 						<tr>
-							<th style="text-align:center; width:5%">선택</th>
-							<th style="text-align:center; width:5%">No</th>							
-							<th style="text-align:center; width:10%">아이디</th>
-							<th style="text-align:center; width:10%">이름</th>
-							<th style="text-align:center; width:5%">성별</th>
-							<th style="text-align:center; width:15%">연락처</th>							
-							<th style="text-align:center; width:10%">등급</th>							
-							<th style="text-align:center; width:10%">가입일</th>
-							<th style="text-align:center; width:10%">수정</th>
+							<th class="adminListTh" style="width:10%">No</th>							
+							<th class="adminListTh" style="width:10%">아이디</th>
+							<th class="adminListTh" style="width:10%">이름</th>
+							<th class="adminListTh" style="width:10%">성별</th>
+							<th class="adminListTh" style="width:20%">연락처</th>							
+							<th class="adminListTh" style="width:15%">등급</th>							
+							<th class="adminListTh" style="width:15%">가입일</th>
+							<th class="adminListTh" style="width:10%">수정</th>
 						</tr>
 					</thead>
 					<tbody>					 
 					<c:forEach items="${list}" var="user">
-						<tr style="vertical-align: middle; height:20px;">						 
-							<td><input type="checkbox" id="select"></td>
+						<tr class="adminListTr">
 							<td><c:out value="${user.uno}"/></td>
 							<td>
-								<a href='/user/profile?userid=<c:out value="${user.userid}"/>' id="userid"><c:out value="${user.userid}" /></a>
+								<a id="userid" href='/user/profile?userid=<c:out value="${user.userid}"/>'><c:out value="${user.userid}" /></a>
 							</td>							
 							<td><c:out value="${user.name}" /></td>
 							<td><c:out value="${user.gender == 'M'?'M':'F'}" /></td>							
@@ -49,8 +47,8 @@
 							<td><fmt:formatDate pattern="YY/MM/dd" value="${user.regdate}" /></td>																				
 							<td>	
 								<!-- data-userid : c:forEach로 반복시 고유한 기능을 잃게되므로 각각 고유한 버튼으로 만들어줘야함. -->
-								<button data-userid="${user.userid}" class="authBtn btn btn-default btn-xs" style="margin-bottom: 2px;">등급조정</button>
-								<button data-userid="${user.userid}" class="deleteBtn btn btn-defualt btn-xs">회원삭제</button>
+								<button class="authBtn btn btn-default btn-xs" data-userid="${user.userid}" style="margin-bottom: 2px;">등급조정</button>
+								<button class="deleteBtn btn btn-defualt btn-xs" data-userid="${user.userid}">회원삭제</button>
 							</td>						
 						</tr>
 					</c:forEach>					
@@ -67,7 +65,7 @@
 				<div class="row">		
 					<div class="col-lg-12">	
 						<div class="pull-right">
-							<form id="searchForm" action="/admin/list" method='get'>							
+							<form id="searchForm" method='get' action="/admin/list">							
 								<select name="type">
 									<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : '' }"/>>전체</option>						
 									<option value="I" <c:out value="${pageMaker.cri.type eq 'I' ? 'selected' : '' }"/>>아이디</option>							
@@ -79,8 +77,8 @@
 									<option value="B" <c:out value="${pageMaker.cri.type eq 'B' ? 'selected' : '' }"/>>생일</option>
 									<%-- <option value="U" <c:out value="${pageMaker.cri.type eq 'U' ? 'selected' : '' }"/>>권한</option> --%>									
 								</select>	
-								<input type="text" name="keyword" placeholder="Search for...">								
-								<button class="btn btn-default" type="button">Search</button>														
+								<input name="keyword" placeholder="Search for...">								
+								<button class="btn btn-default">Search</button>														
 							</form>
 						</div>								
 					</div>
@@ -101,7 +99,7 @@
 								</li>
 							</c:forEach>
 							<c:if test="${pageMaker.next}">
-								<li class="paginate_button next" id="dataTable_next">
+								<li id="dataTable_next" class="paginate_button next">
 									<a href="${pageMaker.endPage + 1}" class="page-link">▶</a>
 								</li>
 							</c:if>
@@ -110,7 +108,7 @@
 				</div>
 			
 				<!-- page이동을 위한 pageMaker정보 가져오기 -->
-				<form id="actionForm" action="/admin/list" method="get">
+				<form id="actionForm" method="get" action="/admin/list">
 					<!-- 페이지 유지 -->
 					<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
 					<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
@@ -125,16 +123,16 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="myModalLabel" style="position: left;">알림</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="position: right;">×</button>
+				<h4 id="myModalLabel" class="modal-title" style="position: left;">알림</h4>
+				<button class="close" data-dismiss="modal" aria-hidden="true" style="position: right;">×</button>
 			</div>
 			<div class="modal-body">처리가 완료되었습니다.</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>							
+				<button class="btn btn-default" data-dismiss="modal">Close</button>							
 			</div>
 		</div>
 	</div>

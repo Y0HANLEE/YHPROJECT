@@ -5,11 +5,11 @@
 <%@ include file="../includes/header.jsp"%>
 <!-- 페이지 제목 -->
 <div class="row">		
-	<form action="/admin/intro" method="post" id="introForm">
+	<form id="introForm" action="/admin/intro" method="post">
 	<!-- 소개 -->
-	<div class="col-lg-12" style="display: flex; align-content: center; align-items: center;">
+	<div id="introCol12" class="col-lg-12">
 		<div style="width: 75%;">
-			<h1 class="page-header" style="display: flex; justify-content: flex-start; align-items: center; width:99.7%;">
+			<h1 id="introPageHeader" class="page-header">
 				<i class="fa fa-bookmark-o"></i>&nbsp;&nbsp;<input class="form-control" style="height:50px; width:82%; font-size: 36px" id="title" name="title_title" placeholder="제목을 입력해주세요" value="${intro.title_title}">
 				<span id="title_title_byte_info" data-input="title_title" style="font-size: 12px; margin-left: 5px;"><%-- ${intro.i_m_tLength} --%></span>
 			</h1>
