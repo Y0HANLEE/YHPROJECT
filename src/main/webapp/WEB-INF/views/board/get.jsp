@@ -8,7 +8,7 @@
 
 <!-- 본문-->
 <div class="row">
-	<div class="col-lg-12" style="margin-top:30px">
+	<div id="userCol12" class="col-lg-12">
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
 			<div class="panel-heading">	Board Read Page</div>	
@@ -43,7 +43,7 @@
 						</c:if>
 					</sec:authorize>				
 					<button data-oper="list" class="btn btn-default">목록으로</button>
-					<button type="button" class="btn btn-default" id="backBtn">뒤로가기</button>
+					<button class="btn btn-default" onclick="history.back()">뒤로가기</button>
 				</div>	
 											
 				<!-- Modify로 bno정보를 넘김으로써 수정/삭제시 modal창을 통해 게시글의 수정/삭제여부를 확인할수있게함. -->
@@ -60,8 +60,7 @@
 		</div>			
 	</div>
 </div>
-			
-<!-- 댓글 파트 -->
+<!-- 댓글 파트 --> 
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
@@ -75,23 +74,22 @@
 			<!-- 댓글 목록 -->
 			<div class="panel-body">
 				<ul class="chat">
-					<!-- function showList(page) -->
+					 <!-- function showList(page) --> 
 				</ul>
 			</div>	
 			<!-- 댓글 페이징 -->
 			<div class="panel-footer">
-				<!-- function showReplyPage(replyCnt) -->
+				 <!-- function showReplyPage(replyCnt) --> 
 			</div>							
 		</div>
 	</div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button  class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">Reply Modal</h4>
             </div>
             <div class="modal-body">
@@ -109,10 +107,10 @@
 				</div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="modalModBtn" class="btn btn-warning">Modify</button>
-                <button type="button" id="modalRemoveBtn" class="btn btn-danger">Remove</button>
-                <button type="button" id="modalRegisterBtn" class="btn btn-default">Register</button>
-                <button type="button" id="modalCloseBtn" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="modalModBtn" class="btn btn-warning">Modify</button>
+                <button id="modalRemoveBtn" class="btn btn-danger">Remove</button>
+                <button id="modalRegisterBtn" class="btn btn-default">Register</button>
+                <button id="modalCloseBtn" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>      
     </div>
@@ -156,15 +154,6 @@ $(document).ready(function(){
 		window.history.back(-navBtnCnt-1);
 	});
 	
-	
-
-
-});
-</script>
-
-<!-- 댓글 -->
-<script>
-$(document).ready(function(){
 	/* 댓글 이벤트처리 */
 	var bnoValue = '<c:out value="${board.bno}"/>';
 	var replyUl = $(".chat");
@@ -193,14 +182,37 @@ $(document).ready(function(){
 				
 				// 댓글이 있을 경우 순차적으로 replyUl에 추가
 				for(var i=0; i<list.length||0; i++){
-					str += "<li class='left clearfix' data-rno="+list[i].rno+"><div class='header'>";
-					str += "<strong class='primary-font'>"+list[i].replyer+"</strong>";
-					str += "<small class='pull-right text-muted'>"+replyService.displayTime(list[i].replyDate)+"</small></div>";
-					str += "<p class='pre-wrap'>"+list[i].reply+"</p></div></li>";					
-				}						
+					str += "<li class='left clearfix' data-rno="+list[i].rno+"><div id='replyZone' class='header'>";
+					str += "<div id='replyA'><div class='reply_ProfileFrame'></div></div>";
+					str += "<div id='replyB'><strong class='primary-font'>"+list[i].replyer+"</strong><p class='pre-wrap'>"+list[i].reply+"</p></div>";
+					str += "<div id='replyC' style='width:15%'><small class='pull-right text-muted'>"+replyService.displayTime(list[i].replyDate)+"</small></div>";
+					str += "</div></li>";		
+					
+					(function(){		
+						$.getJSON("/user/getProfileImg", {userid:list[i].replyer}, function(result){
+							var fileCallPath = encodeURIComponent(result.uploadPath+"/"+result.uuid+"_"+result.fileName);
+					        $(".reply_ProfileFrame").attr({"data-path":result.uploadPath, "data-uuid":result.uuid, "data-filename":result.fileName, "data-type":result.fileType});
+							$(".reply_ProfileFrame").html("<img id='profile_small' src='/display?fileName="+fileCallPath+"'>");
+							console.log("-------"+result);
+							console.log(result.uploadPath);
+							console.log(result.uuid);
+							console.log(result.fileName);
+							console.log(fileCallPath);
+						});
+					})();
+				}
+				
 				replyUl.html(str);
 				
-				showReplyPage(replyCnt);
+				showReplyPage(replyCnt);			
+				
+				// 프로필사진 클릭시 이벤트 처리 
+				$(".reply_ProfileFrame").on("click", "img", function(e){				
+					var img = $(this);
+					var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));					
+					console.log(path);
+					showImage(path.replace(new RegExp(/\\/g),"/"));
+				});	
 			}
 		);	
 	}
@@ -254,9 +266,17 @@ $(document).ready(function(){
 		});
 	});
 	
+	$(document).on('click', '.reply_ProfileFrame', function() {	    	    
+		var file = $(this);
+		var path = encodeURIComponent(file.data("path")+"/"+file.data("uuid")+"_"+file.data("filename"));		
+		showImage(path.replace(new RegExp(/\\/g),"/"));
+	});
+	
 	/* 댓글 조회(특정 댓글 클릭 이벤트) */
-	$(".chat").on("click", "li", function(e){
-		var rno = $(this).data("rno");
+	$(".chat").on("click", "li div[id='replyB']", function(e){
+		var parentLi = $(this).closest('li');
+	    var rno = parentLi.data('rno');
+		//var rno = $(this).data("rno");
 		
 		replyService.get(rno, 
 			function(reply){
@@ -377,12 +397,7 @@ $(document).ready(function(){
 			showList(targetPageNum);
 		}
 	);		
-});
-</script>
 
-<!-- 첨부파일 -->
-<script>
-$(document).ready(function(){
 	/* 첨부파일 조회화면 : 즉시실행함수*/
 	(function(){
 		var bno = '<c:out value="${board.bno}"/>';

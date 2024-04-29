@@ -239,7 +239,7 @@ $(document).ready(function(){
 		var userid = '<c:out value="${user.userid}"/>';
 		$.getJSON("/user/getProfileImg", {userid:userid}, function(result){
 			var fileCallPath = encodeURIComponent(result.uploadPath+"/"+result.uuid+"_"+result.fileName);			            
-			$(".ProfileImg").html("<img src='/display?fileName="+fileCallPath+"' style='width:600px; height:600px;' data-path='"+result.uploadPath+"', data-uuid='"+result.uuid+"', data-filename='"+result.fileName+"', data-type='"+result.fileType+"'>");
+			$(".ProfileImg").html("<img id='profile_big' src='/display?fileName="+fileCallPath+"' data-path='"+result.uploadPath+"', data-uuid='"+result.uuid+"', data-filename='"+result.fileName+"', data-type='"+result.fileType+"'>");
 		});
 	})();
 	

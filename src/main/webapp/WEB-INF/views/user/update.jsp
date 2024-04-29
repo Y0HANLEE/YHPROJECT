@@ -504,7 +504,7 @@ $(document).ready(function(){
 		//기본프로필로 변경 2단계 : 이전 프로필사진 서버삭제
 	    if(inputUuid.val() == "ed87212c-4e79-4813-be6c-8c73ac58ac33" && prevUuid !== "ed87212c-4e79-4813-be6c-8c73ac58ac33"){
 	    	var deleteFile = $("#removeImgBtn").data("file");
-	    	if(deleteFile != null || deleteFile != ""){	    	
+	    	if(deleteFile != null || deleteFile != "" && deleteFile !== defaultDelete){	    	
 		    	$.ajax({ //새로 업로드된 사진 삭제
 		 	        type: 'POST',
 		 	        url: '/deleteFile',
