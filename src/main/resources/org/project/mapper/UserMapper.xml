@@ -33,6 +33,7 @@
 	</resultMap>
 	
 	<resultMap type="org.project.domain.Board.BoardVO" id="boardMap">
+		<id property="bno" column="bno"/>
 		<result property="bno" column="bno"/>
 		<result property="title" column="title"/>
 		<result property="writer" column="writer"/>
@@ -44,6 +45,7 @@
 	</resultMap>
 	
 	<resultMap type="org.project.domain.Album.AlbumVO" id="albumMap">
+		<id property="ano" column="ano"/>
 		<result property="ano" column="ano"/>
 		<result property="title" column="title"/>					
 		<result property="writer" column="writer"/>		
@@ -58,6 +60,7 @@
 	</resultMap>
 	
 	<resultMap type="org.project.domain.Board.BoardReplyVO" id="boardReplyMap">
+		<id property="rno" column="rno"/>
 		<result property="rno" column="rno"/>
 		<result property="bno" column="bno"/>		
 		<result property="reply" column="reply"/>
@@ -68,6 +71,7 @@
 	</resultMap>
 	
 	<resultMap type="org.project.domain.Album.AlbumReplyVO" id="albumReplyMap">
+		<id property="rno" column="rno"/>
 		<result property="rno" column="rno"/>
 		<result property="ano" column="ano"/>		
 		<result property="reply" column="reply"/>
@@ -78,6 +82,7 @@
 	</resultMap>
 	
 	<resultMap type="ProfileImageVO" id="profileMap">		
+		<id property="userid" column="userid"/>
 		<result property="userid" column="userid"/>		
 		<result property="uuid" column="uuid"/>
 		<result property="fileName" column="filename"/>
