@@ -23,6 +23,19 @@
 		<label>소개글</label>
 <textarea class="form-control" name="title_intro" style="width:73.5%" placeholder="간단한 페이지 소개글 입력"><c:out value="${intro.title_intro}"/></textarea>
 	</p>
+	<!-- 파일업로드 -->
+	<div class="form-group" style="margin-left: 20px;">
+		<i class="fa fa-tags fa-fw"></i><label>File</label>
+		<div class="form-group uploadDiv">
+			<input type="file" name="uploadFile" multiple>
+		</div>
+		<!-- 결과 -->
+		<div class="uploadResult">
+			<ul>
+				<!-- function showUploadResult(uploadResultArr) -->
+			</ul>
+		</div>
+	</div>
 	<!-- 지도 -->	
 	<div class="form-group" style="margin-left: 20px;">	
 		<label>장소명</label>
@@ -35,8 +48,7 @@
 			    <em class="link"><a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')" style="font-size: 12px">주소수정제안</a></em>
 			</div>
 		</div>
-	</div>
-
+	</div>	
 	<div id="map" style="border-radius:5px;  width:88.3%; height:350px; margin: 0 0 20px 20px;"></div>
 	<div style="display: flex; justify-content: space-between; margin: 0 0 0 20px;">
 		<div class="form-group" style="width:15%">
@@ -72,6 +84,7 @@
 	</div>	
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	<input type="hidden" name="boardtype" value="2">
+	<input type="hidden" name="attachList.boardtype" value="2">
 	</form>
 	
 	<!-- 이동용 화살표 -->
@@ -85,6 +98,19 @@
 $(document).ready(function(){	
 	$("#modifyBtn").on("click", function(e){
 		e.preventDefault();
+		// DB에 등록시키기 위해 BoardVO.attachList에 정보를 전송
+		var str = "";
+					
+		$(".uploadResult ul li").each(function(i, obj){
+			var jobj = $(obj);			
+			console.dir(jobj); // 체의 속성을 나열하여 출력			
+			str += "<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("filename")+"'>";
+			str += "<input type='hidden' name='attachList["+i+"].uuid' value='"+jobj.data("uuid")+"'>";
+			str += "<input type='hidden' name='attachList["+i+"].uploadPath' value='"+jobj.data("path")+"'>";
+			str += "<input type='hidden' name='attachList["+i+"].fileType' value='"+jobj.data("type")+"'>";
+		});
+		$("#introForm").append(str);	
+		
 		inputCheck();		
 	});
 	
@@ -111,8 +137,145 @@ $(document).ready(function(){
 		}		
 		$("#introForm").submit();
 	}	
+
+	/* 업로드 상세처리(확장자, 크기 등) */
+	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif|avi|mp4|mp3|zip)"); // 업로드 가능 확장자
+	var maxSize = 1073741824; // 1GB		
+	var cloneObj = $(".uploadDiv").clone(); // 클론
+	
+	function checkFile(fileName, fileSize){
+		// 파일사이즈 검토
+		if(fileSize >= maxSize){
+			alert("파일 사이즈 초과");
+			return false;
+		}
+		
+		// 파일이름(확장자) 검토
+		if(!regex.test(fileName)){
+			alert("해당 확장자는 업로드 할 수 없습니다.");
+			return false;
+		}
+		
+		return true; // 성공시
+	}
+		
+	/* 등록버튼 없이 변화가 감지되면 처리할 기능 */
+	$("input[type='file']").change(function(e){
+		var formData = new FormData();
+		var inputFile = $("input[name='uploadFile']");//첨부된 파일
+		var files = inputFile[0].files;
+		
+		for(i=0; i<files.length; i++){
+			if(!checkFile(files[i].name, files[i].size)){
+				$(".uploadDiv").html(cloneObj.html()); // 제한에 걸릴 시, 초기상태("선택 파일 없음")로 보여지기 위해 초기화면을 clone으로 복사하여 붙여넣기함.
+				return false;
+			}
+			formData.append("uploadFile", files[i]);
+		}
+		
+		$.ajax({
+			type:'post',
+			url:'/uploadAjaxAction',
+			processData:false,
+			contentType:false,
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data:formData,
+			dataType:'json',
+			success:function(result){					
+				showUploadResult(result);
+			}
+		});
+	});
+
+	/* 업로드 결과 보이기 */
+	function showUploadResult(uploadResultArr){
+		if(!uploadResultArr || uploadResultArr.length == 0){ return; };
+		
+		var uploadUL = $(".uploadResult ul");		
+		var str="";				
+		
+		$(uploadResultArr).each(
+			function(i,obj){								
+				var fileCallPath = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);													
+				
+				str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.img+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, type(img)을 추가한다.
+				str += "<img src='/display?fileName="+fileCallPath+"'>"; // 첨부파일 이미지(썸네일)						
+				str += "<span>"+' '+obj.fileName+' '+"</span>"; // 파일명 
+				str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file=\'"+fileCallPath+"\' data-type='image'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> image:원본+썸네일 삭제
+			});
+		uploadUL.append(str);
+	}
+	
+	/* 업로드 취소 기능 구현*/
+	$(".uploadResult").on("click", "button", function(e){
+		var target = $(this).data("file");
+		var type = $(this).data("type");
+		var targetLi = $(this).closest("li"); // target(삭제 파일)이 속한 li태그
+				
+		$.ajax({
+			type:'POST',
+			url:'/deleteFile', // 서버(폴더)에서만 삭제
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data:{fileName:target, type:type},
+			dataType:'text',
+			success: function(result){				
+				targetLi.remove(); // 화면에서도 삭제
+			}
+		});		
+	});		
+	
+	/* 첨부파일 클릭시 이벤트 처리 */
+	$(".uploadResult").on("click", "li", function(e){
+		var element = $(e.target);
+		var liObj = $(this);
+		var path = encodeURIComponent(liObj.data("path")+"/"+liObj.data("uuid")+"_"+liObj.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
+		
+		//span이나 img일경우만 이벤트 >> x버튼은 삭제만 처리
+		if(element.is("span") || element.is("img")){
+			if(liObj.data("type")){
+				showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
+			}
+		} 
+	});
+	
+	// 원본사진 확대보기 on
+	function showImage(fileCallPath){			
+		$(".picWrap").css("display","flex").show(); // none > flex 설정 변경
+		$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행 
+	}
+	
+	// 원본사진 확대보기 off 
+	$(".picWrap").on("click", function(e){
+		$(".pic").animate({width:'0%', height:'0%'}, 0); // (0%*0%) 로 0.3초 후 크기변경
+		setTimeout(() => {$(this).hide();}, 0);	// chrome의 ES6화살표함수
+		//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
+	});
+	
+	/* 첨부파일 조회화면 : 즉시실행함수*/
+	(function(){
+		var boardtype = '<c:out value="${intro.boardtype}"/>';
+		$.getJSON("/main/getAttachList", {boardtype:boardtype}, function(arr){
+			console.log(boardtype)
+			
+			var str="";
+			
+			$(arr).each(function(i, attach){
+				var fileCallPath = encodeURIComponent(attach.uploadPath+"/s_"+attach.uuid+"_"+attach.fileName);						
+				str += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
+				str += "<img src='/display?fileName="+fileCallPath+"'> <span>"+attach.fileName+"</span> "; //파일명
+				str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file='"+fileCallPath+"' data-type='image'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> image:원본,썸네일삭제
+			});
+			$(".uploadResult ul").html(str);
+		});
+	})();
+
 });
 </script>
+
 
 <!-- byte체크 -->
 <script>

@@ -3,11 +3,18 @@ package org.project.controller;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.project.domain.Criteria;
+import org.project.domain.IntroAttachVO;
 import org.project.service.IntroService;
 import org.project.service.MailService;
 import org.project.service.UserService;
+import org.project.service.Album.AlbumReplyService;
+import org.project.service.Album.AlbumService;
+import org.project.service.Board.BoardReplyService;
+import org.project.service.Board.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,7 +33,19 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Controller
 @RequestMapping("/main/*")
-public class MainController {	
+public class MainController {
+	@Setter(onMethod_=@Autowired)
+	private BoardService bservice;
+	
+	@Setter(onMethod_=@Autowired)
+	private AlbumService alservice;
+	
+	@Setter(onMethod_=@Autowired)
+	private BoardReplyService brservice;
+	
+	@Setter(onMethod_=@Autowired)
+	private AlbumReplyService arservice;
+	
 	@Setter(onMethod_=@Autowired)
 	private UserService uservice;
 		
@@ -35,16 +54,20 @@ public class MainController {
 	
 	@Setter(onMethod_=@Autowired)
 	private MailService mservice;
-
 	
 	@Setter(onMethod_=@Autowired)
     private IntroService iservice;
 	
 	/*홈/인트로 화면 조회*/
     @GetMapping({"/home","/intro"})
-    public void introPage(Model model) {    	
+    public void introPage(Model model) {
+    	Criteria criteria = new Criteria(1,5);
     	model.addAttribute("home", iservice.read(1));
-    	model.addAttribute("intro", iservice.read(2));
+    	model.addAttribute("intro", iservice.read(2));    	
+    	model.addAttribute("boardList", bservice.getList(criteria)); 
+        model.addAttribute("albumList", alservice.getList(criteria));
+        model.addAttribute("boardReplyList", brservice.getListAll(criteria)); 
+        model.addAttribute("albumReplyList", arservice.getListAll(criteria));
     }
 	
 	/*접근권한에러*/
@@ -105,5 +128,12 @@ public class MainController {
 			log.info("[SecurityController]fail renewal password------------------------------");
 			return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}		  
+	}
+	
+	/* 첨부파일 관련 화면처리 : json으로 데이터 반환 */
+	@GetMapping(value="/getAttachList", produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<IntroAttachVO>> getAttachList(int boardtype) {	
+		return new ResponseEntity<>(iservice.attachList(boardtype), HttpStatus.OK);
 	}
 }

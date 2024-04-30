@@ -10,13 +10,24 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div>
-				<h1 class="page-header">HomePage</h1>
+				<h1 class="page-header">${home.title_title}</h1>
 			</div>
 		    <p class="pull-right"><a href="#board"><i class="fa fa-edit fa-fw"></i>게시판</a>  <a href="#map" style="margin-left: 20px"><i class="fa fa-map-marker fa-fw"></i>지도</a></p>    			
-			<p class="mb-4">2024 YH 홈페이지제작 개인프로젝트 홈화면입니다.</p>
-					    
+			<p class="mb-4">${home.title_intro}</p>
 		</div>
-		
+	</div>	
+	<!-- 사진 슬라이드 -->
+	<div class="row">
+	    <div class="col-lg-12">
+	        <!-- 사진 슬라이드 -->	
+			<div class="slider" style="margin: 50px 0 0 20px; width:88.3%">
+				<div class="slides">		
+					<!-- upload photo -->
+				</div>
+				<button id="prevBtn" class="button prev"><i class="fa fa-chevron-left fa-fw"></i></button>
+				<button id="nextBtn" class="button next"><i class="fa fa-chevron-right fa-fw"></i></button>
+			</div>
+	    </div>
 	</div>
 	<!-- 게시판 -->
 	<h3 style="margin-top: 70px 0 10px 0;">최근 게시글</h3>	
@@ -40,7 +51,7 @@
 							<c:forEach items="${boardList}" var="board">						
 								<tr class="Htr">							
 									<td><c:out value="${board.bno}" /></td>
-									<td class="HBtitle" style="padding: 8px 15px;"><a href='/board/get?bno=<c:out value="${board.bno}"/>'><c:out value="${board.title}" /></a></td>	
+									<td class="HBtitle" style="padding: 8px 15px;"><c:out value="${board.title}" /></td>	
 									<td><c:out value="${board.writer}" /></td>							
 									<td><fmt:formatDate pattern="YY.MM.dd" value="${board.regdate}"/></td>						
 								</tr>
@@ -88,7 +99,6 @@
 			</div>		
 		</div>
 	</div>
-	
 	<!-- 댓글 -->
 	<h3 style="margin:30px 0 10px 0;">최근 댓글</h3>	
 	<div class="row">	
@@ -157,11 +167,10 @@
 			</div>		
 		</div>
 	</div>
-		
 	<!-- 지도 -->
 	<div class="col-lg-12" style="padding: 0">	
 		<div class="form-group" style="margin: 80px 0 5px 0; width: 100%; display: flex; align-items: center;">
-			<label><i class="fa fa-bookmark fa-fw"></i><c:out value="${intro.map_title}"></c:out>&nbsp;_&nbsp;<i class="fa fa-map-marker fa-fw"></i>address: <c:out value="${intro.map_address}"/>. <c:out value="${intro.map_addressdetail}"/></label>					 
+			<label><i class="fa fa-bookmark fa-fw"></i><c:out value="${home.map_title}"></c:out>&nbsp;_&nbsp;<i class="fa fa-map-marker fa-fw"></i>address: <c:out value="${home.map_address}"/>. <c:out value="${home.map_addressdetail}"/></label>					 
 		</div>	
 		<div id="map" style="border-radius:5px;  width:100%; height:350px;"></div>
 	</div>
@@ -174,6 +183,9 @@
 	    			<a href="/main/intro">대답</a>해드리는게 인지상정!
 				</div>
 			</div>
+		</div>
+		<div class="col-lg-12" align="center" style="margin: 50px 0 30px 0; color: gray; font-size: 14px;">
+			${home.intro}
 		</div>
 	</div>
 
@@ -246,7 +258,7 @@ $(document).ready(function(){
 	} 
 	
 	/* 썸네일 출력 */
-	$(".HAthumb").each(function() {
+	$("td.HAthumb").each(function() {
 	    var ano = $(this).data('ano');
 	    var thumbnail = $(this);
 
@@ -287,6 +299,58 @@ $(document).ready(function(){
 		setTimeout(() => {$(this).hide();}, 0);	// chrome의 ES6화살표함수
 		//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
 	});
+	
+	/* 사진 슬라이드 */	
+	//슬라이드 함수
+	function initializeSlide() {
+	    var slideIndex = 0;
+	    var totalSlides = $('.slide').length;
+	
+	    function showSlide(index) {
+	        if (index < 0) {
+	            slideIndex = totalSlides - 1;
+	        } else if (index >= totalSlides) {
+	            slideIndex = 0;
+	        } else {
+	            slideIndex = index;
+	        }
+	        var offset = -slideIndex * 100;
+	        $('.slides').css('transform', 'translateX(' + offset + '%)');
+	    }
+	
+	    $("#prevBtn").click(function() {
+	        console.log("<" + slideIndex);
+	        showSlide(slideIndex - 1);
+	    });
+	
+	    $("#nextBtn").click(function() {
+	        console.log(slideIndex + ">");
+	        showSlide(slideIndex + 1);
+	    });
+	
+	    // 자동 슬라이드 기능 추가
+	    // setInterval(() => { showSlide(slideIndex + 1); }, 10000); // 10초마다 슬라이드 변경
+	}
+	
+	//이미지 추가 함수
+	function addImageToSlide(imageUrl) {
+	    var newSlide = $('<div class="slide"><img src="' + imageUrl + '"></div>');
+	    $('.slides').append(newSlide);
+	}
+	
+	//이미지 불러오기
+	var boardtype = '<c:out value="${home.boardtype}"/>';
+
+    $.getJSON("/main/getAttachList", { boardtype: boardtype }, function(arr) {
+        var str = "";
+
+        $(arr).each(function(i, attach) {
+            var fileCallPath = encodeURIComponent(attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName);
+            addImageToSlide("/display?fileName=" + fileCallPath);
+        });
+
+        initializeSlide(); // 슬라이드 초기화
+    });	
 });
 </script>
 <script type="text/javascript">

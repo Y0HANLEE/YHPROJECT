@@ -4,6 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <title>Intro Page</title>
 <%@ include file="../includes/header.jsp"%>
+
 <!-- 페이지 제목 -->
 <div class="row">
 	<!-- 소개 -->
@@ -21,19 +22,6 @@
 	</div>
 	<div class="mb-4" style="margin: 0 0 20px 20px; width:73.5%; white-space: pre-wrap">		
 		- <c:out value="${intro.title_intro}"/>
-	</div>
-	
-	<!-- 지도 -->	
-	<div class="form-group" style="margin: 50px 0 5px 20px; width: 72.3%; display: flex; align-items: center;">
-		<label><c:out value="${intro.map_title}"></c:out>(<i class="fa fa-map-marker fa-fw"></i>address_<c:out value="${intro.map_address}"/>. <c:out value="${intro.map_addressdetail}"/>)</label>		 
-	</div>
-	
-	<div id="map" style="border-radius:5px;  width:88.3%; height:350px; margin: 0 0 0 20px;"></div>							
-	<div class="form-group" style="margin-left: 20px;">	
-		
-	</div>
-	<div class="form-group" style="margin: 5px 0 70px 20px;">		
-	&nbsp;&nbsp;&nbsp;&nbsp;- <c:out value="${intro.map_intro}"/>
 	</div>	
 	<!-- 본문-->
 	<div class="panel panel-default" style="margin-left: 20px; width: 88.3%">
@@ -42,11 +30,27 @@
 <c:out value="${intro.intro}"/>
 		</div>				
 	</div>
+	<!-- 사진 슬라이드 -->	
+	<div class="slider" style="margin: 50px 0 0 20px; width:88.3%">
+		<div class="slides">		
+			<!-- upload photo -->
+		</div>
+		<button id="prevBtn" class="button prev"><i class="fa fa-chevron-left fa-fw"></i></button>
+		<button id="nextBtn" class="button next"><i class="fa fa-chevron-right fa-fw"></i></button>
+	</div>
+	<!-- 지도 -->	
+	<div class="form-group" style="margin: 50px 0 5px 20px; width: 72.3%; display: flex; align-items: center;">
+		<label><c:out value="${intro.map_title}"></c:out>(<i class="fa fa-map-marker fa-fw"></i>address_<c:out value="${intro.map_address}"/>. <c:out value="${intro.map_addressdetail}"/>)</label>		 
+	</div>
+	
+	<div id="map" style="border-radius:5px;  width:88.3%; height:350px; margin: 0 0 0 20px;"></div>
+	<div class="form-group" style="margin: 10px 0 70px 20px;">		
+	&nbsp;&nbsp;&nbsp;&nbsp;- <c:out value="${intro.map_intro}"/>
+	</div>	
 		
 	<!-- 이동용 화살표 -->
-	<a href="#top" class="btn-nav-arrow up"><i class="fa fa-arrow-up"></i></a>
-	<a href="#bottom" class="btn-nav-arrow down"><i class="fa fa-arrow-down"></i></a>
-	<a class="btn-nav-arrow back"><i class="fa fa-arrow-left"></i></a>
+	<a id="upArrow" href="#top" class="btn-nav-arrow up"><i class="fa fa-arrow-up"></i></a>
+	<a id="downArrow" href="#bottom" class="btn-nav-arrow down"><i class="fa fa-arrow-down"></i></a>	
 </div>
 
 <!-- Modal -->
@@ -108,6 +112,58 @@ $(document).ready(function(){
 		}		
 		$("#myModal").modal("show");
 	} 
+		
+	/* 사진 슬라이드 */	
+	//슬라이드 함수
+	function initializeSlide() {
+	    var slideIndex = 0;
+	    var totalSlides = $('.slide').length;
+	
+	    function showSlide(index) {
+	        if (index < 0) {
+	            slideIndex = totalSlides - 1;
+	        } else if (index >= totalSlides) {
+	            slideIndex = 0;
+	        } else {
+	            slideIndex = index;
+	        }
+	        var offset = -slideIndex * 100;
+	        $('.slides').css('transform', 'translateX(' + offset + '%)');
+	    }
+	
+	    $("#prevBtn").click(function() {
+	        console.log("<" + slideIndex);
+	        showSlide(slideIndex - 1);
+	    });
+	
+	    $("#nextBtn").click(function() {
+	        console.log(slideIndex + ">");
+	        showSlide(slideIndex + 1);
+	    });
+	
+	    // 자동 슬라이드 기능 추가
+	    // setInterval(() => { showSlide(slideIndex + 1); }, 10000); // 10초마다 슬라이드 변경
+	}
+	
+	//이미지 추가 함수
+	function addImageToSlide(imageUrl) {
+	    var newSlide = $('<div class="slide"><img src="' + imageUrl + '"></div>');
+	    $('.slides').append(newSlide);
+	}
+	
+	//이미지 불러오기
+	var boardtype = '<c:out value="${intro.boardtype}"/>';
+
+    $.getJSON("/main/getAttachList", { boardtype: boardtype }, function(arr) {
+        var str = "";
+
+        $(arr).each(function(i, attach) {
+            var fileCallPath = encodeURIComponent(attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName);
+            addImageToSlide("/display?fileName=" + fileCallPath);
+        });
+
+        initializeSlide(); // 슬라이드 초기화
+    });	
 });
 </script>
 

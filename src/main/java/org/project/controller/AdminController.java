@@ -1,6 +1,9 @@
 package org.project.controller;
 
+import java.util.List;
+
 import org.project.domain.Criteria;
+import org.project.domain.IntroAttachVO;
 import org.project.domain.IntroVO;
 import org.project.domain.PageDTO;
 import org.project.domain.User.AuthVO;
@@ -8,6 +11,9 @@ import org.project.service.IntroService;
 import org.project.service.MailService;
 import org.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.Setter;
@@ -87,26 +94,18 @@ public class AdminController {
 	@GetMapping({"/home","/intro"})
 	public void getUpdateIntroduce(Model model) throws NullPointerException{
 		model.addAttribute("home", iservice.read(1));
-		model.addAttribute("intro", iservice.read(2));
-		/*
-        //byte계산		
-		IntroVO home = iservice.read(1);
-		model.addAttribute("h_t_tLength", home.getTitle_title().getBytes().length + "/50 bytes");
-		model.addAttribute("h_m_tLength", home.getMap_title().getBytes().length + "/50 bytes");
-		model.addAttribute("h_m_cLength", home.getMap_caption().getBytes().length + "/50 bytes");
-		model.addAttribute("h_m_aDLength", home.getMap_addressdetail().getBytes().length + "/50 bytes");
-		IntroVO intro = iservice.read(2);		
-        model.addAttribute("i_t_tLength", intro.getTitle_title().getBytes().length + "/50 bytes");
-        model.addAttribute("i_m_tLength", intro.getMap_title().getBytes().length + "/50 bytes");
-        model.addAttribute("i_m_cLength", intro.getMap_caption().getBytes().length + "/50 bytes");
-        model.addAttribute("i_m_aDLength", intro.getMap_addressdetail().getBytes().length + "/50 bytes");
-        */
+		model.addAttribute("intro", iservice.read(2));		
 	}
 	
 	/* 메인/인트로 페이지 수정 */
 	@PostMapping({"/home","/intro"})
 	public String updateIntroduce(IntroVO intro, RedirectAttributes rttr, Model model) {
 		iservice.update(intro);
+		
+		//첨부파일이 있다면
+		if(intro.getAttachList() != null) {
+			intro.getAttachList().forEach(attach -> log.info(attach));
+		}
 
 		if(intro.getBoardtype() == 1) {
 			rttr.addFlashAttribute("result", "메인화면의 수정이 완료되었습니다.");
@@ -118,4 +117,11 @@ public class AdminController {
 		
 		return "redirect:/main/home";
 	}	
+	
+	/* 첨부파일 관련 화면처리 : json으로 데이터 반환 */
+	@GetMapping(value="/getAttachList", produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<IntroAttachVO>> getAttachList(int boardtype) {	
+		return new ResponseEntity<>(iservice.attachList(boardtype), HttpStatus.OK);
+	}
 }

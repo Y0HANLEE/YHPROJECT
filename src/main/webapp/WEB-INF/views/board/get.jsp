@@ -43,7 +43,7 @@
 						</c:if>
 					</sec:authorize>				
 					<button data-oper="list" class="btn btn-default">목록으로</button>
-					<button class="btn btn-default" onclick="history.back()">뒤로가기</button>
+					<button id="backBtn" class="btn btn-default">뒤로가기</button>
 				</div>	
 											
 				<!-- Modify로 bno정보를 넘김으로써 수정/삭제시 modal창을 통해 게시글의 수정/삭제여부를 확인할수있게함. -->
@@ -418,6 +418,7 @@ $(document).ready(function(){
 				}
 			});
 			$(".uploadResult ul").html(str);
+			console.log(str);
 		});
 	})();
 	
