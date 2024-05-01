@@ -2,6 +2,7 @@ package org.project.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -37,7 +38,7 @@ public class BoardMapperTests {
 	public void testGetListWithPaging() {
 		Criteria cri = new Criteria();
 		cri.setPageNum(1);
-		cri.setAmount(20);
+		cri.setAmount(10);
 		bmapper.getListWithPaging(cri).forEach(board->log.info(board));
 	}
 		
@@ -45,9 +46,9 @@ public class BoardMapperTests {
 	@Test
 	public void testInsertSelectKey() {
 		BoardVO board = new BoardVO();
-		board.setTitle("t-test6");
-		board.setContent("c-test6");
-		board.setWriter("w-test6");
+		board.setTitle("mysqlTest2");
+		board.setContent("mysqlTest2");
+		board.setWriter("admin");
 		
 		bmapper.insertSelectKey(board);
 		log.info(board);
@@ -56,25 +57,38 @@ public class BoardMapperTests {
 	/* 게시글 테스트 더미 등록 */
 	@Test
 	public void testInsertContent() {
-		String sql = "insert into board(title, content, writer) values (?,?,?)";
-		for(int i=0; i<100; i++) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			try {				
-				con = ds.getConnection();
-				pstmt = con.prepareStatement(sql);
-								
-				pstmt.setString(1, "[title] paging test"+i);
-				pstmt.setString(2, "[content] paging test"+i);
-				pstmt.setString(3, "[writer] tester"+i);
-			}catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if(pstmt != null) {try {pstmt.close();} catch (Exception e) {} }
-				if(con != null) {try {con.close();} catch (Exception e) {} }
-			}
-		}
-				
+	    String sql = "insert into board(title, content, writer) values (?,?,?)";
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    try {       
+	        con = ds.getConnection();
+	        con.setAutoCommit(false); // 수동 커밋 설정
+	        pstmt = con.prepareStatement(sql);
+
+	        for(int i=0; i<100; i++) {          
+	            pstmt.setString(1, "[title] paging test"+i);
+	            pstmt.setString(2, "[content] paging test"+i);
+	            pstmt.setString(3, "admin");
+	            pstmt.executeUpdate(); // 쿼리 실행
+	        }
+	        con.commit(); // 커밋 수행
+	    } catch (Exception e) {
+	        try {
+	            if (con != null) {
+	                con.rollback(); // 롤백 수행
+	            }
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (pstmt != null) pstmt.close();
+	            if (con != null) con.close();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
 	}
 	
 	/* 게시글 조회 + 조회수 증가 */

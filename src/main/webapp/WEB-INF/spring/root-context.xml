@@ -4,19 +4,27 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
-	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">		
-		<!-- Log4jdbc 사용시 -->
+		<!-- mysql : AWS연결 -->
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test?serverTimezone=UTC"/>
+		<!-- <property name="jdbcUrl" value="jdbc:mysql://34.64.198.251:3306/yoga" /> AWS연결시-->
+		<property name="username" value="test"/>
+		<property name="password" value="1234"/>
+		<!-- Log4jdbc 사용시 : 오라클 
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" />
-		<!-- DB사용자 정보 -->
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" /> -->
+		<!-- DB사용자 정보
 		<property name="username" value="project" />
-		<property name="password" value="project" />
+		<property name="password" value="project" /> -->
 	</bean>
 
 	<!-- HikariCP Configuration -->
@@ -27,7 +35,7 @@
 	<!-- sqlSessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>		
 		<property name="typeAliasesPackage" value="org.project.domain"/><!-- domain별칭 : 매퍼의 경로를 줄여줌. -->
 	</bean>
 	
