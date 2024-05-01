@@ -37,4 +37,5 @@
     
     <!-- Spring Security Annotation --> 
     <sec:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"/>
+
 </beans:beans>

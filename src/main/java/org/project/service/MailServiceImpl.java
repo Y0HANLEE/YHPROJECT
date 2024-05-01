@@ -39,6 +39,32 @@ public class MailServiceImpl implements MailService{
 	}
 	*/
 	
+	public String joinMail(String ranStr, String email) {
+		Mail mail = new Mail();
+		mail.setFromUser("kevinyh18@gmail.com");
+		mail.setToUser(email);                    
+		mail.setTitle("[YH_PROJECT] 회원가입 본인인증 메일");
+		mail.setContent("안녕하세요 고객님,<br>당신의 인증번호는 "+ranStr+"입니다. 회원가입을 진행해주시기 바랍니다.");
+		
+		log.info("-------------------------mail:"+mail);
+		
+		try {
+            MimeMessage msg = mailSender.createMimeMessage();
+            MimeMessageHelper message = new MimeMessageHelper(msg, true, "UTF-8");
+            message.setTo(mail.getToUser());
+            message.setText(mail.getContent());
+            message.setFrom(mail.getFromUser());
+            message.setSubject(mail.getTitle());
+            
+            mailSender.send(msg);
+
+        } catch(Exception e){
+            log.info(e);
+            return "error";
+        }
+        return "success";
+	}
+	
 	public String renewalPwMail(String email, String ranPw) {
 		Mail mail = new Mail();
 		mail.setFromUser("kevinyh18@gmail.com");

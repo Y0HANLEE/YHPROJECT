@@ -14,23 +14,23 @@
 				<span id="title_title_byte_info" data-input="title_title" style="font-size: 12px; margin-left: 5px;"><%-- ${intro.i_m_tLength} --%></span>
 			</h1>
 		</div>
-		<div style="display:flex; align-content: center; width:10%; margin-bottom: 10px;">
-			<button type="button" id="modifyBtn" class="btn btn-info btn" style="margin-right:5px; height: 50px;">수정하기</button>
-			<button type="button" id="backBtn" class="btn btn-default btn" style="height: 50px;">뒤로가기</button>
-		</div>
+		<div style="display:flex; align-content: center; width:25%; margin-bottom: 10px;">
+				<button type="button" id="modifyBtn" class="btn btn-info btn" style="margin-right:5px; height: 50px;">수정하기</button>
+				<button type="button" id="backBtn" class="btn btn-default btn" style="height: 50px;">뒤로가기</button>
+			</div>
 	</div>
 	<p class="mb-4">
 		<label>소개글</label>
 <textarea class="form-control" name="title_intro" style="width:73.5%" placeholder="간단한 페이지 소개글 입력"><c:out value="${intro.title_intro}"/></textarea>
 	</p>
 	<!-- 파일업로드 -->
-	<div class="form-group" style="margin-left: 20px;">
+	<div class="form-group" style="margin-left: 10px; width: 89%;">
 		<i class="fa fa-tags fa-fw"></i><label>File</label>
 		<div class="form-group uploadDiv">
 			<input type="file" name="uploadFile" multiple>
 		</div>
 		<!-- 결과 -->
-		<div class="uploadResult">
+		<div class="uploadResult" style="height: 150px;">
 			<ul>
 				<!-- function showUploadResult(uploadResultArr) -->
 			</ul>

@@ -11,6 +11,7 @@ import org.project.domain.Criteria;
 import org.project.domain.MyCriteria;
 import org.project.domain.User.AuthVO;
 import org.project.domain.User.UserVO;
+import org.project.mapper.User.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

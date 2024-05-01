@@ -20,7 +20,7 @@
 	<div class="row">
 	    <div class="col-lg-12">
 	        <!-- 사진 슬라이드 -->	
-			<div class="slider" style="margin: 50px 0 0 20px; width:88.3%">
+			<div class="slider" style="margin: 50px 0 0 50px; width:88.3%">
 				<div class="slides">		
 					<!-- upload photo -->
 				</div>
@@ -30,7 +30,7 @@
 	    </div>
 	</div>
 	<!-- 게시판 -->
-	<h3 style="margin-top: 70px 0 10px 0;">최근 게시글</h3>	
+	<h3 style="margin: 70px 0 10px 0;">최근 게시글</h3>	
 	<div class="row">
 		<div id="board" class="col-lg-6">
 			<div class="panel panel-success">
@@ -172,7 +172,8 @@
 		<div class="form-group" style="margin: 80px 0 5px 0; width: 100%; display: flex; align-items: center;">
 			<label><i class="fa fa-bookmark fa-fw"></i><c:out value="${home.map_title}"></c:out>&nbsp;_&nbsp;<i class="fa fa-map-marker fa-fw"></i>address: <c:out value="${home.map_address}"/>. <c:out value="${home.map_addressdetail}"/></label>					 
 		</div>	
-		<div id="map" style="border-radius:5px;  width:100%; height:350px;"></div>
+		<div id="map" style="border-radius:5px;  width:100%; height:350px; margin-bottom: 10px;"></div>
+		- <c:out value="${home.map_intro}"/>
 	</div>
 	<!-- 소개 -->
 	<div class="row">

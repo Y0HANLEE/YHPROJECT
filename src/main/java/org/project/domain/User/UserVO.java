@@ -20,6 +20,7 @@ public class UserVO {
 	private String gender;	
 	private String phone;	
 	private String email;	//not null >> id/비번찾기 활용
+	private String checkStr; //본인인증 메일발송용 난수
 	private String zonecode;
 	private String address;
 	private String addressDetail;
@@ -33,5 +34,5 @@ public class UserVO {
 	private List<AlbumReplyVO> albumReplyList;
 	private List<BoardVO> boardList;
 	private List<BoardReplyVO> boardReplyList;	
-	private ProfileImageVO profileImg;
+	private ProfileImageVO profileImg;	
 }

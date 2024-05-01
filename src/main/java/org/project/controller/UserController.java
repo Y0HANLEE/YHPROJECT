@@ -2,9 +2,11 @@ package org.project.controller;
 
 import java.security.Principal;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.project.domain.MyCriteria;
 import org.project.domain.PageDTO;
 import org.project.domain.User.AuthVO;
+import org.project.domain.User.CheckVO;
 import org.project.domain.User.ProfileImageVO;
 import org.project.domain.User.UserVO;
 import org.project.service.MailService;
@@ -62,6 +64,42 @@ public class UserController {
 		log.info("[controller]------------------------------"+user);
 		return "redirect:/";
 	}
+	
+	/* 본인인증 매일발송 */
+	@Transactional
+	@ResponseBody
+	@PostMapping("/checkMailSend")
+	public ResponseEntity<String> checkMailSend(@RequestParam("email") String email){
+		String checkStr = RandomStringUtils.randomAlphanumeric(10); //8자리 영어+숫자 난수
+		log.info("isMailExist-------------------------------"+uservice.isMailExist(email));
+
+	    if(uservice.isMailExist(email) == 0) { // 최초 버튼 클릭 시, DB에 email, checkStr 저장
+	        CheckVO vo = new CheckVO();
+	        vo.setCheckStr(checkStr);
+	        vo.setEmail(email);
+	        uservice.checkStr(vo);
+	        mservice.joinMail(checkStr, email);
+	        log.info("[UserController]insert CheckVO----------------------------------"+vo);
+	        log.info("[UserController]mail to-----------------------------------------"+email);
+	        return new ResponseEntity<>("success", HttpStatus.OK);
+	    } else if (uservice.isMailExist(email) == 1 && uservice.ranStr(checkStr, email) == 1) { // 이메일이 있고(=기존에 발송된 인증번호가 있다), 인증번호 수정이 이루어졌다면 - 메일전송  
+	        mservice.joinMail(checkStr, email);
+	        log.info("[UserController]checkStr----------------------------------------"+checkStr);
+	        log.info("[UserController]mail to-----------------------------------------"+email);
+	        return new ResponseEntity<>("success", HttpStatus.OK);
+	    } else {
+	        log.info("[UserController]fail-------------------------------------------------");
+	        return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	/* 본인인증 체크 */
+	@ResponseBody
+	@PostMapping("/checkMailUser")
+	public int checkMailUser(@RequestParam("ranStr") String ranStr) throws Exception {		
+		int result = uservice.mailCheck(ranStr);
+		return result;
+	}	 
 	
 	/* 회원정보 조회 화면 : 로그인유저=현재사용자 + 관리자 */
 	@PreAuthorize("principal.username == #userid or hasRole('ADMIN')")

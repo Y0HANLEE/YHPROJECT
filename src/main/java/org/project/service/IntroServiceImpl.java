@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.project.domain.IntroAttachVO;
 import org.project.domain.IntroVO;
-import org.project.mapper.IntroAttachMapper;
-import org.project.mapper.IntroMapper;
+import org.project.mapper.Intro.IntroAttachMapper;
+import org.project.mapper.Intro.IntroMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

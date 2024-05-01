@@ -43,16 +43,16 @@
 						<ul><!-- 사진목록 --></ul>
 					</div>
 				</div>				
-				<div class="pull-right">
+				<div style="justify-content: flex-end; display: flex; width: 100%;">
 					<!-- 작성자 = 로그인된 사용자인 경우에만 Modify버튼 활성화 -->
 					<sec:authentication property="principal" var="info"/>						
 					<sec:authorize access="isAuthenticated()">
 						<c:if test="${info.username eq album.writer}">
-							<button data-oper="modify" class="btn btn-info">수정하기</button>
+							<button data-oper="modify" class="btn btn-info" style="width:100px">수정하기</button>
 						</c:if>
 					</sec:authorize>				
-					<button data-oper="list" class="btn btn-default">목록으로</button>
-					<button type="button" id="backBtn" class="btn btn-default">뒤로가기</button>
+					<button data-oper="list" class="btn btn-default" style="width:100px; margin: 0 5px;">목록으로</button>
+					<button id="backBtn" class="btn btn-default"  style="width:100px">뒤로가기</button>
 				</div>				
 											
 				<!-- Modify로 ano정보를 넘김으로써 수정/삭제시 modal창을 통해 게시글의 수정/삭제여부를 확인할수있게함. -->

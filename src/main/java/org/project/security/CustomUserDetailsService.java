@@ -1,7 +1,7 @@
 package org.project.security;
 
 import org.project.domain.User.UserVO;
-import org.project.mapper.UserMapper;
+import org.project.mapper.User.UserMapper;
 import org.project.security.domain.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

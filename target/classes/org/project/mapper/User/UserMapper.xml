@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.project.mapper.User.UserMapper">
+	<!-- foreign key 1:N userVO-authVO -->
+	<resultMap type="org.project.domain.User.UserVO" id="UserMap">
+		<!-- primary key -->
+		<id property="userid" column="userid"/>
+		<!-- column -->
+		<result property="uno" column="uno"/>
+		<result property="userid" column="userid"/>
+		<result property="userpw" column="userpw"/>
+		<result property="name" column="name"/>
+		<result property="gender" column="gender"/>
+		<result property="phone" column="phone"/>
+		<result property="email" column="email"/>
+		<result property="zonecode" column="zonecode"/>
+		<result property="address" column="address"/>
+		<result property="addressDetail" column="addressdetail"/>
+		<result property="birth" column="birth"/>
+		<result property="regdate" column="regdate"/>
+		<result property="updateDate" column="updatedate"/>				
+		<collection property="authList" resultMap="authMap"/>
+		<collection property="albumList" resultMap="albumMap"/>
+		<collection property="albumReplyList" resultMap="albumReplyMap"/>
+		<collection property="boardList" resultMap="boardMap"/>
+		<collection property="boardReplyList" resultMap="boardReplyMap"/>
+		<collection property="profileImg" resultMap="profileMap"/>
+	</resultMap>
+	
+	<resultMap type="org.project.domain.User.AuthVO" id="authMap">
+		<result property="userid" column="userid"/>
+		<result property="auth" column="auth"/>		
+	</resultMap>
+	
+	<resultMap type="org.project.domain.Board.BoardVO" id="boardMap">
+		<id property="bno" column="bno"/>
+		<result property="bno" column="bno"/>
+		<result property="title" column="title"/>
+		<result property="writer" column="writer"/>
+		<result property="regdate" column="regdate"/>
+		<result property="updateDate" column="updatedate"/>
+		<result property="hit" column="hit"/>
+		<result property="replyCnt" column="replycnt"/>
+		<result property="boardType" column="boardtype"/>
+	</resultMap>
+	
+	<resultMap type="org.project.domain.Album.AlbumVO" id="albumMap">
+		<id property="ano" column="ano"/>
+		<result property="ano" column="ano"/>
+		<result property="title" column="title"/>					
+		<result property="writer" column="writer"/>		
+		<result property="regdate" column="regdate"/>
+		<result property="updatedate" column="updatedate"/>
+		<result property="hit" column="hit"/>		
+		<result property="replyCnt" column="replycnt"/>		
+		<result property="boardType" column="boardtype"/>
+		<result property="startDate" column="startdate"/>
+		<result property="endDate" column="enddate"/>
+		<result property="location" column="location"/>
+	</resultMap>
+	
+	<resultMap type="org.project.domain.Board.BoardReplyVO" id="boardReplyMap">
+		<id property="rno" column="rno"/>
+		<result property="rno" column="rno"/>
+		<result property="bno" column="bno"/>		
+		<result property="reply" column="reply"/>
+		<result property="replyer" column="replyer"/>
+		<result property="replyDate" column="replydate"/>
+		<result property="updateDate" column="updatedate"/>
+		<result property="boardType" column="boardtype"/>		
+	</resultMap>
+	
+	<resultMap type="org.project.domain.Album.AlbumReplyVO" id="albumReplyMap">
+		<id property="rno" column="rno"/>
+		<result property="rno" column="rno"/>
+		<result property="ano" column="ano"/>		
+		<result property="reply" column="reply"/>
+		<result property="replyer" column="replyer"/>
+		<result property="replyDate" column="replydate"/>
+		<result property="updateDate" column="updatedate"/>
+		<result property="boardType" column="boardtype"/>		
+	</resultMap>
+	
+	<resultMap type="ProfileImageVO" id="profileMap">		
+		<id property="userid" column="userid"/>
+		<result property="userid" column="userid"/>		
+		<result property="uuid" column="uuid"/>
+		<result property="fileName" column="filename"/>
+		<result property="uploadPath" column="uploadpath"/>
+		<result property="fileType" column="filetype"/>		
+	</resultMap>
+	
+	<!-- 회원등록-정보 -->
+	<insert id="insertUser" parameterType="org.project.domain.User.UserVO">
+		insert into users (uno, userid, userpw, name, phone, email, address, birth, regdate, updatedate, enabled, gender, zonecode, addressdetail) 
+    	values (seq_users.nextval, #{userid}, #{userpw}, #{name}, #{phone}, #{email}, #{address}, #{birth, jdbcType=DATE}, sysdate, sysdate, #{enabled}, #{gender}, #{zonecode}, #{addressDetail})
+	</insert>
+	<!-- 회원등록-권한 : 기본_일반회원(3)-->
+	<insert id="insertAuth" parameterType="org.project.domain.User.UserVO">	    
+	    insert into auth (userid, auth) values (#{userid}, 'ROLE_USER')
+	</insert>
+	<!-- 메일검증 -->
+	<insert id="checkStr" parameterType="org.project.domain.User.CheckVO">
+		insert into checkmail(email, checkStr) values (#{email}, #{checkStr})
+	</insert>
+		
+		
+	<!-- 회원정보조회 -->
+	<select id="read" resultMap="UserMap">
+		select u.userid, userpw, name, gender, phone, email, zonecode, address, addressdetail, birth, regdate, updatedate, auth, p.uuid, p.filename, p.uploadpath, p.filetype 
+		from users u left outer join auth a on u.userid=a.userid
+					 left outer join profile p on u.userid=p.userid
+		where u.userid = #{userid}
+	</select>	
+	<!-- 회원등급조회 -->
+	<select id="readAuth" resultType="org.project.domain.User.AuthVO">
+		select auth from auth where userid=#{userid}
+	</select>
+	<!-- 중복아이디 확인 -->
+	<select id="checkId" resultType="int">
+		select count(*) from users where userid=#{userid}
+	</select>	
+	<!-- 아이디 찾기 -->
+	<select id="findId" resultType="String">
+		select userid from users where name=#{name} and email=#{email}
+	</select>
+	<!-- 이메일 본인인증 -->
+	<select id="mailCheck" resultType="int">
+		select count(*) from checkmail where checkStr=#{ranStr}
+	</select>
+	<!-- 이메일 본인인증 -->
+	<select id="isMailExist" resultType="int">
+		select count(*) from checkmail where email=#{email}
+	</select>
+	
+	<!-- <select id="boardList" resultMap="boardMap">
+	<![CDATA[
+    	select * from (
+        	select rownum rn, b.bno, b.title, b.writer, b.replycnt, b.hit, b.regdate, b.updatedate
+        	from board b left join users u on u.userid=b.writer where u.userid=#{userid} 
+	]]>     
+            <include refid="criteria"/>  : 인식오류 typeArr을 인식못함.
+            
+    <![CDATA[	    
+	        and rownum<=#{pageNum}*#{amount} order by bno desc
+	    ) where rn>(#{pageNum}-1)*#{amount}
+    ]]>
+   </select> -->
+	
+	<!-- 내가 쓴 글(board) 찾기 -->
+	<select id="boardList" resultMap="boardMap">	
+    	select * from (
+        select rownum rn, u.userid, b.bno, b.title, b.writer, b.replycnt, b.hit, b.regdate, b.updatedate, b.boardType
+        from board b left join users u on u.userid = b.writer where  
+	    <include refid="criteria"/>        
+        <![CDATA[	    
+	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by bno desc
+	    ) where rn>(#{pageNum}-1)*#{amount}
+    	]]>
+   </select>
+    <!-- 내가 쓴 총 게시글 수 -->
+    <select id="getBoardCnt" resultType="int">
+    	select count(*) from board where writer=#{userid}
+    </select>
+   	<!-- 내가 쓴 글(album) 찾기 -->
+	<select id="albumList" resultMap="albumMap">
+		select * from (
+       	select rownum rn, u.userid, a.ano, a.title, a.writer, a.replycnt, a.hit, a.regdate, a.updatedate, a.location, a.startdate, a.enddate, a.boardType
+        from album a left join users u on u.userid=a.writer where	
+        <include refid="criteria"/>
+        <![CDATA[	    
+	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by ano desc
+	    ) where rn>(#{pageNum}-1)*#{amount}
+    	]]>    
+	</select>
+	<!-- 내가 쓴 총 게시글 수 -->
+    <select id="getAlbumCnt" resultType="int">
+    	select count(*) from album where writer=#{userid}
+    </select>	
+	<!-- 내가 쓴 댓글(board) 찾기 -->
+	<select id="boardReplyList" resultMap="boardReplyMap">		
+    	select * from (
+        select rownum rn, b.rno, b.bno, b.reply, b.replyer, b.replydate, b.updatedate, b.boardType
+        from board_reply b left join users u on userid=b.replyer where  
+		<include refid="criteria"/>
+    	<![CDATA[	    
+	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by replydate desc
+	    ) where rn>(#{pageNum}-1)*#{amount}
+    	]]>    
+	</select>
+	<!-- 내가 쓴 총 댓글 수 -->
+    <select id="getBoardReplyCnt" resultType="int">
+    	select count(*) from board_reply where replyer=#{userid}
+    </select>
+	<!-- 내가 쓴 댓글(album) 찾기 -->
+	<select id="albumReplyList" resultMap="albumReplyMap">
+    	select * from (
+		select rownum rn, a.rno, a.ano, a.reply, a.replyer, a.replydate, a.updatedate, a.boardType
+		from album_reply a left join users u on u.userid=a.replyer where
+		<include refid="criteria"/>
+    	<![CDATA[	    
+	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by replydate desc
+	    ) where rn>(#{pageNum}-1)*#{amount}
+    	]]>
+	</select>
+	<!-- 내가 쓴 총 게시글 수 -->
+    <select id="getAlbumReplyCnt" resultType="int">
+    	select count(*) from album_reply where replyer=#{userid}
+    </select>
+		
+	<!-- 회원정보 수정 -->
+	<update id="update">
+		update users set phone=#{phone}, email=#{email}, zonecode=#{zonecode}, address=#{address}, addressdetail=#{addressDetail}, updatedate=sysdate where userid=#{userid}		
+	</update>
+	<!-- 비밀번호 수정 -->
+	<update id="updatePw">
+		update users set userpw=#{newPw} where userid=#{userid} and userpw=#{oldPw}		
+	</update>	
+	<!-- 비번초기화 -->
+	<update id="renewalPw">
+		update users set userpw=#{randomPw} where userid=#{userid} and email=#{email} 
+	</update>		
+	<!-- 이메일 본인인증 : 랜덤문자열 생성 -->
+	<update id="ranStr">
+		update checkmail set checkStr=#{checkStr} where email=#{email}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="delete">
+		delete from users where userid=#{userid}
+	</delete>
+	<!-- 사용자 권한 삭제 -->
+	<delete id="deleteAuth">
+		delete from auth where userid=#{userid}
+	</delete>	
+	<!-- 세션 삭제(자동로그인의 경우) -->
+	<delete id="deleteSession">
+		delete from persistent_logins where username=#{userid}
+	</delete>
+	
+
+	<!-- Admin_회원 목록 조회(페이징) -->
+	<select id="getUserList" resultMap="UserMap">
+	<![CDATA[
+		select * from(
+    		select rownum rn, u.uno, u.userid, u.name, u.gender, u.phone, u.email, u.zonecode, u.address, u.addressdetail, u.birth, u.regdate, u.updatedate, a.auth 
+	    	from users u left outer join auth a on u.userid = a.userid where
+	]]>				
+			<include refid="adminCri"/>	
+	<![CDATA[
+	    	rownum<=#{pageNum}*#{amount} order by u.uno desc
+		) where rn>(#{pageNum}-1)*#{amount}
+	]]>
+	</select>
+	<!-- Admin_회원등급 수정 -->
+	<update id="updateAuth">
+		update auth set auth=#{auth} where userid=#{userid} 
+	</update>
+	<!-- Admin_총 회원 수 계산 -->
+	<select id="getTotalUser" resultType="int">	
+		select count(*) from users u where		 
+		<include refid="adminCri"/>
+	<![CDATA[			
+		uno>0
+	]]>	
+	</select>
+		
+	<sql id="criteria">		
+    <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+        <choose>
+            <when test="type == 'T'.toString()">
+                title like '%'||#{keyword}||'%' 
+            </when>						
+            <when test="type == 'C'.toString()">
+                content like '%'||#{keyword}||'%'
+            </when>	
+            <when test="type == 'R'.toString()">
+                reply like '%'||#{keyword}||'%'
+            </when>	
+            <when test="type == 'L'.toString()">
+                location like '%'||#{keyword}||'%'
+            </when>				
+            <!-- <when test="type == 'D'.toString()">
+                <![CDATA[
+                    startdate <= #{endDate} AND enddate >= #{startDate} OR startdate LIKE '%' || #{keyword} || '%' OR enddate LIKE '%' || #{keyword} || '%'
+                ]]>
+            </when>	 -->											
+        </choose>					
+    </trim>		
+</sql>
+		
+		
+		
+	<!-- 공통 사용 퀴리 -->
+	<sql id="criteria2">		
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<!-- <foreach item="type" collection="typeArr"> -->
+			 <!-- <foreach item="type" collection="type.split('')" separator="OR"> -->	
+				<!-- <trim prefix="OR">		 -->					
+					<choose>
+						<when test="type == 'T'.toString()">
+						    title like '%'||#{keyword}||'%' 
+						</when>						
+						<when test="type == 'C'.toString()">
+						    content like '%'||#{keyword}||'%'
+						</when>	
+						<when test="type == 'R'.toString()">
+						    reply like '%'||#{keyword}||'%'
+						</when>	
+						<when test="type == 'L'.toString()">
+						    location like '%'||#{keyword}||'%'
+						</when>				
+						<!-- <when test="type == 'D'.toString()">
+						<![CDATA[
+						    startdate <= #{endDate} AND enddate >= #{startDate} OR startdate LIKE '%' || #{keyword} || '%'OR enddate LIKE '%' || #{keyword} || '%'
+					    ]]>
+						</when>		 -->										
+					</choose>					
+				<!-- </trim>						
+			</foreach> -->
+		</trim>		
+	</sql>	
+	
+	<sql id="adminCri">
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">							
+					<choose>					
+						<when test="type == 'I'.toString()">
+						    u.userid like '%'||#{keyword}||'%' 
+						</when>						
+						<when test="type == 'N'.toString()">
+						    u.name like '%'||#{keyword}||'%'
+						</when>	
+						<when test="type == 'G'.toString()">
+						    u.gender like '%'||#{keyword}||'%'
+						</when>	
+						<when test="type == 'P'.toString()">
+						    u.phone like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'M'.toString()">
+						    u.email like '%'||#{keyword}||'%'
+						</when>				
+						<when test="type == 'A'.toString()">
+						    u.address like '%'||#{keyword}||'%' 
+						</when>						
+						<when test="type == 'B'.toString()">
+						    u.birth like '%'||#{keyword}||'%'
+						</when>	
+						<when test="type == 'U'.toString()">
+						    a.auth like '%'||#{keyword}||'%'
+						</when>	
+					</choose>					
+				</trim>						
+			</foreach>
+		</trim>
+	</sql>
+</mapper>

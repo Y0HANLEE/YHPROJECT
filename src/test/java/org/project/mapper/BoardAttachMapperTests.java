@@ -17,7 +17,7 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
 public class BoardAttachMapperTests {
-	//AlbumAttachMapper의 경우, BoardAttachMapper를 기반으로 작성하여 구조가 같으므로 별도의 테스트를 진행하지 않음.
+	//AlbumAttachMapper, IntroAttachMapper의 경우, BoardAttachMapper를 기반으로 작성하여 구조가 같으므로 별도의 테스트를 진행하지 않음.
 	@Setter(onMethod_ = @Autowired)
 	private BoardAttachMapper bamapper;
 		

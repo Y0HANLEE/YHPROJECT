@@ -9,10 +9,11 @@ import org.project.domain.Album.AlbumVO;
 import org.project.domain.Board.BoardReplyVO;
 import org.project.domain.Board.BoardVO;
 import org.project.domain.User.AuthVO;
+import org.project.domain.User.CheckVO;
 import org.project.domain.User.ProfileImageVO;
 import org.project.domain.User.UserVO;
-import org.project.mapper.ProfileImageMapper;
-import org.project.mapper.UserMapper;
+import org.project.mapper.User.ProfileImageMapper;
+import org.project.mapper.User.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +41,30 @@ public class UserServiceImpl implements UserService{
 		profile.setUserid(user.getUserid()); 
 		pmapper.insert(profile);		
 	}
-		
+	
+	/* 본인인증 */
+	@Override
+	public void checkStr(CheckVO check) {
+		umapper.checkStr(check);
+	}
+	
+	
+	/* 본인인증 */
+	@Override
+	public int mailCheck(String ranStr) {
+		return umapper.mailCheck(ranStr);
+	}
+	
+	public int isMailExist(String email) {
+		return umapper.isMailExist(email);
+	};
+	
+	/* 본인인증용 난수 생성 */
+	@Override
+	public int ranStr(String checkStr, String email) {
+		return umapper.ranStr(checkStr, email);
+	}
+	
 	/* 사용자 정보 조회*/
 	@Override
 	public UserVO read(String userid) {
@@ -60,40 +84,49 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/* 아이디 찾기 */
+	@Override
 	public List<String> findId(String name, String email) {
 		return umapper.findId(name, email);
 	}
 	
-	/* 내가 쓴 게시글(board) 찾기 */ 
+	/* 내가 쓴 게시글(board) 찾기 */
+	@Override
 	public List<BoardVO> findBoardByUserid(MyCriteria cri){
 		return umapper.boardList(cri);
 	}
 	/* 내가 쓴 게시글(album) 찾기 */ 
+	@Override
 	public List<AlbumVO> findAlbumByUserid(MyCriteria cri){
 		return umapper.albumList(cri);
 	}
 	/* 내가 쓴 댓글(board) 찾기 */ 
+	@Override
 	public List<BoardReplyVO> findBoardReplyByUserid(MyCriteria cri){
 		return umapper.boardReplyList(cri);
 	}
 	/* 내가 쓴 댓글(album) 찾기 */ 
+	@Override
 	public List<AlbumReplyVO> findAlbumReplyByUserid(MyCriteria cri){
 		return umapper.albumReplyList(cri);
 	}
 	
 	/* 내가 쓴 글 개수 */
+	@Override
 	public int getBoardCnt(String userid) {
 		return umapper.getBoardCnt(userid);
 	}
 	/* 내가 쓴 글 개수 */
+	@Override
 	public int getAlbumCnt(String userid){
 		return umapper.getAlbumCnt(userid);
 	}
 	/* 내가 쓴 댓글 개수 */
+	@Override
 	public int getBoardReplyCnt(String userid){
 		return umapper.getBoardReplyCnt(userid);
 	}
 	/* 내가 쓴 댓글 개수 */
+	@Override
 	public int getAlbumReplyCnt(String userid){
 		return umapper.getAlbumReplyCnt(userid);
 	}	
@@ -121,6 +154,7 @@ public class UserServiceImpl implements UserService{
     }
 	
 	/* 비밀번호 초기화 */
+	@Override
 	public int renewalPw(String randomPw, String userid, String email) {
 		return umapper.renewalPw(randomPw, userid, email);
 	}
@@ -138,6 +172,7 @@ public class UserServiceImpl implements UserService{
 	}	
 		
 	/* Admin_사용자목록조회 */
+	@Override
 	public List<UserVO> getUserList(Criteria cri){
 		return umapper.getUserList(cri);
 	}
@@ -149,6 +184,7 @@ public class UserServiceImpl implements UserService{
 	} 
 
 	/* Admin_사용자등급조정 */
+	@Override
 	public int updateAuth(String auth, String userid) {
 		return umapper.updateAuth(auth, userid);
 	}

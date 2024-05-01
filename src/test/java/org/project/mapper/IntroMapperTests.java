@@ -3,6 +3,7 @@ package org.project.mapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.project.domain.IntroVO;
+import org.project.mapper.Intro.IntroMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,8 +20,7 @@ public class IntroMapperTests {
 
 	@Setter(onMethod_ = @Autowired)
 	private IntroMapper imapper;
-	
-		
+			
 	/* 소개화면-소개글 조회 */
 	@Test
 	public void getIntro() {
