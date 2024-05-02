@@ -57,11 +57,13 @@
 						<sec:authentication property="principal" var="principal"/>					
 						<sec:authorize access="isAuthenticated()">
 							<c:if test="${principal.username eq user.userid}">
-								<button id="updateBtn" class="btn btn-lg btn-info btn-lg">수정하기</button>						
-								<button id="deleteBtn" class="btn btn-lg btn-default btn-lg ">회원탈퇴</button>
-							</c:if>
-						</sec:authorize>				
-						<button id="backBtn" class="btn btn-lg btn-default btn-lg" onclick="history.back()">뒤로가기</button>						
+								<button id="updateBtn" class="btn btn-lg btn-info btn-lg">수정하기</button>
+								<sec:authorize access="hasAnyRole('ROLE_MANAGER','ROLE_USER')">
+									<button id="deleteBtn" class="btn btn-lg btn-default btn-lg ">회원탈퇴</button>
+								</sec:authorize>
+							</c:if>								
+						</sec:authorize>							
+						<button id="backBtn" class="btn btn-lg btn-default btn-lg" onclick="history.back()">뒤로가기</button>
 					</div>
 				</div>	
 			</div>

@@ -9,13 +9,11 @@
 	<div id="userCol12" class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				User List Page
-				<!-- <button id="regBtn" class="btn btn-primary btn-xs pull-right">register</button> -->
+				User List Page				
 			</div>
 			<!-- 본문 및 부가기능 -->
 			<div class="panel-body">
-				<!-- 본문 -->
-				<!-- <table width="100%"	class="table table-striped table-bordered table-hover" id="dataTables-example"> sort기능 -->
+				<!-- 본문 -->				
 				<table class="table table-striped table-bordered table-hover tableList">
 					<thead>					
 						<tr>
