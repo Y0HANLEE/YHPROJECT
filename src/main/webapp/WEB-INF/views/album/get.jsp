@@ -202,24 +202,21 @@ $(document).ready(function(){
 				// 댓글이 있을 경우 순차적으로 replyUl에 추가
 				for(var i=0; i<list.length||0; i++){
 					str += "<li class='left clearfix' data-rno="+list[i].rno+"><div id='replyZone' class='header'>";
-					str += "<div id='replyA'><div class='reply_ProfileFrame'></div></div>";
+					str += "<div id='replyA'><div class='reply_ProfileFrame' data-userid="+list[i].replyer+"></div></div>";
 					str += "<div id='replyB'><strong class='primary-font'>"+list[i].replyer+"</strong><p class='pre-wrap'>"+list[i].reply+"</p></div>";
 					str += "<div id='replyC' style='width:15%'><small class='pull-right text-muted'>"+replyService.displayTime(list[i].replyDate)+"</small></div>";
-					str += "</div></li>";	
+					str += "</div></li>";		
 					
 					(function(){		
-						$.getJSON("/user/getProfileImg", {userid:list[i].replyer}, function(result){
+						var replyer = list[i].replyer;
+						$.getJSON("/user/getProfileImg", {userid:replyer}, function(result){
 							var fileCallPath = encodeURIComponent(result.uploadPath+"/"+result.uuid+"_"+result.fileName);
-					        $(".reply_ProfileFrame").attr({"data-path":result.uploadPath, "data-uuid":result.uuid, "data-filename":result.fileName, "data-type":result.fileType});
-							$(".reply_ProfileFrame").html("<img id='profile_small' src='/display?fileName="+fileCallPath+"'>");
-							console.log("-------"+result);
-							console.log(result.uploadPath);
-							console.log(result.uuid);
-							console.log(result.fileName);
-							console.log(fileCallPath);
+					      	$(".reply_ProfileFrame[data-userid='"+replyer+"']").attr({ "data-path": result.uploadPath, "data-uuid": result.uuid, "data-filename": result.fileName, "data-type": result.fileType, "data-userid": result.userid });
+				            $(".reply_ProfileFrame[data-userid='"+replyer+"']").html("<img id='profile_small' src='/display?fileName=" + fileCallPath + "'>");
 						});
 					})();
-				}						
+				}
+				
 				replyUl.html(str);
 				
 				showReplyPage(replyCnt);
