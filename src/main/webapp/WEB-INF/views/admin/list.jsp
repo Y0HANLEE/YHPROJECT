@@ -37,16 +37,27 @@
 							<td><c:out value="${user.name}" /></td>
 							<td><c:out value="${user.gender == 'M'?'M':'F'}" /></td>							
 							<td><c:out value="${user.phone}"/></td>
-							<td><select name="auth">									
-									<option value="ROLE_USER" <c:out value="${user.authList[0].auth == 'ROLE_USER'?'selected':''}"/>>일반회원</option>
-									<option value="ROLE_MANAGER" <c:out value="${user.authList[0].auth == 'ROLE_MANAGER'?'selected':''}"/>>운영자</option>
-									<option value="ROLE_ADMIN" <c:out value="${user.authList[0].auth == 'ROLE_ADMIN'?'selected':''}"/>>관리자</option>
-							</select></td>
+							<td>
+								<c:choose>
+									<c:when test="${user.userid ne 'admin'}">
+									<select name="auth">									
+										<option value="ROLE_USER" <c:out value="${user.authList[0].auth == 'ROLE_USER'?'selected':''}"/>>일반회원</option>
+										<option value="ROLE_MANAGER" <c:out value="${user.authList[0].auth == 'ROLE_MANAGER'?'selected':''}"/>>운영자</option>
+										<option value="ROLE_ADMIN" <c:out value="${user.authList[0].auth == 'ROLE_ADMIN'?'selected':''}"/>>관리자</option>
+									</select>
+									</c:when>
+									<c:otherwise>
+										<c:out value="${user.authList[0].auth == 'ROLE_ADMIN' ? '관리자':''}"/>
+									</c:otherwise>
+								</c:choose>
+							</td>
 							<td><fmt:formatDate pattern="YY/MM/dd" value="${user.regdate}" /></td>																				
-							<td>	
-								<!-- data-userid : c:forEach로 반복시 고유한 기능을 잃게되므로 각각 고유한 버튼으로 만들어줘야함. -->
-								<button class="authBtn btn btn-default btn-xs" data-userid="${user.userid}" style="margin-bottom: 2px;">등급조정</button>
-								<button class="deleteBtn btn btn-defualt btn-xs" data-userid="${user.userid}">회원삭제</button>
+							<td style="height: 63.5px">
+								<c:if test="${user.userid ne 'admin'}">
+									<!-- data-userid : c:forEach로 반복시 고유한 기능을 잃게되므로 각각 고유한 버튼으로 만들어줘야함. -->
+									<button class="authBtn btn btn-default btn-xs" data-userid="${user.userid}" style="margin-bottom: 2px;">등급조정</button>
+									<button class="deleteBtn btn btn-defualt btn-xs" data-userid="${user.userid}">회원삭제</button>
+								</c:if>
 							</td>						
 						</tr>
 					</c:forEach>					
@@ -198,7 +209,6 @@
 		        return false;
 		    }
 		});
-
 		
 		/* MODAL창 설정 */
 		function checkModal(result) {			
