@@ -21,7 +21,7 @@
 		select count(rno) from album_reply where ano=#{ano}	
 	</select>
 	<!-- 전체 댓글 목록 -->
-	<select id="getListAll" resultType="BoardReplyVO">    
+	<select id="getListAll" resultType="AlbumReplyVO">    
         select * from (
             select row_number() over (order by rno desc) rn, rno, ano, reply, replyer, replydate, updatedate
             from album_reply where rno>0

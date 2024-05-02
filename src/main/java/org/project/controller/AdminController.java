@@ -101,7 +101,7 @@ public class AdminController {
 	@PostMapping({"/home","/intro"})
 	public String updateIntroduce(IntroVO intro, RedirectAttributes rttr, Model model) {
 		iservice.update(intro);
-		
+		log.info(intro);
 		//첨부파일이 있다면
 		if(intro.getAttachList() != null) {
 			intro.getAttachList().forEach(attach -> log.info(attach));

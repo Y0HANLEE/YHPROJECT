@@ -1,7 +1,5 @@
 package org.project.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import org.project.domain.Criteria;
@@ -42,15 +40,13 @@ public class HomeController {
     /* 홈화면 */    
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Locale locale, Criteria cri, Model model) {
-        logger.info("Welcome YH Project! The client locale is {}.", locale);        
-        String formDate = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale).format(new Date());        
-        model.addAttribute("serverTime", formDate);
+        logger.info("어서오세요, 혼돈의 카오스. YH Project에! [Client locale {}]", locale);
     	
         Criteria criteria = new Criteria(1,5);        
         model.addAttribute("boardList", bservice.getList(criteria)); 
         model.addAttribute("albumList", alservice.getList(criteria));
-        model.addAttribute("boardReplyList", brservice.getListAll(criteria)); 
-        model.addAttribute("albumReplyList", arservice.getListAll(criteria));
+        model.addAttribute("boardReplyList", brservice.getListAll(criteria));
+        model.addAttribute("albumReplyList", arservice.getListAll(criteria));        
         model.addAttribute("home", iservice.read(1));    	
         
         return "main/home";

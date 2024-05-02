@@ -155,7 +155,7 @@
 						<tbody>						
 							<c:forEach items="${albumReplyList}" var="albumReply">						
 								<tr class="Htr">							
-									<td><c:out value="${albumReply.ano}" /></td>
+									<td><c:out value="${albumReply.ano}"/></td>
 									<td class="HBtitle" style="padding: 8px 15px;"><c:out value="${albumReply.reply}" /></td>	
 									<td><c:out value="${albumReply.replyer}" /></td>							
 									<td><fmt:formatDate pattern="YY.MM.dd" value="${albumReply.replyDate}"/></td>						
