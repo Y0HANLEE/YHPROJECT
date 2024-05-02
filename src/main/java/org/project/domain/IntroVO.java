@@ -1,5 +1,6 @@
 package org.project.domain;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -15,5 +16,7 @@ public class IntroVO {
 	private String map_address;
 	private String map_addressdetail;
 	private String intro;
+	private Date regdate;
+	private Date updateDate;
 	private List<IntroAttachVO> attachList;	
 }

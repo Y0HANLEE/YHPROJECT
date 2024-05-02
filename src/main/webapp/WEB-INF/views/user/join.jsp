@@ -455,7 +455,7 @@ $(document).ready(function(){
 		}
 		
 		//이메일 본인인증 여부 확인
-		if($("#checkMailSend").val() == "N"){
+		if($("#checkMdalBtn").val() == "N"){
 			$("#myModalBody").html("<p>이메일 본인인증을 진행해주세요</p>");
 			modal("#checkMailSend");
 		    return;					

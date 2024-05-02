@@ -8,13 +8,13 @@
 	
 	
 	<!-- 특정 게시물에 달린 첨부파일 찾기 -->	
-	<select id="findByBno" resultType="org.project.domain.Board.BoardAttachVO">
+	<select id="findByBno" resultType="BoardAttachVO">
 		select * from board_attach where bno = #{bno}
 	</select>
 	
 	<!-- 오래된(하루전) 파일들 가져오기 : task를 이용하여 검사하기 위함. -->
-	<select id="getOldFiles" resultType="org.project.domain.Board.BoardAttachVO">
-		select * from board_attach where uploadPath = to_char(sysdate-1, 'yyyy\mm\dd')
+	<select id="getOldFiles" resultType="BoardAttachVO">
+		select * from board_attach where uploadpath = date_format(date_sub(CURDATE(), interval 1 day), '%y/%m/%d');
 	</select>
 
 	

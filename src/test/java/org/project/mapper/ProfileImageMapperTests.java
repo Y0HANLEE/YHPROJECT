@@ -46,14 +46,7 @@ public class ProfileImageMapperTests {
 		profile.setUuid("gengi;opehjiejafgqgohda");
 		pmapper.update(profile);
 	}
-	
-	/*프로필초기화*/
-	@Test
-	public void testResetProfile() {
-		ProfileImageVO profile = pmapper.getProfileByUserid("qwerty");
-		pmapper.reset(profile);
-	}
-	
+		
 	/*프로필삭제-탈퇴시*/
 	@Test
 	public void testDeleteProfile() {

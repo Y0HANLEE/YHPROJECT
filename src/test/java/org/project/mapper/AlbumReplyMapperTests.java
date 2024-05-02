@@ -10,8 +10,8 @@ import javax.sql.DataSource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.project.domain.Criteria;
-import org.project.domain.Board.BoardReplyVO;
-import org.project.mapper.Board.BoardReplyMapper;
+import org.project.domain.Album.AlbumReplyVO;
+import org.project.mapper.Album.AlbumReplyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,10 +22,9 @@ import lombok.extern.log4j.Log4j;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
-public class BoardReplyMapperTests {
-	//AlbumReplyMapper의 경우, BoardReplyMapper를 기반으로 작성하여 구조가 같으므로 별도의 테스트를 진행하지 않음.
+public class AlbumReplyMapperTests {
 	@Setter(onMethod_ = @Autowired)
-	private BoardReplyMapper rmapper;
+	private AlbumReplyMapper rmapper;
 	
 	@Setter(onMethod_ = @Autowired)
 	private DataSource ds;
@@ -38,7 +37,7 @@ public class BoardReplyMapperTests {
 	/* 댓글 테스트 더미 등록 */
 	@Test
 	public void testInsertContent() {
-	    String sql = "insert into board_reply (bno, reply, replyer) values (?, ?, ?)";
+	    String sql = "insert into album_reply (ano, reply, replyer) values (?, ?, ?)";
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    try {       
@@ -75,8 +74,7 @@ public class BoardReplyMapperTests {
 	/* 댓글 등록 */
 	@Test
 	public void testInsert() {
-		BoardReplyVO reply = new BoardReplyVO();
-		reply.setBno(1L);
+		AlbumReplyVO reply = new AlbumReplyVO();		
 		reply.setReply("test reply");
 		reply.setReplyer("admin");
 		
@@ -93,7 +91,7 @@ public class BoardReplyMapperTests {
 	/* 댓글 수정*/
 	@Test
 	public void testUpdate() {
-		BoardReplyVO reply = rmapper.read(201L);		
+		AlbumReplyVO reply = rmapper.read(201L);		
 		reply.setReply("up test");
 		int result = rmapper.update(reply);
 		if(result == 1) {
@@ -114,7 +112,7 @@ public class BoardReplyMapperTests {
 	public void testList() {
 		Criteria cri = new Criteria();
 		long targetBno = 100L;
-		List<BoardReplyVO> replies = rmapper.getListWithPaging(cri, targetBno);
+		List<AlbumReplyVO> replies = rmapper.getListWithPaging(cri, targetBno);
 		replies.forEach(reply->log.info(reply));
 	}
 	
@@ -122,15 +120,15 @@ public class BoardReplyMapperTests {
 	@Test
 	public void testGetCount() {
 		long targetBno = 100L;
-		log.info("count replies--------"+rmapper.getCountByBno(targetBno));
+		log.info("count replies--------"+rmapper.getCountByAno(targetBno));
 	}
 	
 	/* 전체 댓글 목록 조회 */
 	@Test
 	public void testGetListAll() {
 		int page = 1;
-		int amount = 10;
-		List<BoardReplyVO> replies = rmapper.getListAll(new Criteria(page,amount));
+		int amount = 100;
+		List<AlbumReplyVO> replies = rmapper.getListAll(new Criteria(page, amount));
 		replies.forEach(reply -> log.info(reply));
 	}
 }

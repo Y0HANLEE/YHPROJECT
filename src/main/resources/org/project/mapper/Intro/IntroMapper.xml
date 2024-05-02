@@ -12,6 +12,8 @@
 		<result property="map_address" column="map_address"/>
 		<result property="map_addressdetail" column="map_addressdetail"/>
 		<result property="intro" column="intro"/>
+		<result property="regdate" column="regdate"/>
+		<result property="updateDate" column="updatedate"/>
 		<collection property="attachList" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap type="IntroAttachVO" id="attachMap">		
@@ -31,7 +33,7 @@
 	<update id="update">		
 		update intro set title_title=#{title_title}, title_intro=#{title_intro}, 
 			   map_title=#{map_title}, map_intro=#{map_intro}, map_caption=#{map_caption}, map_address=#{map_address}, map_addressdetail=#{map_addressdetail}, 
-			   intro=#{intro} 
+			   intro=#{intro}, updatedate=current_timestamp 
 		where boardtype=#{boardtype}		
 	</update>	
 </mapper>

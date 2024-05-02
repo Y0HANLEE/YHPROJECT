@@ -3,50 +3,34 @@
 <mapper namespace="org.project.mapper.Album.AlbumReplyMapper">
 	<!-- 댓글 등록 -->	
 	<insert id="insert">
-		insert into album_reply (rno, ano, reply, replyer) values (seq_album_reply.nextval, #{ano}, #{reply}, #{replyer})
+		insert into album_reply (ano, reply, replyer) values (#{ano}, #{reply}, #{replyer})
 	</insert>
-	
-	
 	<!-- 댓글 조회 -->
-	<select id="read" resultType="org.project.domain.Album.AlbumReplyVO">
+	<select id="read" resultType="AlbumReplyVO">
 		select * from album_reply where rno=#{rno}
 	</select>
-	
-	<!-- 댓글 목록 -->
-	<select id="getListWithPaging" resultType="org.project.domain.Album.AlbumReplyVO">
-		<![CDATA[
-			select rno, ano, reply, replyer, replydate, updatedate 
-			from (
-				select /*+INDEX(reply idx_album_reply)*/
-					rownum rn, rno, ano, reply, replyer, replydate, updatedate
-					from album_reply where ano=#{ano} and rno>0 and rownum <= #{cri.pageNum} * #{cri.amount} 
-			) where rn > (#{cri.pageNum} -1) * #{cri.amount}		
-		]]>
-	</select>	
-	
+	<!-- 댓글 목록 -->	
+	<select id="getListWithPaging" resultType="AlbumReplyVO">
+        select * from (
+            select row_number() over (order by rno desc) rn, rno, ano, reply, replyer, replydate, updatedate
+            from album_reply where ano=#{ano}
+        )sub where rn between ((#{cri.pageNum}-1)*#{cri.amount})+1 and #{cri.pageNum}*#{cri.amount}
+	</select>
 	<!-- 특정 게시글에 달린 댓글 개수 세기 -->
 	<select id="getCountByAno" resultType="int">
 		select count(rno) from album_reply where ano=#{ano}	
 	</select>
-	
 	<!-- 전체 댓글 목록 -->
-	<select id="getListAll" resultType="org.project.domain.Album.AlbumReplyVO">
-		<![CDATA[
-			select rno, ano, reply, replyer, replydate, updatedate 
-			from (
-				select /*+INDEX_desc(reply idx_album_reply)*/
-					rownum rn, rno, ano, reply, replyer, replydate, updatedate
-					from album_reply where rno>0 and rownum <= #{pageNum} * #{amount} order by replydate desc
-			) where rn > (#{pageNum} -1) * #{amount}		
-		]]>
+	<select id="getListAll" resultType="BoardReplyVO">    
+        select * from (
+            select row_number() over (order by rno desc) rn, rno, ano, reply, replyer, replydate, updatedate
+            from album_reply where rno>0
+        )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{pageNum}*#{amount}
 	</select>
-	
 	<!-- 댓글 수정 -->
 	<update id="update">
-		update album_reply set reply=#{reply}, updatedate=sysdate where rno=#{rno} 
+		update album_reply set reply=#{reply}, updatedate=current_timestamp where rno=#{rno} 
 	</update>
-	
-	
 	<!-- 댓글 삭제 -->
 	<delete id="delete">
 		delete from album_reply where rno=#{rno}

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.project.mapper.User.UserMapper">
 	<!-- foreign key 1:N userVO-authVO -->
-	<resultMap type="org.project.domain.User.UserVO" id="UserMap">
+	<resultMap type="UserVO" id="UserMap">
 		<!-- primary key -->
 		<id property="userid" column="userid"/>
 		<!-- column -->
@@ -26,13 +26,11 @@
 		<collection property="boardReplyList" resultMap="boardReplyMap"/>
 		<collection property="profileImg" resultMap="profileMap"/>
 	</resultMap>
-	
-	<resultMap type="org.project.domain.User.AuthVO" id="authMap">
+	<resultMap type="AuthVO" id="authMap">
 		<result property="userid" column="userid"/>
 		<result property="auth" column="auth"/>		
 	</resultMap>
-	
-	<resultMap type="org.project.domain.Board.BoardVO" id="boardMap">
+	<resultMap type="BoardVO" id="boardMap">
 		<id property="bno" column="bno"/>
 		<result property="bno" column="bno"/>
 		<result property="title" column="title"/>
@@ -43,8 +41,7 @@
 		<result property="replyCnt" column="replycnt"/>
 		<result property="boardType" column="boardtype"/>
 	</resultMap>
-	
-	<resultMap type="org.project.domain.Album.AlbumVO" id="albumMap">
+	<resultMap type="AlbumVO" id="albumMap">
 		<id property="ano" column="ano"/>
 		<result property="ano" column="ano"/>
 		<result property="title" column="title"/>					
@@ -58,8 +55,7 @@
 		<result property="endDate" column="enddate"/>
 		<result property="location" column="location"/>
 	</resultMap>
-	
-	<resultMap type="org.project.domain.Board.BoardReplyVO" id="boardReplyMap">
+	<resultMap type="BoardReplyVO" id="boardReplyMap">
 		<id property="rno" column="rno"/>
 		<result property="rno" column="rno"/>
 		<result property="bno" column="bno"/>		
@@ -69,8 +65,7 @@
 		<result property="updateDate" column="updatedate"/>
 		<result property="boardType" column="boardtype"/>		
 	</resultMap>
-	
-	<resultMap type="org.project.domain.Album.AlbumReplyVO" id="albumReplyMap">
+	<resultMap type="AlbumReplyVO" id="albumReplyMap">
 		<id property="rno" column="rno"/>
 		<result property="rno" column="rno"/>
 		<result property="ano" column="ano"/>		
@@ -80,7 +75,6 @@
 		<result property="updateDate" column="updatedate"/>
 		<result property="boardType" column="boardtype"/>		
 	</resultMap>
-	
 	<resultMap type="ProfileImageVO" id="profileMap">		
 		<id property="userid" column="userid"/>
 		<result property="userid" column="userid"/>		
@@ -91,29 +85,29 @@
 	</resultMap>
 	
 	<!-- 회원등록-정보 -->
-	<insert id="insertUser" parameterType="org.project.domain.User.UserVO">
-		insert into users (uno, userid, userpw, name, phone, email, address, birth, regdate, updatedate, enabled, gender, zonecode, addressdetail) 
-    	values (seq_users.nextval, #{userid}, #{userpw}, #{name}, #{phone}, #{email}, #{address}, #{birth, jdbcType=DATE}, sysdate, sysdate, #{enabled}, #{gender}, #{zonecode}, #{addressDetail})
+	<insert id="insertUser" parameterType="UserVO">
+		insert into users (userid, userpw, name, phone, email, address, birth, regdate, updatedate, enabled, gender, zonecode, addressdetail) 
+    	values (#{userid}, #{userpw}, #{name}, #{phone}, #{email}, #{address}, #{birth, jdbcType=DATE}, current_timestamp, current_timestamp, #{enabled}, #{gender}, #{zonecode}, #{addressDetail})
 	</insert>
 	<!-- 회원등록-권한 : 기본_일반회원(3)-->
-	<insert id="insertAuth" parameterType="org.project.domain.User.UserVO">	    
+	<insert id="insertAuth" parameterType="UserVO">	    
 	    insert into auth (userid, auth) values (#{userid}, 'ROLE_USER')
 	</insert>
 	<!-- 메일검증 -->
-	<insert id="checkStr" parameterType="org.project.domain.User.CheckVO">
+	<insert id="checkStr" parameterType="CheckVO">
 		insert into checkmail(email, checkStr) values (#{email}, #{checkStr})
 	</insert>
 		
 		
 	<!-- 회원정보조회 -->
 	<select id="read" resultMap="UserMap">
-		select u.userid, userpw, name, gender, phone, email, zonecode, address, addressdetail, birth, regdate, updatedate, auth, p.uuid, p.filename, p.uploadpath, p.filetype 
-		from users u left outer join auth a on u.userid=a.userid
-					 left outer join profile p on u.userid=p.userid
-		where u.userid = #{userid}
+		select u.*, a.auth, p.uuid, p.filename, p.uploadpath, p.filetype
+		from users u left join auth a on u.userid = a.userid
+					 left join profile p on u.userid = p.userid
+		where u.userid = #{userid};
 	</select>	
 	<!-- 회원등급조회 -->
-	<select id="readAuth" resultType="org.project.domain.User.AuthVO">
+	<select id="readAuth" resultType="AuthVO">
 		select auth from auth where userid=#{userid}
 	</select>
 	<!-- 중복아이디 확인 -->
@@ -150,13 +144,10 @@
 	<!-- 내가 쓴 글(board) 찾기 -->
 	<select id="boardList" resultMap="boardMap">	
     	select * from (
-        select rownum rn, u.userid, b.bno, b.title, b.writer, b.replycnt, b.hit, b.regdate, b.updatedate, b.boardType
-        from board b left join users u on u.userid = b.writer where  
-	    <include refid="criteria"/>        
-        <![CDATA[	    
-	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by bno desc
-	    ) where rn>(#{pageNum}-1)*#{amount}
-    	]]>
+        	select row_number() over(order by bno desc) rn, u.userid, bno, title, content, writer, regdate, updatedate, replycnt, hit 
+        	from board b left join users u on u.userid=b.writer where <include refid="criteria"/>
+	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR}
+	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}    	
    </select>
     <!-- 내가 쓴 총 게시글 수 -->
     <select id="getBoardCnt" resultType="int">
@@ -165,28 +156,22 @@
    	<!-- 내가 쓴 글(album) 찾기 -->
 	<select id="albumList" resultMap="albumMap">
 		select * from (
-       	select rownum rn, u.userid, a.ano, a.title, a.writer, a.replycnt, a.hit, a.regdate, a.updatedate, a.location, a.startdate, a.enddate, a.boardType
-        from album a left join users u on u.userid=a.writer where	
-        <include refid="criteria"/>
-        <![CDATA[	    
-	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by ano desc
-	    ) where rn>(#{pageNum}-1)*#{amount}
-    	]]>    
+        	select row_number() over(order by ano desc) rn, u.userid, ano, location, title, content, writer, replycnt, hit, regdate, updatedate, startdate, enddate  
+        	from album a left join users u on u.userid=a.writer where <include refid="criteria"/>
+	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR}
+	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}  
 	</select>
 	<!-- 내가 쓴 총 게시글 수 -->
     <select id="getAlbumCnt" resultType="int">
     	select count(*) from album where writer=#{userid}
     </select>	
 	<!-- 내가 쓴 댓글(board) 찾기 -->
-	<select id="boardReplyList" resultMap="boardReplyMap">		
-    	select * from (
-        select rownum rn, b.rno, b.bno, b.reply, b.replyer, b.replydate, b.updatedate, b.boardType
-        from board_reply b left join users u on userid=b.replyer where  
-		<include refid="criteria"/>
-    	<![CDATA[	    
-	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by replydate desc
-	    ) where rn>(#{pageNum}-1)*#{amount}
-    	]]>    
+	<select id="boardReplyList" resultMap="boardReplyMap">
+		select * from (
+        	select row_number() over(order by bno asc, rno desc) rn, u.userid, rno, bno, reply, replyer, replydate, updatedate 
+        	from board_reply b left join users u on u.userid=b.replyer where <include refid="criteria"/>
+	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR}
+	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}
 	</select>
 	<!-- 내가 쓴 총 댓글 수 -->
     <select id="getBoardReplyCnt" resultType="int">
@@ -195,13 +180,10 @@
 	<!-- 내가 쓴 댓글(album) 찾기 -->
 	<select id="albumReplyList" resultMap="albumReplyMap">
     	select * from (
-		select rownum rn, a.rno, a.ano, a.reply, a.replyer, a.replydate, a.updatedate, a.boardType
-		from album_reply a left join users u on u.userid=a.replyer where
-		<include refid="criteria"/>
-    	<![CDATA[	    
-	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR} and rownum<=#{pageNum}*#{amount} order by replydate desc
-	    ) where rn>(#{pageNum}-1)*#{amount}
-    	]]>
+        	select row_number() over(order by ano asc, rno desc) rn, u.userid, rno, ano, reply, replyer, replydate, updatedate 
+        	from album_reply a left join users u on u.userid=a.replyer where <include refid="criteria"/>
+	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR}
+	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}
 	</select>
 	<!-- 내가 쓴 총 게시글 수 -->
     <select id="getAlbumReplyCnt" resultType="int">
@@ -210,7 +192,7 @@
 		
 	<!-- 회원정보 수정 -->
 	<update id="update">
-		update users set phone=#{phone}, email=#{email}, zonecode=#{zonecode}, address=#{address}, addressdetail=#{addressDetail}, updatedate=sysdate where userid=#{userid}		
+		update users set phone=#{phone}, email=#{email}, zonecode=#{zonecode}, address=#{address}, addressdetail=#{addressDetail}, updatedate=current_timestamp where userid=#{userid}		
 	</update>
 	<!-- 비밀번호 수정 -->
 	<update id="updatePw">
@@ -240,17 +222,11 @@
 	
 
 	<!-- Admin_회원 목록 조회(페이징) -->
-	<select id="getUserList" resultMap="UserMap">
-	<![CDATA[
+	<select id="getUserList" resultMap="UserMap">	
 		select * from(
-    		select rownum rn, u.uno, u.userid, u.name, u.gender, u.phone, u.email, u.zonecode, u.address, u.addressdetail, u.birth, u.regdate, u.updatedate, a.auth 
-	    	from users u left outer join auth a on u.userid = a.userid where
-	]]>				
-			<include refid="adminCri"/>	
-	<![CDATA[
-	    	rownum<=#{pageNum}*#{amount} order by u.uno desc
-		) where rn>(#{pageNum}-1)*#{amount}
-	]]>
+    		select row_number() over(order by uno desc) rn, u.*, a.auth 
+    		from users u left join auth a on u.userid=a.userid where <include refid="adminCri"/> uno>0	    	
+		)sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{pageNum}*#{amount}	
 	</select>
 	<!-- Admin_회원등급 수정 -->
 	<update id="updateAuth">
@@ -258,68 +234,58 @@
 	</update>
 	<!-- Admin_총 회원 수 계산 -->
 	<select id="getTotalUser" resultType="int">	
-		select count(*) from users u where		 
-		<include refid="adminCri"/>
-	<![CDATA[			
-		uno>0
-	]]>	
+		select count(*) from users u where <include refid="adminCri"/> uno>0
 	</select>
 		
-	<sql id="criteria">		
+	<!-- <sql id="criteria">		
     <trim prefix="(" suffix=") AND " prefixOverrides="OR">
         <choose>
             <when test="type == 'T'.toString()">
-                title like '%'||#{keyword}||'%' 
+                title like CONCAT('%', #{keyword}, '%') 
             </when>						
             <when test="type == 'C'.toString()">
-                content like '%'||#{keyword}||'%'
+                content like CONCAT('%', #{keyword}, '%')
             </when>	
             <when test="type == 'R'.toString()">
-                reply like '%'||#{keyword}||'%'
+                reply like CONCAT('%', #{keyword}, '%')
             </when>	
             <when test="type == 'L'.toString()">
-                location like '%'||#{keyword}||'%'
+                location like CONCAT('%', #{keyword}, '%')
             </when>				
-            <!-- <when test="type == 'D'.toString()">
+            <when test="type == 'D'.toString()">
                 <![CDATA[
                     startdate <= #{endDate} AND enddate >= #{startDate} OR startdate LIKE '%' || #{keyword} || '%' OR enddate LIKE '%' || #{keyword} || '%'
                 ]]>
-            </when>	 -->											
+            </when>												
         </choose>					
     </trim>		
-</sql>
-		
-		
-		
-	<!-- 공통 사용 퀴리 -->
-	<sql id="criteria2">		
+</sql> -->
+	<!-- 공통 사용 퀴리문 -->
+	<sql id="criteria">
 		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
-			<!-- <foreach item="type" collection="typeArr"> -->
-			 <!-- <foreach item="type" collection="type.split('')" separator="OR"> -->	
-				<!-- <trim prefix="OR">		 -->					
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">							
 					<choose>
 						<when test="type == 'T'.toString()">
-						    title like '%'||#{keyword}||'%' 
-						</when>						
+						    title like CONCAT('%', #{keyword}, '%')
+						</when>
 						<when test="type == 'C'.toString()">
-						    content like '%'||#{keyword}||'%'
-						</when>	
-						<when test="type == 'R'.toString()">
-						    reply like '%'||#{keyword}||'%'
-						</when>	
+						    content like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'W'.toString()">
+						    writer like CONCAT('%', #{keyword}, '%')
+						</when>
 						<when test="type == 'L'.toString()">
-						    location like '%'||#{keyword}||'%'
-						</when>				
-						<!-- <when test="type == 'D'.toString()">
-						<![CDATA[
-						    startdate <= #{endDate} AND enddate >= #{startDate} OR startdate LIKE '%' || #{keyword} || '%'OR enddate LIKE '%' || #{keyword} || '%'
-					    ]]>
-						</when>		 -->										
+						    location like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'D'.toString()">
+						    <![CDATA[ (startdate <= #{keyword} AND enddate >= #{keyword}) ]]>
+						</when>
 					</choose>					
-				<!-- </trim>						
-			</foreach> -->
-		</trim>		
-	</sql>	
+				</trim>						
+			</foreach>
+		</trim> 
+	</sql>
 	
 	<sql id="adminCri">
 		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
@@ -327,28 +293,28 @@
 				<trim prefix="OR">							
 					<choose>					
 						<when test="type == 'I'.toString()">
-						    u.userid like '%'||#{keyword}||'%' 
+						    u.userid like CONCAT('%', #{keyword}, '%') 
 						</when>						
 						<when test="type == 'N'.toString()">
-						    u.name like '%'||#{keyword}||'%'
+						    u.name like CONCAT('%', #{keyword}, '%')
 						</when>	
 						<when test="type == 'G'.toString()">
-						    u.gender like '%'||#{keyword}||'%'
+						    u.gender like CONCAT('%', #{keyword}, '%')
 						</when>	
 						<when test="type == 'P'.toString()">
-						    u.phone like '%'||#{keyword}||'%'
+						    u.phone like CONCAT('%', #{keyword}, '%')
 						</when>
 						<when test="type == 'M'.toString()">
-						    u.email like '%'||#{keyword}||'%'
+						    u.email like CONCAT('%', #{keyword}, '%')
 						</when>				
 						<when test="type == 'A'.toString()">
-						    u.address like '%'||#{keyword}||'%' 
+						    u.address like CONCAT('%', #{keyword}, '%') 
 						</when>						
 						<when test="type == 'B'.toString()">
-						    u.birth like '%'||#{keyword}||'%'
+						    u.birth like CONCAT('%', #{keyword}, '%')
 						</when>	
 						<when test="type == 'U'.toString()">
-						    a.auth like '%'||#{keyword}||'%'
+						    a.auth like CONCAT('%', #{keyword}, '%')
 						</when>	
 					</choose>					
 				</trim>						

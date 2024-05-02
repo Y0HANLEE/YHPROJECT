@@ -8,9 +8,7 @@ public interface ProfileImageMapper {
 	//조회
 	public ProfileImageVO getProfileByUserid(String userid);
 	//수정
-	public int update(ProfileImageVO profile);
-	//초기화
-	public int reset(ProfileImageVO profile);
+	public int update(ProfileImageVO profile);	
 	//삭제
 	public int delete(String userid);
 }

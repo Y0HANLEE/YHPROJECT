@@ -3,50 +3,34 @@
 <mapper namespace="org.project.mapper.Board.BoardReplyMapper">
 	<!-- 댓글 등록 -->	
 	<insert id="insert">
-		insert into board_reply (rno, bno, reply, replyer) values (seq_board_reply.nextval, #{bno}, #{reply}, #{replyer})
+		insert into board_reply (bno, reply, replyer) values (#{bno}, #{reply}, #{replyer});
 	</insert>
-	
-	
 	<!-- 댓글 조회 -->
-	<select id="read" resultType="org.project.domain.Board.BoardReplyVO">
+	<select id="read" resultType="BoardReplyVO">
 		select * from board_reply where rno=#{rno}
 	</select>
-	
-	<!-- 댓글목록조회 -->
-	<select id="getListWithPaging" resultType="org.project.domain.Board.BoardReplyVO">
-		<![CDATA[
-			select rno, bno, reply, replyer, replydate, updatedate 
-			from (
-				select /*+INDEX(reply idx_board_reply)*/
-					rownum rn, rno, bno, reply, replyer, replydate, updatedate
-					from board_reply where bno=#{bno} and rno>0 and rownum <= #{cri.pageNum} * #{cri.amount} 
-			) where rn > (#{cri.pageNum} -1) * #{cri.amount}		
-		]]>
-	</select>	
-	
+	<!-- getListWithPaging -->
+	<select id="getListWithPaging" resultType="BoardReplyVO">
+        select * from (
+            select row_number() over (order by rno desc) rn, rno, bno, reply, replyer, replydate, updatedate 
+            from board_reply where bno=#{bno}
+        )sub where rn between ((#{cri.pageNum}-1)*#{cri.amount})+1 and #{cri.pageNum}*#{cri.amount}
+	</select>
 	<!-- 특정 게시글에 달린 댓글 개수 세기 -->
 	<select id="getCountByBno" resultType="int">
 		select count(rno) from board_reply where bno=#{bno}	
 	</select>
-	
 	<!-- 전체 댓글 조회 -->
-	<select id="getListAll" resultType="org.project.domain.Board.BoardReplyVO">
-		<![CDATA[
-			select rno, bno, reply, replyer, replydate, updatedate 
-			from (
-				select /*+INDEX_desc(reply idx_board_reply)*/
-					rownum rn, rno, bno, reply, replyer, replydate, updatedate
-					from board_reply where rno>0 and rownum <= #{pageNum} * #{amount} order by replydate desc
-			) where rn > (#{pageNum} -1) * #{amount}		
-		]]>
+	<select id="getListAll" resultType="BoardReplyVO">    
+        select * from (
+            select row_number() over (order by rno desc) rn, rno, bno, reply, replyer, replydate, updatedate 
+            from board_reply where rno > 0
+        )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{pageNum}*#{amount}
 	</select>
-	
 	<!-- 댓글 수정 -->
 	<update id="update">
-		update board_reply set reply=#{reply}, updatedate=sysdate where rno=#{rno} 
+		update board_reply set reply=#{reply}, updatedate=current_timestamp where rno=#{rno} 
 	</update>
-	
-	
 	<!-- 댓글 삭제 -->
 	<delete id="delete">
 		delete from board_reply where rno=#{rno}
