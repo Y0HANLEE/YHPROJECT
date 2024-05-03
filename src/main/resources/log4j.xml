@@ -16,13 +16,11 @@
 		<appender-ref ref="console"/>
 	</root>
 	
-	<!-- JDBC Loggers -->	
+	<!-- JDBC Loggers -->
 	<logger name="org.mybatis">
-	    <level value="DEBUG"/>
+	    <level value="warn"/>
 	</logger>
-	
-	
-	<!-- JDBC Loggers
+	 
 	<logger name="jdbc.audit">
 		<level value = "warn"/>
 	</logger>
@@ -34,9 +32,12 @@
 	<logger name="jdbc.connection">
 		<level value = "warn"/>
 	</logger>
-	-->
 	
-	<!-- Application Loggers -->	
+	
+	<!-- Application Loggers 	
+	<logger name="org.mybatis">
+	    <level value="DEBUG"/>
+	</logger>
 	<logger name="org.project.controller">
 		<level value="DEBUG" />
 	</logger>	 
@@ -45,9 +46,8 @@
 	</logger>
 	<logger name="org.project.mapper">
 		<level value="DEBUG" />
-	</logger>
+	</logger> -->
 	 
-	
 	 
 	<!-- 3rdparty Loggers -->
 	<!-- 
