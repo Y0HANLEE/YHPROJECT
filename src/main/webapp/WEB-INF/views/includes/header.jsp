@@ -65,59 +65,58 @@
 			<div class="sidebar-nav navbar-collapse">
 				<ul class="nav" id="side-menu">
 					<!-- 1.Home-->
-					<li><a href="/"><i class="fa fa-home fa-fw"></i> Home</a></li>
+					<li><a href="/"><i class="fa fa-home fa-fw"></i> 메인화면</a></li>
 					<!-- 2.User -->
-					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user fa-fw"></i> User
+					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user fa-fw"></i> 회원페이지
 					<c:if test="${pageContext.request.userPrincipal != null}">(@<c:out value="${pageContext.request.userPrincipal.name}"/>)</c:if> <span class="fa fa-caret-down"></span></a>
 						<ul class="nav nav-second-level">
 							<!-- 로그인된 상태(운영자, 일반회원) -->							
 							<sec:authorize access="isAuthenticated()">								
-								<li><a href="../user/profile?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>"><i class="fa fa-user fa-fw"></i> Profile</a></li>
-								<li><a href="../user/contents?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>&boardType=1"><i class="fa fa-th-list fa-fw"></i> MyContent</a></li>								
-								<li><a href="../user/comments?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>&boardType=1.1"><i class="fa fa-comment fa-fw"></i> MyComment</a></li>
+								<li><a href="../user/profile?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>"><i class="fa fa-user fa-fw"></i> 회원정보</a></li>
+								<li><a href="../user/contents?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>&boardType=1"><i class="fa fa-th-list fa-fw"></i> 내가 쓴 게시글</a></li>								
+								<li><a href="../user/comments?userid=<c:out value="${pageContext.request.userPrincipal.name}"/>&boardType=1.1"><i class="fa fa-comment fa-fw"></i> 내가 쓴 댓글</a></li>
 								<li class="divider"></li>
 								<li><form action="../main/logoutPage" method="post" id="logoutForm" style="height: 40px; display: flex;align-items: center;">
-									<a href="#" id="logout"><i class="fa fa-lock fa-fw"></i> Logout</a>
+									<a href="#" id="logout"><i class="fa fa-lock fa-fw"></i> 로그아웃</a>
 									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 								</form></li>
 							</sec:authorize>
 							<!-- 로그아웃/ 로그인하지 않은 모든 사용자 -->
 							<sec:authorize access="isAnonymous()">
-								<li><a href="/main/loginPage"><i class="fa fa-unlock fa-fw"></i> Login</a></li>
+								<li><a href="/main/loginPage"><i class="fa fa-unlock fa-fw"></i> 로그인</a></li>
 							</sec:authorize>
 						</ul>
 					</li>
 					<!-- 2-1-1.Admin -->
 					<sec:authorize access="hasRole('ROLE_ADMIN')">
-					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear fa-fw"></i> Admin Page <span class="fa fa-caret-down"></span></a>
+					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear fa-fw"></i> 관리자페이지<span class="fa fa-caret-down"></span></a>
 						<ul class="nav nav-second-level">
-							<!-- 로그인된 상태(운영자, 일반회원) -->
-							<li><a href="../admin/auth"><i class="fa fa-gear fa-fw"></i> Auth </a></li>
-							<li><a href="../admin/list"><i class="fa fa-user fa-fw"></i> User List</a></li>
-							<li><a href="../admin/home"><i class="fa fa-home fa-fw"></i> Main Setting</a></li>
-							<li><a href="../admin/intro"><i class="fa fa-paper-plane fa-fw"></i> Intro Setting</a></li>
+							<!-- 로그인된 상태(운영자, 일반회원) -->							
+							<li><a href="../admin/list"><i class="fa fa-user fa-fw"></i> 회원목록</a></li>
+							<li><a href="../admin/home"><i class="fa fa-home fa-fw"></i> 메인화면 관리</a></li>
+							<li><a href="../admin/intro"><i class="fa fa-paper-plane fa-fw"></i> 소개화면 관리</a></li>
 						</ul>
 					</li>
 					</sec:authorize>
 					<!-- 2-1-2.Manager -->
 					<sec:authorize access="hasRole('ROLE_MANAGER')">
-					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear fa-fw"></i> Manager Page <span class="fa fa-caret-down"></span></a>
+					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear fa-fw"></i> 운영자페이지<span class="fa fa-caret-down"></span></a>
 						<ul class="nav nav-second-level">
 							<!-- 로그인된 상태(운영자, 일반회원) -->							
-							<li><a href="../manager/list"><i class="fa fa-user fa-fw"></i> User List</a></li>							
+							<li><a href="../manager/list"><i class="fa fa-user fa-fw"></i> 회원목록</a></li>							
 						</ul>
 					</li>
 					</sec:authorize>
 					<!-- 3.Board -->					
-					<li><a href="../board/list"><i class="fa fa-edit fa-fw"></i> Board</a></li>					
+					<li><a href="../board/list"><i class="fa fa-edit fa-fw"></i> 일반게시판</a></li>					
 					<!-- 4.Album -->
-					<li><a href="../album/list"><i class="fa fa-camera-retro fa-fw"></i> Album</a></li>
+					<li><a href="../album/list"><i class="fa fa-camera-retro fa-fw"></i> 사진게시판</a></li>
 					<sec:authorize access="isAnonymous()">
 						<!-- 5.회원가입 -->
-						<li><a href="../user/join"><i class="fa fa-users fa-fw"></i> Join</a></li>
+						<li><a href="../user/join"><i class="fa fa-users fa-fw"></i> 회원가입</a></li>
 					</sec:authorize>					
 					<!-- 6.introduce -->
-					<li><a href="../main/intro"><i class="fa fa-paper-plane fa-fw"></i> Introduce</a></li>
+					<li><a href="../main/intro"><i class="fa fa-paper-plane fa-fw"></i> 소개페이지</a></li>
 					
 				</ul>
 			</div>
