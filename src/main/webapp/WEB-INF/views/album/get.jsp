@@ -269,7 +269,7 @@ $(document).ready(function(){
 			modal.find("textarea").val(""); // input내용 비우고,
 			modal.modal("hide");         // modal창 숨기기.
 			
-			showList(-1); // 새 댓글은 마지막에 추가됨.
+			showList(1); // 새 댓글은 마지막에 추가됨.
 		});
 	});
 	
@@ -393,6 +393,7 @@ $(document).ready(function(){
 	replyPageFooter.on("click","li a", function(e){
 			e.preventDefault();
 			var targetPageNum = $(this).attr("href"); // panel-footer(prev/num/next) > href속성
+			pageNum = targetPageNum;
 			showList(targetPageNum);
 		}
 	);		
