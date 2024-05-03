@@ -19,7 +19,7 @@
 					<button id="boardBtn" class="btn btn-info" value="Y">일반게시판</button>				
 					<button id="albumBtn" class="btn btn-default" value="N">사진게시판</button>
 				</div>		
-				<!-- 검색창 --> 
+				<!-- 검색창 
 				<div class="row">		
 					<div class="col-lg-12">	
 						<div class="pull-right">
@@ -35,7 +35,7 @@
 							</form>
 						</div>								
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<!-- 본문 및 부가기능 -->
 			<div class="panel-body">
@@ -44,7 +44,7 @@
 					<thead>
 						<tr>
 							<th class="con-type">구분</th>
-							<th class="con-num">글번호</th>							
+							<th class="con-num">게시글</th>							
 							<th class="con-content">내용</th>							
 							<th class="con-reg">등록일</th>
 							<th class="con-update">수정일</th>
@@ -118,8 +118,8 @@ $(document).ready(function(){
 	    album.hide();
 		board.show();
 		
-		$("#searchForm").attr("action", "/user/contents?boardType=1.1");
-	    $("#searchForm").find("input[name='boardType']").val("1.1");
+		//$("#searchForm").attr("action", "/user/contents?boardType=1.1");
+	    //$("#searchForm").find("input[name='boardType']").val("1.1");
 	});
 
 	/* album버튼 - 사진게시판 조회 */
@@ -142,11 +142,11 @@ $(document).ready(function(){
 	    board.hide();		    
 		album.show();
 					
-		$("#searchForm").attr("action", "/user/contents?boardType=2.1");		    
-	    $("#searchForm").find("input[name='boardType']").val("2.1"); 
+		//$("#searchForm").attr("action", "/user/contents?boardType=2.1");		    
+	    //$("#searchForm").find("input[name='boardType']").val("2.1"); 
 	});
 	
-	/* 검색버튼 이벤트 처리 */
+	/* 검색버튼 이벤트 처리 
 	var searchForm = $("#searchForm");
 	var userid = "<c:out value='${userid}'/>";
 	var boardType = $("input[name='boardType']").val();
@@ -170,7 +170,7 @@ $(document).ready(function(){
 		}
 	
 		searchForm.submit();
-	});
+	});*/
 });
 </script>
 

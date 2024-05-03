@@ -19,7 +19,7 @@
 					<button id="boardBtn" class="btn btn-info">일반게시판</button>
 					<button id="albumBtn" class="btn btn-default">사진게시판</button>
 				</div>			
-				<!-- 검색창 --> 
+				<!-- 검색창 
 				<div class="row">		
 					<div class="col-lg-12">	
 						<div class="pull-right">
@@ -36,7 +36,7 @@
 							</form>
 						</div>								
 					</div>
-				</div>			
+				</div>	 -->		
 			</div>
 			<!-- 본문 및 부가기능 -->
 			<div class="panel-body">
@@ -121,6 +121,9 @@
 		</div>
 	</div>
 </div>
+<!-- 이동용 화살표 -->
+<a href="#" class="btn-nav-arrow up" style="position:fixed; top:45%; right:1%;" title="25%↑"><i class="fa fa-arrow-up"></i></a>
+<a href="#" class="btn-nav-arrow down" style="position:fixed; top:55%; right:1%;" title="25%↓"><i class="fa fa-arrow-down"></i></a>
 
 <script>
 $(document).ready(function(){
@@ -144,7 +147,7 @@ $(document).ready(function(){
 	    $("#albumBtn").attr("class", "btn btn-default");		   
 	    album.hide();
 		board.show();
-		
+		/*
 		$("#searchForm").attr("action", "/user/contents?boardType=1");
 	    $("select[name='type']").html(		    		
     		'<option value=""  ${boardPage.cri.type == null ? "selected" : ""}>--</option>' +						
@@ -152,7 +155,8 @@ $(document).ready(function(){
 	        '<option value="C" ${boardPage.cri.type eq "C" ? "selected" : ""}>내용</option>' 			        
 	    );	  
 	   
-	    $("#searchForm").find("input[name='boardType']").val("1");		    
+	    $("#searchForm").find("input[name='boardType']").val("1");
+	    */
 	});
 
 	/* album버튼 - 사진게시판 조회 */
@@ -172,7 +176,7 @@ $(document).ready(function(){
 	    $("#boardBtn").attr("class", "btn btn-default");			
 	    board.hide();		    
 		album.show();
-					
+		/*			
 		$("#searchForm").attr("action", "/user/contents?boardType=2");
 	    $("select[name='type']").html(
 	        '<option value=""  ${albumPage.cri.type == null ? "selected" : ""}>--</option>' +						
@@ -181,9 +185,28 @@ $(document).ready(function(){
 	        '<option value="L" ${albumPage.cri.type eq "L" ? "selected" : ""}>여행지</option>'
 	    );
 	    $("#searchForm").find("input[name='boardType']").val("2");
+	    */
 	});
 
-	/* 검색버튼 이벤트 처리 */
+	// 화살표 클릭시 스크롤 이벤트 처리
+	$('.btn-nav-arrow.up').click(function(e) {
+		e.preventDefault();
+		scroll(-25);
+	});
+	
+	$('.btn-nav-arrow.down').click(function(e) {
+		e.preventDefault();
+		scroll(25);
+	});
+
+	function scroll(percentage) {		
+		var windowHeight = $(window).height(); //페이지높이		
+		var scrollAmount = (windowHeight * percentage) / 100; //스크롤시 내릴 퍼센티지		
+		var currentScroll = $(window).scrollTop(); //현재스크롤 위치
+		$('html, body').animate({ scrollTop: currentScroll + scrollAmount}, 500);// 스크롤 이동
+	}
+	
+	/* 검색버튼 이벤트 처리 
 	var searchForm = $("#searchForm");
 	var userid = "<c:out value='${userid}'/>";
 	var boardType = $("input[name='boardType']").val();
@@ -209,7 +232,7 @@ $(document).ready(function(){
 		}
 		
 		searchForm.submit();
-	});
+	});*/
 });
 </script>
 
