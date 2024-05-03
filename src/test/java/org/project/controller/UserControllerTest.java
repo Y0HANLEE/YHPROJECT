@@ -17,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,10 +39,7 @@ import lombok.extern.log4j.Log4j;
 public class UserControllerTest {
 	@Setter(onMethod_= {@Autowired})
 	private WebApplicationContext ctx;
-	
-	@Autowired
-	private BCryptPasswordEncoder pwEncoder;
-	
+		
 	@InjectMocks
     private UserController userController;
 

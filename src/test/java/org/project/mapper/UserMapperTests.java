@@ -16,7 +16,6 @@ import org.project.domain.User.AuthVO;
 import org.project.domain.User.UserVO;
 import org.project.mapper.User.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -30,8 +29,7 @@ import lombok.extern.log4j.Log4j;
 public class UserMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private UserMapper umapper;
-	@Setter(onMethod_ = @Autowired)
-	BCryptPasswordEncoder bcrypt;
+	
 		
 	/* 회원 등록 테스트 */
 	@Test
@@ -141,9 +139,8 @@ public class UserMapperTests {
 	
 	/* 회원 비밀번호 수정 테스트 */
 	@Test
-	public void testUpdatePw() {		
-		String pw = bcrypt.encode("1234");		 
-		umapper.updatePw(pw, "admin", "1234");		
+	public void testUpdatePw() {
+		umapper.updatePw("1222", "admin", "1234");		
 	}
 	
 	/* 비밀번호 초기화 테스트 */
