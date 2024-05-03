@@ -25,6 +25,11 @@
 		<result property="boardtype" column="boardtype"/>		
 	</resultMap>
 	
+	<!-- 소개정보 등록 : 최초등록시만 필요 -->
+	<insert id="insert">
+		insert into intro (title_title, title_intro, map_title, map_intro, map_caption, map_address, map_addressdetail, intro, boardtype)  
+		values (#{title_title}, #{title_intro}, #{map_title}, #{map_intro}, #{map_caption}, #{map_address}, #{map_addressdetail}, #{intro}, #{boardtype})			   
+	</insert>
 	<!-- 소개정보조회 -->
 	<select id="read" resultType="IntroVO">
 		select * from intro where boardtype = #{boardtype}
