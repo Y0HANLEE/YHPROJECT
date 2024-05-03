@@ -45,22 +45,22 @@
 					<div class="col-lg-6">				
 						<div class="form-group">						
 							<p>
-								<label for="userid">아이디<sup class="essential">*</sup></label> 
+								<label for="userid">아이디</label> 
 								<button id="idCheck" class="btn btn-outline btn-danger btn-xs" value="N">CHECK</button>
 							</p>
 							<input id="userid" class="form-control" name="userid" placeholder="ID" autofocus>							
 						</div>						
 						<div class="form-group">
-							<label for="userpw">비밀번호<sup class="essential">*</sup></label>
+							<label for="userpw">비밀번호</label>
 							<input id="userpw" class="form-control" name="userpw" type="password" placeholder="Password">
 						</div>
 						<div class="form-group">
-							<div><label for="pwconfirm">비밀번호확인<sup class="essential">*</sup></label> 
+							<div><label for="pwconfirm">비밀번호확인</label> 
 							<button type="button" class="btn btn-outline btn-danger btn-xs" id="pwCheck" value="N">CHECK</button></div>
 							<input id="pwconfirm" class="form-control" name="pwconfirm" type="password" placeholder="Password Again">
 						</div>
 						<div class="form-group">
-							<label for="name">이름<sup class="essential">*</sup></label>
+							<label for="name">이름</label>
 							<input class="form-control" name="name" placeholder="Name">
 						</div>
 						<div class="form-group">
@@ -76,7 +76,7 @@
 							<input id="phone" class="form-control" name="phone" placeholder="Phone Number">
 						</div>
 						<div class="form-group">							
-							<div><label for="email">이메일<sup class="essential">*</sup></label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="checkModalBtn" value="N">SEND MAIL</button></div>
+							<div><label for="email">이메일</label><button type="button" class="btn btn-outline btn-danger btn-xs" id="checkModalBtn" value="N">SEND MAIL</button></div>
 							<input id="email" class="form-control" name="email" type="email" placeholder="Email Address">
 						</div>
 						<div class="form-group">
