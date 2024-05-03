@@ -127,26 +127,13 @@
 		select count(*) from checkmail where email=#{email}
 	</select>
 	
-	<!-- <select id="boardList" resultMap="boardMap">
-	<![CDATA[
-    	select * from (
-        	select rownum rn, b.bno, b.title, b.writer, b.replycnt, b.hit, b.regdate, b.updatedate
-        	from board b left join users u on u.userid=b.writer where u.userid=#{userid} 
-	]]>     
-            <include refid="criteria"/>  : 인식오류 typeArr을 인식못함.
-            
-    <![CDATA[	    
-	        and rownum<=#{pageNum}*#{amount} order by bno desc
-	    ) where rn>(#{pageNum}-1)*#{amount}
-    ]]>
-   </select> -->
 	
 	<!-- 내가 쓴 글(board) 찾기 -->
 	<select id="boardList" resultMap="boardMap">	
     	select * from (
-        	select row_number() over(order by bno desc) rn, u.userid, bno, title, content, writer, regdate, updatedate, replycnt, hit 
+        	select row_number() over(order by bno desc) rn, u.userid, bno, title, content, writer, b.regdate, b.updatedate, replycnt, hit 
         	from board b left join users u on u.userid=b.writer where <include refid="criteria"/>
-	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR}
+	        u.userid=#{userid} and boardtype = #{boardType, jdbcType=VARCHAR}
 	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}    	
    </select>
     <!-- 내가 쓴 총 게시글 수 -->
@@ -156,9 +143,9 @@
    	<!-- 내가 쓴 글(album) 찾기 -->
 	<select id="albumList" resultMap="albumMap">
 		select * from (
-        	select row_number() over(order by ano desc) rn, u.userid, ano, location, title, content, writer, replycnt, hit, regdate, updatedate, startdate, enddate  
+        	select row_number() over(order by ano desc) rn, u.userid, ano, location, title, content, writer, replycnt, hit, a.regdate, a.updatedate, startdate, enddate  
         	from album a left join users u on u.userid=a.writer where <include refid="criteria"/>
-	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR}
+	        u.userid=#{userid} and boardtype = #{boardType, jdbcType=VARCHAR}
 	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}  
 	</select>
 	<!-- 내가 쓴 총 게시글 수 -->
@@ -168,9 +155,9 @@
 	<!-- 내가 쓴 댓글(board) 찾기 -->
 	<select id="boardReplyList" resultMap="boardReplyMap">
 		select * from (
-        	select row_number() over(order by bno asc, rno desc) rn, u.userid, rno, bno, reply, replyer, replydate, updatedate 
+        	select row_number() over(order by bno asc, rno desc) rn, u.userid, rno, bno, reply, replyer, replydate, b.updatedate 
         	from board_reply b left join users u on u.userid=b.replyer where <include refid="criteria"/>
-	        u.userid=#{userid} and b.boardtype = #{boardType, jdbcType=VARCHAR}
+	        u.userid=#{userid} and boardtype = #{boardType, jdbcType=VARCHAR}
 	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}
 	</select>
 	<!-- 내가 쓴 총 댓글 수 -->
@@ -180,9 +167,9 @@
 	<!-- 내가 쓴 댓글(album) 찾기 -->
 	<select id="albumReplyList" resultMap="albumReplyMap">
     	select * from (
-        	select row_number() over(order by ano asc, rno desc) rn, u.userid, rno, ano, reply, replyer, replydate, updatedate 
+        	select row_number() over(order by ano asc, rno desc) rn, u.userid, rno, ano, reply, replyer, replydate, a.updatedate 
         	from album_reply a left join users u on u.userid=a.replyer where <include refid="criteria"/>
-	        u.userid=#{userid} and a.boardtype = #{boardType, jdbcType=VARCHAR}
+	        u.userid=#{userid} and boardtype = #{boardType, jdbcType=VARCHAR}
 	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}
 	</select>
 	<!-- 내가 쓴 총 게시글 수 -->
