@@ -16,9 +16,9 @@
 		<!-- mysql : AWS연결 -->
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
     	<!-- <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test?useSSL=false&amp;useUnicode=true&amp;serverTimezone=Asia/Seoul"/> -->
-		<property name="jdbcUrl" value="jdbc:mysql://https://3.35.102.86:8080/" /> <!-- AWS연결시 -->
-		<property name="username" value="yhproject"/>
-		<property name="password" value="yhproject"/>
+		<property name="jdbcUrl" value="jdbc:mysql://https://db-project24.c9gq0kgc4f3f.ap-northeast-2.rds.amazonaws.com:3306/webservice?useSSL=false/" /> <!-- AWS연결시 -->
+		<property name="username" value="root"/>
+		<property name="password" value="qwer1234"/>
 		<!-- Log4jdbc 사용시 : 오라클 
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" /> -->
