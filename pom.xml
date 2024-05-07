@@ -5,7 +5,7 @@
 	<groupId>org.project</groupId>
 	<artifactId>controller</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<!-- <packaging>war</packaging> -->
+	<packaging>war</packaging>
 	<properties>
 		<java-version>11</java-version>
 		<org.springframework-version>5.3.7</org.springframework-version>
@@ -35,7 +35,7 @@
 					<artifactId>commons-logging </artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -335,10 +335,10 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
+			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.3</version>
-			</plugin> -->
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo </groupId>
 				<artifactId>exec-maven-plugin </artifactId>
