@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.project.mapper.Album.AlbumMapper">		
+	<!-- 등록하기 -->	
+	<insert id="insertSelectKey" parameterType="AlbumVO" useGeneratedKeys="true" keyProperty="ano">
+		insert into album (title, content, writer, location, startdate, enddate) values (#{title}, #{content}, #{writer}, #{location}, #{startDate, jdbcType=DATE}, #{endDate, jdbcType=DATE})
+	</insert>
+	<!-- 조회 -->
+	<select id="read" resultType="AlbumVO">
+		select * from album where ano=#{ano}
+	</select>	
+	<!-- 앨범 목록 화면 출력(페이징) -->
+	<select id="getListWithPaging" resultType="AlbumVO">      
+		select * from (
+	        select row_number() over(order by ano desc) rn, ano, location, title, content, writer, replycnt, hit, regdate, updatedate, startdate, enddate 
+	        from album where <include refid="criteria"/> ano>0
+	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum}
+	</select>
+	
+	<!-- 총 게시물 수 계산 -->
+	<select id="getTotalCnt" resultType="int">
+		select count(*) from album where <include refid="criteria"/> ano>0	
+	</select>
+	
+	<!-- 수정 -->
+	<update id="update">
+		update album set location=#{location}, title=#{title}, content=#{content}, writer=#{writer}, startdate=#{startDate, jdbcType=DATE}, enddate=#{endDate, jdbcType=DATE}, updatedate=current_timestamp where ano=#{ano}
+	</update>
+		
+	<!-- 조회수 증가 -->
+	<update id="upHit">
+		update album set hit=(hit+1) where ano=#{ano}
+	</update>
+	
+	<!-- 댓글 수 증감(등록+1,삭제-1) -->
+	<update id="updateReplyCnt">
+		update album set replycnt=replycnt+#{amount} where ano=#{ano}
+	</update>
+	
+	
+	<!-- 삭제 -->
+	<delete id="delete">
+		delete from album where ano=#{ano}
+	</delete>
+	
+	<!-- 공통 사용 퀴리문 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">							
+					<choose>
+						<when test="type == 'T'.toString()">
+						    title like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'C'.toString()">
+						    content like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'W'.toString()">
+						    writer like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'L'.toString()">
+						    location like CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'D'.toString()">
+						    <![CDATA[ (startdate <= #{keyword} AND enddate >= #{keyword}) ]]>
+						</when>
+					</choose>					
+				</trim>						
+			</foreach>
+		</trim> 
+	</sql>
+	
+</mapper>

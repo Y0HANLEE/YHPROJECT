@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:task="http://www.springframework.org/schema/task"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<!-- 기본 -->
-		<!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> 
- 		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:XE" /> -->
-		
-		<!-- Log4jdbc 사용시 -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">		
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<!-- mysql연결 -->
+    	<!-- <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test?useSSL=false&amp;useUnicode=true&amp;serverTimezone=Asia/Seoul"/>
+    	<property name="username" value="test"/>
+		<property name="password" value="1234"/> -->
+		<!-- mysql : AWS연결 -->
+		<property name="jdbcUrl" value="jdbc:mysql://project24.c9gq0kgc4f3f.ap-northeast-2.rds.amazonaws.com:3306/yhproject?serverTimezone=Asia/Seoul"/> 
+		<property name="username" value="root"/>
+		<property name="password" value="qwer1234"/>
+
+		<!-- Log4jdbc 사용시 : 오라클 
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" />
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" /> -->
+		<!-- DB사용자 정보
 		<property name="username" value="project" />
-		<property name="password" value="project" />
+		<property name="password" value="project" /> -->
 	</bean>
 
 	<!-- HikariCP Configuration -->
@@ -34,24 +39,49 @@
 	<!-- sqlSessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>		
+		<property name="typeAliasesPackage" value="org.project.domain"/><!-- domain별칭 : 매퍼의 경로를 줄여줌. -->
+	</bean>
+	
+	<!-- sqlSession -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" name="sqlSessionFactory" ref="sqlSessionFactory"/>
 	</bean>
 	
 	<!-- mybatis-spring -->
 	<mybatis-spring:scan base-package="org.project.mapper"/>
+	<context:component-scan base-package="org.project.service"/>
+	<!-- <context:component-scan	base-package="org.project.persistence" /> -->
 	
 	<!-- transaction : tx -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
-	
-	<context:component-scan base-package="org.project.service"/>
-	<context:component-scan base-package="org.project.aop"/>
-	<context:component-scan base-package="org.project.task"/>
-	<!-- <context:component-scan	base-package="org.project.persistence" /> -->
-	
-	<context:annotation-config/>
-	<aop:aspectj-autoproxy/>
-	<task:annotation-driven/>
 	<tx:annotation-driven/>
 	
+	<!-- Annotation  -->
+	<context:annotation-config/>
+	
+	<!-- AOP -->	
+	<!-- <context:component-scan base-package="org.project.aop"/>
+	<aop:aspectj-autoproxy/> -->
+
+	<!-- 스케쥴링 : Quartz라이브러리 사용(Spring-Batch를 사용하기도) 
+	<context:component-scan base-package="org.project.task"/>
+	<task:annotation-driven/>-->
+	
+	<!-- javaMail -->
+	<bean id="mailSender" class ="org.springframework.mail.javamail.JavaMailSenderImpl" >
+		<property name="host" value="smtp.gmail.com" /> <!-- google -->
+		<property name="port" value="587" /><!-- default -->
+		<property name="username" value="kevinyh18@gmail.com" />
+		<property name="password" value="nlul uldq wefw yzjj" /> <!-- 앱비밀번호 -->
+		<!-- 보안연결TLS -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
+	</bean>
 </beans>

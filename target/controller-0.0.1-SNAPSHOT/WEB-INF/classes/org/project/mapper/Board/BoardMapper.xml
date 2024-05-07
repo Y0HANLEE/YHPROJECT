@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.project.mapper.Board.BoardMapper">
+	<!-- 게시글 등록 : bno의 시퀀스 값을 바로 저정. Modal처리시 리다이렉트에서 bno값을 바로 전달하여야하므로	필요. -->
+	<insert id="insertSelectKey" parameterType="BoardVO" useGeneratedKeys="true" keyProperty="bno"> 		
+		insert into board (title, content, writer) values (#{title}, #{content}, #{writer})
+	</insert>
+
+	<!-- 게시글 조회 -->
+	<select id="read" resultType="BoardVO">
+		select * from board where bno =	#{bno}
+	</select>
+
+	<!-- 게시물 목록 화면 출력(페이징) -->
+	<select id="getListWithPaging" resultType="org.project.domain.Board.BoardVO">
+	    select * from (
+	        select row_number() over(order by bno desc) rn, bno, title, content, writer, regdate, updatedate, replycnt, hit
+	        from board where <include refid="criteria"/> bno>0
+	    )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{amount}*#{pageNum} 
+	</select>
+
+	<!-- 총 게시물 수 계산 -->
+	<select id="getTotalCount" resultType="int">	
+		select count(*) from board where <include refid="criteria"/> bno>0
+	</select>
+
+	<!-- 게시글 수정 -->
+	<update id="update">
+		update board set title=#{title}, content=#{content}, writer=#{writer}, updatedate=current_timestamp where bno=#{bno}
+	</update>
+	
+	<!-- 조회수 증가 -->
+	<update id="upHit">
+		update board set hit=(hit+1) where bno=#{bno}
+	</update>
+	
+	<!-- 댓글 수 증감 -->
+	<update id="updateReplyCnt">
+		update board set replycnt=replycnt+#{amount} where bno=#{bno}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="delete">
+		delete from board where bno = #{bno}
+	</delete>
+	
+	<!-- 공통사용 sql문 -->
+	<sql id="criteria">
+	    <trim prefix="(" suffix=") AND " prefixOverrides="OR">        	
+        	<foreach item="type" collection="typeArr">
+	            <trim prefix="OR">                           
+	                <choose>
+	                    <when test="type == 'T'.toString()">
+	                        title like concat('%', #{keyword}, '%')
+	                    </when>
+	                    <when test="type == 'C'.toString()">
+	                        content like concat('%', #{keyword}, '%')
+	                    </when>	                    
+	                    <when test="type == 'W'.toString()">
+	                        writer like concat('%', #{keyword}, '%')
+	                    </when>
+	                </choose>                  
+	            </trim>                        
+        	</foreach>
+	    </trim>        
+	</sql>
+	
+</mapper>

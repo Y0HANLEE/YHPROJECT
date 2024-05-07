@@ -10,12 +10,17 @@
 		</layout>
 	</appender>
 	
-	<!-- Application Loggers -->
-	<logger name="org.project.controller">
-		<level value="info" />
-	</logger>
+	<!-- Root Logger -->	 
+	<root>
+		<priority value="warn"/>
+		<appender-ref ref="console"/>
+	</root>
 	
 	<!-- JDBC Loggers -->
+	<logger name="org.mybatis">
+	    <level value="warn"/>
+	</logger>
+	 
 	<logger name="jdbc.audit">
 		<level value = "warn"/>
 	</logger>
@@ -28,7 +33,24 @@
 		<level value = "warn"/>
 	</logger>
 	
+	
+	<!-- Application Loggers 	
+	<logger name="org.mybatis">
+	    <level value="DEBUG"/>
+	</logger>
+	<logger name="org.project.controller">
+		<level value="DEBUG" />
+	</logger>	 
+	<logger name="org.project.service">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.project.mapper">
+		<level value="DEBUG" />
+	</logger> -->
+	 
+	 
 	<!-- 3rdparty Loggers -->
+	<!-- 
 	<logger name="org.springframework.core">
 		<level value="info" />
 	</logger>	
@@ -44,11 +66,6 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
-
-	<!-- Root Logger -->
-	<root>
-		<priority value="info" />
-		<appender-ref ref="console" />
-	</root>
+	 -->	
 	
 </log4j:configuration>

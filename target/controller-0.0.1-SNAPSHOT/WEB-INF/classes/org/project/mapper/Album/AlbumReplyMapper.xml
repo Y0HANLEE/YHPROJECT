@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.project.mapper.Album.AlbumReplyMapper">
+	<!-- 댓글 등록 -->	
+	<insert id="insert">
+		insert into album_reply (ano, reply, replyer) values (#{ano}, #{reply}, #{replyer})
+	</insert>
+	<!-- 댓글 조회 -->
+	<select id="read" resultType="AlbumReplyVO">
+		select * from album_reply where rno=#{rno}
+	</select>
+	<!-- 댓글 목록 -->	
+	<select id="getListWithPaging" resultType="AlbumReplyVO">
+        select * from (
+            select row_number() over (order by rno desc) rn, rno, ano, reply, replyer, replydate, updatedate
+            from album_reply where ano=#{ano}
+        )sub where rn between ((#{cri.pageNum}-1)*#{cri.amount})+1 and #{cri.pageNum}*#{cri.amount}
+	</select>
+	<!-- 특정 게시글에 달린 댓글 개수 세기 -->
+	<select id="getCountByAno" resultType="int">
+		select count(rno) from album_reply where ano=#{ano}	
+	</select>
+	<!-- 전체 댓글 목록 -->
+	<select id="getListAll" resultType="AlbumReplyVO">    
+        select * from (
+            select row_number() over (order by rno desc) rn, rno, ano, reply, replyer, replydate, updatedate
+            from album_reply where rno>0
+        )sub where rn between ((#{pageNum}-1)*#{amount})+1 and #{pageNum}*#{amount}
+	</select>
+	<!-- 댓글 수정 -->
+	<update id="update">
+		update album_reply set reply=#{reply}, updatedate=current_timestamp where rno=#{rno} 
+	</update>
+	<!-- 댓글 삭제 -->
+	<delete id="delete">
+		delete from album_reply where rno=#{rno}
+	</delete>	
+</mapper>

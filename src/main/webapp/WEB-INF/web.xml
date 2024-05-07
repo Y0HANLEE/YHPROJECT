@@ -36,16 +36,16 @@
 		 -->
 		 
 		<!-- File Upload -->
-		<multipart-config>
-			<!-- 업로드 경로 -->
+		<!-- <multipart-config>
+			업로드 경로
 			<location>C:\\upload\\temp</location>
-			<!-- 개별 최대사이즈 : 20MB -->
+			개별 최대사이즈 : 20MB
 			<max-file-size>20971520</max-file-size>
-			<!-- 전체 최대사이즈 : 40MB -->
+			전체 최대사이즈 : 40MB
 			<max-request-size>41943040</max-request-size>
-			<!-- 메모리 보관 최대 사이즈 :20MB -->
+			메모리 보관 최대 사이즈 :20MB
 			<file-size-threshold>20971520</file-size-threshold>
-		</multipart-config>
+		</multipart-config> -->
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>

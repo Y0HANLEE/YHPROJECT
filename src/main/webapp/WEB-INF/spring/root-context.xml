@@ -13,12 +13,16 @@
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">		
-		<!-- mysql : AWS연결 -->
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-    	<!-- <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test?useSSL=false&amp;useUnicode=true&amp;serverTimezone=Asia/Seoul"/> -->
-		<property name="jdbcUrl" value="jdbc:mysql://https://db-project24.c9gq0kgc4f3f.ap-northeast-2.rds.amazonaws.com:3306/webservice?useSSL=false/" /> <!-- AWS연결시 -->
+		<!-- mysql연결 -->
+    	<!-- <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test?useSSL=false&amp;useUnicode=true&amp;serverTimezone=Asia/Seoul"/>
+    	<property name="username" value="test"/>
+		<property name="password" value="1234"/> -->
+		<!-- mysql : AWS연결 -->
+		<property name="jdbcUrl" value="jdbc:mysql://project24.c9gq0kgc4f3f.ap-northeast-2.rds.amazonaws.com:3306/yhproject?serverTimezone=Asia/Seoul"/> 
 		<property name="username" value="root"/>
 		<property name="password" value="qwer1234"/>
+
 		<!-- Log4jdbc 사용시 : 오라클 
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" /> -->
