@@ -98,7 +98,7 @@ $('button').on('click', function(e){
 	
 	var oper = $(this).data("oper"); // 현재 동작상태 : button의 data-oper속성
 	
-	if(oper === 'remove'){
+	if(oper === 'remove'){		
 		formObj.attr("action", "/board/remove");
 	} else if(oper === 'list'){
 		formObj.attr("action", "/board/list").attr("method", "get");

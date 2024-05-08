@@ -17,7 +17,8 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">	<c:out value="${SPRING_SECURITY_403_EXCEPTION.getMessage()}"/> </div>
 			<div class="panel-body">			
-				<h2><c:out value="${msg}"/></h2>				
+				<h2><c:out value="${msg}"/></h2>
+				<button onclick="history.back()">이전화면</button>				
 			</div>
 		</div>
 	</div>

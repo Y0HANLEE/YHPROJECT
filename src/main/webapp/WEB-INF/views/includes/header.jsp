@@ -66,7 +66,11 @@
 				<ul class="nav" id="side-menu">
 					<!-- 1.Home-->
 					<li><a href="/"><i class="fa fa-home fa-fw"></i> 메인화면</a></li>
-					<!-- 2.User -->
+					<sec:authorize access="isAnonymous()">
+						<!-- 2.회원가입 -->
+						<li><a href="../user/join"><i class="fa fa-users fa-fw"></i> 회원가입</a></li>
+					</sec:authorize>
+					<!-- 3.User -->
 					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user fa-fw"></i> 회원페이지
 					<c:if test="${pageContext.request.userPrincipal != null}">(@<c:out value="${pageContext.request.userPrincipal.name}"/>)</c:if> <span class="fa fa-caret-down"></span></a>
 						<ul class="nav nav-second-level">
@@ -87,7 +91,7 @@
 							</sec:authorize>
 						</ul>
 					</li>
-					<!-- 2-1-1.Admin -->
+					<!-- 3-1-1.Admin -->
 					<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear fa-fw"></i> 관리자페이지<span class="fa fa-caret-down"></span></a>
 						<ul class="nav nav-second-level">
@@ -98,7 +102,7 @@
 						</ul>
 					</li>
 					</sec:authorize>
-					<!-- 2-1-2.Manager -->
+					<!-- 3-1-2.Manager -->
 					<sec:authorize access="hasRole('ROLE_MANAGER')">
 					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear fa-fw"></i> 운영자페이지<span class="fa fa-caret-down"></span></a>
 						<ul class="nav nav-second-level">
@@ -107,16 +111,12 @@
 						</ul>
 					</li>
 					</sec:authorize>
-					<!-- 3.Board -->					
+					<!-- 4.Board -->					
 					<li><a href="../board/list"><i class="fa fa-edit fa-fw"></i> 일반게시판</a></li>					
-					<!-- 4.Album -->
-					<li><a href="../album/list"><i class="fa fa-camera-retro fa-fw"></i> 사진게시판</a></li>
-					<sec:authorize access="isAnonymous()">
-						<!-- 5.회원가입 -->
-						<li><a href="../user/join"><i class="fa fa-users fa-fw"></i> 회원가입</a></li>
-					</sec:authorize>					
+					<!-- 5.Album -->
+					<li><a href="../album/list"><i class="fa fa-camera-retro fa-fw"></i> 사진게시판</a></li>										
 					<!-- 6.introduce -->
-					<li><a href="../main/intro"><i class="fa fa-paper-plane fa-fw"></i> 소개페이지</a></li>
+					<li><a href="../main/intro"><i class="fa fa-paper-plane fa-fw"></i> 소개화면</a></li>
 					
 				</ul>
 			</div>
