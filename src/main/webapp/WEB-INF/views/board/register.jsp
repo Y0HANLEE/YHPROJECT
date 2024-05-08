@@ -119,7 +119,7 @@ $(document).ready(function(e){
 	
 	/* 업로드 상세처리(확장자, 크기 등) */
 	var regex = new RegExp("(.*?)\.(exe|sh|alz)"); // 업로드 불가 확장자
-	var maxSize = 1073741824; // 1GB		
+	var maxSize = 31457280; // 30MB		
 	var cloneObj = $(".uploadDiv").clone(); // 클론
 	
 	function checkFile(fileName, fileSize){

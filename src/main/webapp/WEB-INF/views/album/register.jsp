@@ -175,8 +175,8 @@ $(document).ready(function(e){
 	}
 	
 	/* 업로드 상세처리(확장자, 크기 등) */
-	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif|avi|mp4|mp3|zip)"); // 업로드 가능 확장자
-	var maxSize = 1073741824; // 1GB
+	var regex1 = new RegExp("(.*?)\.(jpg|jpeg|png|gif)"); // 업로드 가능 확장자	
+	var maxSize = 31457280; // 30MB
 	var cloneObj = $(".uploadResult").clone(); // 클론
 	
 	function checkFile(fileName, fileSize){
@@ -191,7 +191,7 @@ $(document).ready(function(e){
 			alert("해당 확장자는 업로드 할 수 없습니다.");
 			return false;
 		}
-		
+			
 		return true; // 성공시
 	}
 		
