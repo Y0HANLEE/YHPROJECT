@@ -33,6 +33,7 @@
         <property name="uploadTempDir" value="file:/C:/upload/tmp"/>
         <property name="maxInMemorySize" value="10485756"/>
     </beans:bean> -->
+    
     <beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
     
     <!-- Spring Security Annotation --> 

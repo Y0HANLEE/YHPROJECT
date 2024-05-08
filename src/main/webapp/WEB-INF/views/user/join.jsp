@@ -247,6 +247,7 @@ $(document).ready(function(){
                 reader.onload = function(){
 					var fileCallPath = encodeURIComponent(uploadPath+"/"+uuid+"_"+fileName);
 					var DeleteFilePath = encodeURIComponent(uploadPath+"/s_"+uuid+"_"+fileName); //기존의 /deleteFile는 썸네일을 지우는 용도, 파일명 쪼개서 "s_"를 붙이는것보단 지우는게 쉽다.
+					//var DeleteFilePath = uploadPath+"/s_"+uuid+"_"+fileName; //기존의 /deleteFile는 썸네일을 지우는 용도, 파일명 쪼개서 "s_"를 붙이는것보단 지우는게 쉽다.
 					var ImgTag = fileType === true ? '<img id="profile" src="/display?fileName='+fileCallPath+'">' : '<img id="profile" src="/resources/img/Default-Profile.png">'; //그럴리없겠지만 이미지타입이 아닌 경우, 기본프로필사진
                     $(".uploadProfile").attr({"data-path":uploadPath, "data-uuid":uuid, "data-filename":fileName, "data-type":fileType, "data-file":fileCallPath});
                     $(".uploadProfile").html(ImgTag);
@@ -272,15 +273,23 @@ $(document).ready(function(){
 	$("#resetImgBtn").on("click", function(e){
 	    e.preventDefault();
 	    
-	    //프로필 이미지 초기화
-	    $(".uploadProfile").html('<img id="profile" src="/resources/img/Default-Profile.png" style="width:200px; height:200px">'); 
+	    var defaultPath = "2024\\04\\27";
+	    var defaultUuid = "ed87212c-4e79-4813-be6c-8c73ac58ac33";
+	    var defaultName = "Default-Profile.png";
+	    var defaultType = "image";
+	    var defaultCallPath = encodeURIComponent(defaultPath+"/"+defaultUuid+"_"+defaultName);
 	    
+		//프로필 이미지 초기화
+        $(".uploadProfile").attr({"data-path":defaultPath, "data-uuid":defaultUuid, "data-filename":defaultName, "data-type":defaultType, "data-file":defaultCallPath});
+        $(".uploadProfile").html('<img id="profile" src="/display?fileName='+defaultCallPath+'" style="width:200px; height:200px">');
+        
 	    //서버로 파일 삭제 요청 보내기
 	    var fileName = $(this).data("file"); //삭제할 파일 이름 가져오기, 사진은 원본이지만 이름은 썸네일
-	    console.log(fileName);
+	    console.log("-----------------삭제:"+fileName);
 	    
 	    //설정된 파일이 없다면 리턴
-	    if(fileName != null || fileName == null){
+	    if(fileName == null){
+	    	console.log("실패");
 	    	return false;
 	    }
 	    
@@ -293,9 +302,9 @@ $(document).ready(function(){
 	        },
 	        success: function(result){
 	            console.log('파일 삭제 성공');
-	            $("input[name='profileImg.uploadPath']").val("2024\\04\\27");	            
-	            $("input[name='profileImg.uuid']").val("ed87212c-4e79-4813-be6c-8c73ac58ac33");
-	            $("input[name='profileImg.fileName']").val("Default-Profile.png");	            
+	            $("input[name='profileImg.uploadPath']").val(defaultPath);	            
+	            $("input[name='profileImg.uuid']").val(defaultUuid);
+	            $("input[name='profileImg.fileName']").val(defaultName);	            
 	        },
 	        error: function(xhr, status, error) {
 	            console.error('파일 삭제 실패:', error);
@@ -303,8 +312,8 @@ $(document).ready(function(){
 	    });
 	});	
 	
-	//프로필사진 더블클릭시 이벤트 처리 
-	$(".uploadProfile").on("dblclick", function(e){				
+	//프로필사진 클릭시 이벤트 처리 
+	$(".uploadProfile").on("click", function(e){				
 		var img = $(this);
 		console.log(img);
 		var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
@@ -323,7 +332,7 @@ $(document).ready(function(){
 		setTimeout(() => {$(this).hide();}, 0);	//chrome의 ES6화살표함수
 		//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
 	});
-	
+	/*
 	//프로필사진 오프셋 조정
 	var profile = $('#profile');
     var offsetX = 0;
@@ -353,7 +362,7 @@ $(document).ready(function(){
             $profileImage.css({ left: x + 'px', top: y + 'px' });
         }
     });
-	       
+	*/     
 	/* modal창 설정 */
 	function modal(element){
 		$("#myModal").modal("show");
