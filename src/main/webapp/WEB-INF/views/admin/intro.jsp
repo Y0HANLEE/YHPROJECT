@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<title>Intro Update Page</title>
+<title>소개페이지 관리</title>
 <%@ include file="../includes/header.jsp"%>
 <!-- 페이지 제목 -->
 <div class="row">		
@@ -66,7 +66,7 @@
 				<span id="map_addressdetail_byte_info" data-input="map_addressdetail"><%-- ${intro.i_m_aDLength} --%></span>	
 			</div>
 			<div style="width: 20%; margin-left: 5px">
-				<button id="searchBtn" class="btn btn-default" style="height: 34px">search</button>
+				<button id="searchBtn" class="btn btn-default" style="height: 34px">Mark</button>
 			</div>
 			</div>
 		</div>
@@ -139,8 +139,8 @@ $(document).ready(function(){
 	}	
 
 	/* 업로드 상세처리(확장자, 크기 등) */
-	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif|avi|mp4|mp3|zip)"); // 업로드 가능 확장자
-	var maxSize = 1073741824; // 1GB		
+	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)"); // 업로드 가능 확장자
+	var maxSize = 31457280; // 30MB		
 	var cloneObj = $(".uploadDiv").clone(); // 클론
 	
 	function checkFile(fileName, fileSize){
