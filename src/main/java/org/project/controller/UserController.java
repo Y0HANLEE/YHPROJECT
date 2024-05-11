@@ -200,9 +200,9 @@ public class UserController {
 		model.addAttribute("userid", user);
 				
 		model.addAttribute("board", uservice.findBoardByUserid(cri));
-		model.addAttribute("boardPage", new PageDTO(cri, uservice.getBoardCnt(user)));
+		//model.addAttribute("boardPage", new PageDTO(cri, uservice.getBoardCnt(user)));
 		model.addAttribute("album", uservice.findAlbumByUserid(cri));
-		model.addAttribute("albumPage", new PageDTO(cri, uservice.getAlbumCnt(user)));
+		//model.addAttribute("albumPage", new PageDTO(cri, uservice.getAlbumCnt(user)));
 	}
 	
 	/* 내가 쓴 댓글(일반/사진) 조회 */
