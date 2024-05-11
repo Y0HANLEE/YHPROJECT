@@ -86,13 +86,7 @@ public class MainController {
 			model.addAttribute("logout", "로그아웃되었습니다.");
 		}
 	}	
-	
-	/*로그아웃*/
-	@GetMapping("/logoutPage")
-	public void logoutPage() {
-	
-	}
-	
+		
 	/* 아이디 찾기 */
 	@ResponseBody
 	@RequestMapping(value="/findId", method = RequestMethod.POST)
