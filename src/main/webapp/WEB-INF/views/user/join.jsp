@@ -95,8 +95,8 @@
 					</div>						
 					<!-- 보안:사이트간 요청 위조방지. spring security에서 post방식을 이용하는 경우 사용.-->
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-					<!-- 프로필사진 정보 -->
-					<input type="hidden" name="profileImg.uploadPath" value="2024\\04\\27">
+					<!-- 프로필사진 정보 -->					
+					<input type="hidden" name="profileImg.uploadPath" value="profile">
 					<input type="hidden" name="profileImg.uuid" value="ed87212c-4e79-4813-be6c-8c73ac58ac33">
 					<input type="hidden" name="profileImg.fileName" value="Default-Profile.png">
 					<input type="hidden" name="profileImg.fileType" value="true">
@@ -272,12 +272,12 @@ $(document).ready(function(){
 	//업로드 취소-업로드파일삭제
 	$("#resetImgBtn").on("click", function(e){
 	    e.preventDefault();
-	    
-	    var defaultPath = "2024\\04\\27";
-	    var defaultUuid = "ed87212c-4e79-4813-be6c-8c73ac58ac33";
-	    var defaultName = "Default-Profile.png";
-	    var defaultType = "image";
-	    var defaultCallPath = encodeURIComponent(defaultPath+"/"+defaultUuid+"_"+defaultName);
+	    	    
+	    var defaultPath = "profile", 
+	    	defaultUuid = "ed87212c-4e79-4813-be6c-8c73ac58ac33",
+	    	defaultName = "Default-Profile.png",
+	    	defaultType = "image",
+	    	defaultCallPath = encodeURIComponent(defaultPath+"/"+defaultUuid+"_"+defaultName);
 	    
 		//프로필 이미지 초기화
         $(".uploadProfile").attr({"data-path":defaultPath, "data-uuid":defaultUuid, "data-filename":defaultName, "data-type":defaultType, "data-file":defaultCallPath});

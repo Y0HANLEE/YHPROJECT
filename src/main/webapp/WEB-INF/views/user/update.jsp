@@ -300,8 +300,8 @@ $(document).ready(function(){
 		prevDelete = encodeURIComponent(prevPath+"/s_"+prevUuid+"_"+prevName);
 	var inputPath = $("input[name='profileImg.uploadPath']"),
 		inputUuid = $("input[name='profileImg.uuid']"),
-		inputName = $("input[name='profileImg.fileName']");
-	var defaultPath = "2024\\04\\27", 
+		inputName = $("input[name='profileImg.fileName']");	 
+	var defaultPath = "profile",
 		defaultUuid = "ed87212c-4e79-4813-be6c-8c73ac58ac33",
 		defaultName = "Default-Profile.png", 
 		defaultType = "true",
@@ -426,9 +426,9 @@ $(document).ready(function(){
     	//기본프로필 사진으로 변경
         uploadProfile.html("<img id='profile_big' src='/display?fileName="+defaultFile+"' style='width:400px; height:400;'>"); //프로필사진 초기화
 		//기본 form으로 변경		
-		inputPath.val("2024\\04\\27");	            
-		inputUuid.val("ed87212c-4e79-4813-be6c-8c73ac58ac33");
-		inputName.val("Default-Profile.png");
+		inputPath.val(defaultPath);	            
+		inputUuid.val(defaultUuid);
+		inputName.val(defaultName);
 		//리셋버튼에 정보전달
 		$("#resetImgBtn").attr({"data-file": defaultDelete, "data-type": defaultType});
 	});

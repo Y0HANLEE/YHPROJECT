@@ -177,17 +177,17 @@ $(document).ready(function(e){
 		
 		$(uploadResultArr).each(
 			function(i,obj){
-				if(!obj.img){
+				if(!obj.fileType){
 					var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);						
 					
-					str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.img+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uuid, uploadpath, filename, type(img)을 추가한다.
+					str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uuid, uploadpath, filename, type(img)을 추가한다.
 					str += "<img src='/resources/img/attach.png'>";	// 첨부파일 이미지(attach.png)
 					str += "<span>"+' '+obj.fileName+' '+"</span>"; // 파일명
 					str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file='"+fileCallPath+"' data-type='file'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> file:그냥삭제
 				} else {				
 					var fileCallPath = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);													
 					
-					str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.img+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, type(img)을 추가한다.
+					str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, type(img)을 추가한다.
 					str += "<img src='/display?fileName="+fileCallPath+"'>"; // 첨부파일 이미지(썸네일)						
 					str += "<span>"+' '+obj.fileName+' '+"</span>"; // 파일명 
 					str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file=\'"+fileCallPath+"\' data-type='image'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> image:원본+썸네일 삭제
