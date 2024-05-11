@@ -30,6 +30,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>   
     <!-- KAKAO Map : services(장소검색,주소/좌표변환)와 clusterer(Marker), drawing(Marker,graphics 그리기모드지원) 라이브러리 불러오기 -->
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3b70d3d0a8a684def18821cba38c489e&libraries=services,clusterer,drawing"></script>
+	<!-- AWS -->
+	<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=791b5c673ffcd3bb0ff814a44f60f05f&libraries=services,clusterer,drawing"></script> -->
 	<!-- KAKAO 우편번호찾기 -->
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
