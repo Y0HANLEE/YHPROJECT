@@ -27,16 +27,16 @@
 	
 	<!-- 소개정보 등록 : 최초등록시만 필요 -->
 	<insert id="insert">
-		insert into intro (title_title, title_intro, map_title, map_intro, map_caption, map_address, map_addressdetail, intro, boardtype)  
+		insert into INTRO (title_title, title_intro, map_title, map_intro, map_caption, map_address, map_addressdetail, intro, boardtype)  
 		values (#{title_title}, #{title_intro}, #{map_title}, #{map_intro}, #{map_caption}, #{map_address}, #{map_addressdetail}, #{intro}, #{boardtype})			   
 	</insert>
 	<!-- 소개정보조회 -->
 	<select id="read" resultType="IntroVO">
-		select * from intro where boardtype = #{boardtype}
+		select * from INTRO where boardtype = #{boardtype}
 	</select>		
 	<!-- 소개정보 수정 -->
 	<update id="update">		
-		update intro set title_title=#{title_title}, title_intro=#{title_intro}, 
+		update INTRO set title_title=#{title_title}, title_intro=#{title_intro}, 
 			   map_title=#{map_title}, map_intro=#{map_intro}, map_caption=#{map_caption}, map_address=#{map_address}, map_addressdetail=#{map_addressdetail}, 
 			   intro=#{intro}, updatedate=current_timestamp 
 		where boardtype=#{boardtype}		

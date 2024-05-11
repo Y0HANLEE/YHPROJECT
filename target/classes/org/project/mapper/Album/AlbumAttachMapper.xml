@@ -3,18 +3,18 @@
 <mapper namespace="org.project.mapper.Album.AlbumAttachMapper">	
 	<!-- 첨부파일 등록 -->
 	<insert id="insert"> 
-		insert into album_attach (uuid, uploadpath, filename, filetype, ano) values (#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{ano}) 
+		insert into ALBUM_ATTACH (uuid, uploadpath, filename, filetype, ano) values (#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{ano}) 
 	</insert>
 	<!-- 특정 게시물에 달린 첨부파일 찾기 -->	
 	<select id="findByAno" resultType="AlbumAttachVO">
-		select * from album_attach where ano = #{ano}
+		select * from ALBUM_ATTACH where ano = #{ano}
 	</select>
 	<!-- 오래된(하루전) 파일들 가져오기 task를 이용하여 검사하기 위함. -->
 	<select id="getOldFiles" resultType="AlbumAttachVO">
-		select * from album_attach where uploadPath = date_format(date_sub(CURDATE(), interval 1 day), '%y/%m/%d');
+		select * from ALBUM_ATTACH where uploadPath = date_format(date_sub(CURDATE(), interval 1 day), '%y/%m/%d');
 	</select>
 	<!-- 특정 게시물에 달린 모든 첨부파일 삭제 -->
 	<delete id="deleteAll">
-		delete from album_attach where ano = #{ano}
+		delete from ALBUM_ATTACH where ano = #{ano}
 	</delete>	
 </mapper>
