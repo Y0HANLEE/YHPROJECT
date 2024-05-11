@@ -8,15 +8,12 @@ import org.project.domain.IntroVO;
 import org.project.domain.PageDTO;
 import org.project.domain.User.AuthVO;
 import org.project.service.IntroService;
-import org.project.service.MailService;
 import org.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -40,9 +37,6 @@ public class AdminController {
 	private UserService uservice;
 		
 	@Setter(onMethod_=@Autowired)
-	private MailService mservice;	
-	
-	@Setter(onMethod_=@Autowired)
 	private IntroService iservice;
 	
 	/* 게시글 목록 화면 (LIST) : 페이징 */
@@ -54,19 +48,6 @@ public class AdminController {
 		model.addAttribute("list", uservice.getUserList(cri));		
 		model.addAttribute("pageMaker", new PageDTO(cri, uservice.getTotalUser(cri)));
 	}
-				
-	/*현재 로그인 사용자 권한 확인*/	
-	@GetMapping("/auth")
-	public void getCurrentUserAuthorities(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userid = authentication.getName();
-        if (authentication != null && authentication.isAuthenticated()) {
-            model.addAttribute("auth", authentication.getAuthorities().toString());
-            model.addAttribute("id", userid);
-        } else {
-            model.addAttribute("auth", "Anonymous");
-        }        
-    }
 	
 	/* 사용자 권한 조정(등급조정) */
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -92,14 +73,14 @@ public class AdminController {
 	}		
 	
 	@GetMapping({"/home","/intro"})
-	public void getUpdateIntroduce(Model model) throws NullPointerException{
+	public void getUpdateIntro(Model model) throws NullPointerException{
 		model.addAttribute("home", iservice.read(1));
 		model.addAttribute("intro", iservice.read(2));		
 	}
 	
 	/* 메인/인트로 페이지 수정 */
 	@PostMapping({"/home","/intro"})
-	public String updateIntroduce(IntroVO intro, RedirectAttributes rttr, Model model) {
+	public String updateIntro(IntroVO intro, RedirectAttributes rttr, Model model) {
 		iservice.update(intro);
 		log.info(intro);
 		//첨부파일이 있다면
