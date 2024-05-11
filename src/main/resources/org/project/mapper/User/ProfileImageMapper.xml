@@ -3,18 +3,22 @@
 <mapper namespace="org.project.mapper.User.ProfileImageMapper">
 	<!-- 프로필 이미지 등록 -->
 	<insert id="insert">
-		insert into profile (userid, filename, uuid, uploadpath, filetype) values (#{userid}, #{fileName}, #{uuid}, #{uploadPath}, #{fileType})
+		insert into PROFILE (userid, filename, uuid, uploadpath, filetype) values (#{userid}, #{fileName}, #{uuid}, #{uploadPath}, #{fileType})
 	</insert>	
 	<!-- 프로필 이미지 조회 -->
 	<select id="getProfileByUserid" resultType="ProfileImageVO">
-		select * from profile where userid=#{userid}  
+		select * from PROFILE where userid=#{userid}  
 	</select>	
 	<!-- 프로필 이미지 수정 -->
 	<update id="update">
-		update profile set filename=#{fileName}, uploadpath=#{uploadPath}, uuid=#{uuid} where userid=#{userid}  
+		update PROFILE set filename=#{fileName}, uploadpath=#{uploadPath}, uuid=#{uuid} where userid=#{userid}  
 	</update>	
 	<!-- 프로필 삭제 -->
 	<delete id="delete">
-		delete from profile where userid=#{userid}
-	</delete>
+		delete from PROFILE where userid=#{userid}
+	</delete>	
+	<!-- 오래된(하루전) 파일들 가져오기 : task를 이용하여 검사하기 위함. -->
+	<select id="getOldFiles" resultType="ProfileImageVO">
+		select * from profile where uploadpath = date_format(date_sub(CURDATE(), interval 1 day), '%y/%m/%d');
+	</select>
 </mapper>
