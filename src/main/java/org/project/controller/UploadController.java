@@ -36,6 +36,11 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Controller
 @Log4j
 public class UploadController {
+	//private static final String UPLOAD_FOLDER = "/opt/tomcat/upload"; //aws
+	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //aws
+	private static final String UPLOAD_FOLDER = "C:\\upload"; 
+	private static final String UPLOAD_PATH = "C:\\upload\\";
+	
 	/* 폴더 생성 규칙 */
 	private String getFolder() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -64,7 +69,7 @@ public class UploadController {
 	    
 	    try {
 	        // 업로드할 폴더 설정
-	        String uploadFolder = "C:\\upload";
+	        String uploadFolder = UPLOAD_FOLDER;
 	        File uploadPath = new File(uploadFolder, getFolder());
 	        String uploadFolderPath = getFolder();
 
@@ -94,7 +99,7 @@ public class UploadController {
 
 	        // 이미지인지 확인 후 썸네일 생성_프로필이미지이므로 더 작게
 	        if (checkImg(saveFile)) {
-	            file.setImg(true);
+	            file.setFileType(true);
 	            File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
 	            FileOutputStream thumbnail = new FileOutputStream(thumbnailFile);
 	            Thumbnailator.createThumbnail(singleFile.getInputStream(), thumbnail, 30, 30);
@@ -107,7 +112,6 @@ public class UploadController {
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
-
 	
 	/* ajax방식 다중파일 저장 + 인증된 사용자(로그인) */	
 	@ResponseBody
@@ -115,7 +119,7 @@ public class UploadController {
 	public ResponseEntity<List<FileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
 		
 		List<FileDTO> list = new ArrayList<>();
-		String uploadFolder = "C:\\upload"; // 업로드 할 폴더 경로
+		String uploadFolder = UPLOAD_FOLDER; // 업로드 할 폴더 경로
 		File uploadPath = new File(uploadFolder, getFolder()); // 새 폴더는 오늘 날짜 이름으로 한다.
 		String uploadFolderPath = getFolder(); // 업로드폴더 이름				
 
@@ -147,9 +151,9 @@ public class UploadController {
 				attach.setUuid(uuid.toString());
 				attach.setUploadPath(uploadFolderPath);
 				
-				//img check
+				//fileType(img) check
 				if(checkImg(saveFile)) {
-					attach.setImg(true);					
+					attach.setFileType(true);					
 					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_"+uploadFileName)); //썸네일은 "s_uuid_파일명"으로 저장(outputstream-출력)					
 					Thumbnailator.createThumbnail(file.getInputStream(), thumbnail, 100, 100);//썸네일파일명, 100*100사이즈로 썸네일 생성(inputstream-입력)					
 					thumbnail.close();
@@ -166,7 +170,8 @@ public class UploadController {
 	@GetMapping("/display")
 	@ResponseBody
 	public ResponseEntity<byte[]> getFile(String fileName){
-		File file = new File("C:\\upload\\"+fileName);
+		File file = new File(UPLOAD_PATH+fileName);		
+		
 		ResponseEntity<byte[]> result = null; // byte[]는 실제 파일을 넘기기 위함.
 		
 		try {
@@ -183,7 +188,8 @@ public class UploadController {
 	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent, String fileName){		
-		Resource resource = new FileSystemResource("C:\\upload\\"+fileName); //다운로드할 파일
+		Resource resource = new FileSystemResource(UPLOAD_PATH+fileName); //다운로드할 파일
+		//Resource resource = new FileSystemResource("/opt/tomcat/upload/"+fileName); //aws
 		
 		if (resource.exists() == false) {// 다운로드할 파일이 없다면 
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404오류
@@ -227,7 +233,9 @@ public class UploadController {
 		File file;
 		
 		try {
-			file = new File("C:\\upload\\"+URLDecoder.decode(fileName, "UTF-8"));
+			file = new File(UPLOAD_PATH+URLDecoder.decode(fileName, "UTF-8"));
+			//file = new File("/opt/tomcat/upload/"+URLDecoder.decode(fileName, "UTF-8")); //aws
+			
 			file.delete();// 일반파일의 경우 경로에 해당하는 파일 바로 삭제
 			if(type.equals("image")) { // 이미지 타입의 파일이라면,
 				String largeFileName = file.getAbsolutePath().replace("s_", ""); // 절대경로에서 s_를 지워버림.
