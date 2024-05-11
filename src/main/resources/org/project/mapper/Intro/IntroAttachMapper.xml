@@ -3,23 +3,23 @@
 <mapper namespace="org.project.mapper.Intro.IntroAttachMapper">	
 	<!-- 첨부파일 등록 -->
 	<insert id="insert"> 
-		insert into intro_attach (uuid, uploadpath, filename, filetype, boardtype) values (#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{boardtype}) 
+		insert into INTRO_ATTACH (uuid, uploadpath, filename, filetype, boardtype) values (#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{boardtype}) 
 	</insert>
 	
 
 	<!-- 특정 게시물에 달린 첨부파일 찾기 -->	
 	<select id="findByBoard" resultType="IntroAttachVO">
-		select * from intro_attach where boardtype = #{boardtype}
+		select * from INTRO_ATTACH where boardtype = #{boardtype}
 	</select>
 
 	<!-- 오래된(하루전) 파일들 가져오기 task를 이용하여 검사하기 위함. -->
 	<select id="getOldFiles" resultType="IntroAttachVO">
-		select * from intro_attach where uploadPath = to_char(sysdate-1, 'yyyy\mm\dd')
+		select * from intro_attach where uploadpath = date_format(date_sub(curdate(), interval 1 day), '%y/%m/%d');
 	</select>
 	
 	
 	<!-- 특정 게시물에 달린 모든 첨부파일 삭제 -->
 	<delete id="deleteAll">
-		delete from intro_attach where boardtype = #{boardtype}
+		delete from INTRO_ATTACH where boardtype = #{boardtype}
 	</delete>	
 </mapper>
