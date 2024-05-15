@@ -12,6 +12,7 @@ import org.project.domain.PageDTO;
 import org.project.domain.Album.AlbumAttachVO;
 import org.project.domain.Album.AlbumVO;
 import org.project.service.Album.AlbumService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Controller
@@ -35,8 +37,12 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class AlbumController {	
 	
+	@Setter(onMethod_=@Autowired)
 	private AlbumService alservice;
 
+	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
+	private static final String UPLOAD_PATH = "c:\\upload\\";
+	
 	private void deleteFiles(List<AlbumAttachVO> attachList) {
 		if(attachList == null || attachList.size() == 0) {
 			return;
@@ -44,11 +50,11 @@ public class AlbumController {
 		
 		attachList.forEach(attach -> {
 			try {
-				Path file = Paths.get("c:\\upload\\"+attach.getUploadPath()+"\\"+attach.getUuid()+"_"+attach.getFileName());
+				Path file = Paths.get(UPLOAD_PATH+attach.getUploadPath()+"\\"+attach.getUuid()+"_"+attach.getFileName());
 				Files.deleteIfExists(file);
 
 				if(Files.probeContentType(file).startsWith("image")) {
-					Path thumbnail = Paths.get("c:\\upload\\"+attach.getUploadPath()+"\\s_"+attach.getUuid()+"_"+attach.getFileName());
+					Path thumbnail = Paths.get(UPLOAD_PATH+attach.getUploadPath()+"\\s_"+attach.getUuid()+"_"+attach.getFileName());
 					Files.delete(thumbnail);
 				}
 			} catch (Exception e) {

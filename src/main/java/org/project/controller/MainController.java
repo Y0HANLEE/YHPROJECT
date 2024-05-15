@@ -1,10 +1,12 @@
 package org.project.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.project.domain.Criteria;
 import org.project.domain.IntroAttachVO;
+import org.project.domain.User.UserVO;
 import org.project.service.IntroService;
 import org.project.service.MailService;
 import org.project.service.UserService;
@@ -16,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,9 +72,10 @@ public class MainController {
     }
 	
 	/*접근권한에러*/
-	@GetMapping("/accessError")
-	public void accessDenied(Authentication auth, Model model) {
-		model.addAttribute("msg", "Access Denied");
+	@GetMapping("/403")
+	public void accessDenied(Principal principal, Model model) {
+		UserVO user = uservice.read(principal.getName());
+		model.addAttribute("user", user);		
 	}
 	
 	/*로그인*/

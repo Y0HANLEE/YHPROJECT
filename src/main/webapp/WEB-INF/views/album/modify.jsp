@@ -65,7 +65,7 @@
 							</c:if>					
 						</sec:authorize>
 						<button type="submit" data-oper="list" class="btn btn-default">목록으로</button>
-						<button class="btn btn-default" onclick="history.back()">뒤로가기</button>
+						<a href="/album/get?ano=<c:out value='${album.ano}'/>" class="btn btn-default">뒤로가기</a>						
 					</div>
 					
 					<!-- AlbumController get()_modify의 @ModelAttribute("cri")로 인해 수집된 정보 -->
@@ -104,6 +104,7 @@
 <!-- 본문 script -->
 <script>
 var formObj = $("form");
+var ano = "<c:out value='${album.ano}'/>";
 
 <!-- form 내부의 버튼클릭이벤트 data-oper="modify/remove/list" -->
 $('button').on('click', function(e){
@@ -141,8 +142,7 @@ $('button').on('click', function(e){
 		});
 		formObj.append(str);
 		checkBlank();
-	}
-	
+	}	
 	checkBlank();
 });
 
@@ -213,24 +213,24 @@ $(document).ready(function(){
 
 	
 	/* 첨부파일의 추가 - 업로드 상세처리(확장자, 크기 등) */ 
-	var regex = new RegExp("(.*?)\.(exe|sh|alz)"); // 업로드 불가 확장자
-	var maxSize = 1073741824; // 1GB
+	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)"); // 업로드 가능 확장자	
+	var maxSize = 31457280; // 30MB	
 	
 	function checkFile(fileName, fileSize){
 		// 파일사이즈 검토
 		if(fileSize >= maxSize){
-			alert("파일 사이즈 초과");
+			alert("파일 사이즈 초과 : 파일당 최대 30MB까지 업로드 가능합니다.");
 			return false;
 		}
 		
 		// 파일이름(확장자) 검토
-		if(regex.test(fileName)){
-			alert("해당 확장자는 업로드 할 수 없습니다.");
+		if(!regex.test(fileName)){
+			alert("jpg,jpeg,png,gif 확장자만 업로드 가능합니다.");
 			return false;
 		}
-		
+			
 		return true; // 성공시
-	}	
+	}
 	
 	/* 등록버튼 없이 변화가 감지되면 처리할 기능 */
 	$("input[type='file']").change(function(e){
@@ -239,7 +239,7 @@ $(document).ready(function(){
 		var files = inputFile[0].files;
 		
 		for(i=0; i<files.length; i++){
-			if(!checkFile(files[i].name, files[i].size)){
+			if(!checkFile(files[i].name, files[i].size)){				
 				return false;
 			}
 			formData.append("uploadFile", files[i]);
@@ -255,8 +255,8 @@ $(document).ready(function(){
 			},
 			data:formData,
 			dataType:'json',
-			success:function(result){					
-				showUploadResult(result);
+			success:function(result){		
+				showUploadResult(result);			
 			}
 		});
 	});
@@ -315,7 +315,7 @@ $(document).ready(function(){
 	})();
 
 	// x버튼 이벤트 처리
-	$(".uploadResult").on("click", "button", function(e){
+	$(".uploadResult").on("click", ".btn-danger", function(e){
 		console.log("delete file!!!");
 		var targetLi = $(this).closest("li");
 		targetLi.remove();		

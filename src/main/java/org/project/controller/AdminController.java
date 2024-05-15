@@ -66,7 +66,7 @@ public class AdminController {
 	@PostMapping("/delete")
 	public String deleteUser(@RequestParam("userid") String userid, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) throws Exception {		
 		uservice.remove(userid);
-		log.info("[controller]-------------------------------------deleted userid:"+userid);
+		log.warn("[controller]-------------------------------------deleted userid:"+userid);
 		rttr.addFlashAttribute("result", userid+"님의 계정이 삭제되었습니다.");
 		
 		return "redirect:/admin/list" + cri.getListLink();

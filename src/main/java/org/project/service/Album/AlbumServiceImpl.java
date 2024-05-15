@@ -76,11 +76,13 @@ public class AlbumServiceImpl implements AlbumService{
 		int result = almapper.update(album);		
 		
 		amapper.deleteAll(album.getAno()); //삭제
+		log.info("[albumService]--------------------------delete");
 		
 		if(result==1 && album.getAttachList()!=null && album.getAttachList().size()>0) {
 			album.getAttachList().forEach(attach -> {
 				attach.setAno(album.getAno());
 				amapper.insert(attach); //재등록
+				log.info("[albumService]--------------------------"+attach);
 			});
 		}
 		

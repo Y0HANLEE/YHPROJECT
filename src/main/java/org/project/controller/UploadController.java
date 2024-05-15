@@ -3,7 +3,6 @@ package org.project.controller;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -36,8 +35,8 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Controller
 @Log4j
 public class UploadController {
-	//private static final String UPLOAD_FOLDER = "/opt/tomcat/upload"; //aws
-	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //aws
+	//private static final String UPLOAD_FOLDER = "/opt/tomcat/upload"; //AWS
+	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
 	private static final String UPLOAD_FOLDER = "C:\\upload"; 
 	private static final String UPLOAD_PATH = "C:\\upload\\";
 	
@@ -51,6 +50,7 @@ public class UploadController {
 	
 	/* 이미지 파일 체크 */
 	private boolean checkImg(File file) {
+		/*
 		try {
 			String contentType = Files.probeContentType(file.toPath()); // 파일 경로에서 확장자를 확인 후 MIME타입으로 반환
 			return contentType.startsWith("image"); // image로 시작하는지 확인
@@ -58,6 +58,20 @@ public class UploadController {
 			e.printStackTrace();
 		}		
 		return false; // 기본적으로는 이미지 파일이 아닌 것으로 판단
+		*/		
+		// 보다 확실히 하기 위해 이미지타입의 확장자를 배열로 표기하여 비교
+		try {
+			String fileName = file.getName();
+		    String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+		    String[] imgExtensions = {"jpg", "jpeg", "png", "gif"};
+
+		    for (String ext : imgExtensions) {
+		    	if (extension.equalsIgnoreCase(ext)){ return true; }
+	    	}
+	    } catch (Exception e) {
+			e.printStackTrace();
+	    }
+	    return false;
 	}
 
 	/* 단일 파일 업로드 */	
@@ -189,8 +203,7 @@ public class UploadController {
 	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent, String fileName){		
 		Resource resource = new FileSystemResource(UPLOAD_PATH+fileName); //다운로드할 파일
-		//Resource resource = new FileSystemResource("/opt/tomcat/upload/"+fileName); //aws
-		
+			
 		if (resource.exists() == false) {// 다운로드할 파일이 없다면 
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404오류
 		}
@@ -234,7 +247,6 @@ public class UploadController {
 		
 		try {
 			file = new File(UPLOAD_PATH+URLDecoder.decode(fileName, "UTF-8"));
-			//file = new File("/opt/tomcat/upload/"+URLDecoder.decode(fileName, "UTF-8")); //aws
 			
 			file.delete();// 일반파일의 경우 경로에 해당하는 파일 바로 삭제
 			if(type.equals("image")) { // 이미지 타입의 파일이라면,

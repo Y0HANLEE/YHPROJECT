@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.Setter;
 
 @Controller
-@RequestMapping("/manager/*")
+@RequestMapping("/mgr/*")
 public class ManagerController {
 	
 	@Setter(onMethod_=@Autowired)

@@ -4,6 +4,7 @@ import org.project.domain.Criteria;
 import org.project.domain.Board.BoardReplyPageDTO;
 import org.project.domain.Board.BoardReplyVO;
 import org.project.service.Board.BoardReplyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins="*")
 @RequestMapping("/board/replies/*")
 public class BoardReplyController {
-
+	
+	@Setter(onMethod_=@Autowired)
 	private BoardReplyService rservice;
 	
 	/* 댓글 등록 + 인증된 사용자(로그인) */

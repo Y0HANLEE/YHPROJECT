@@ -75,14 +75,17 @@
 	<!-- javaMail -->
 	<bean id="mailSender" class ="org.springframework.mail.javamail.JavaMailSenderImpl" >
 		<property name="host" value="smtp.gmail.com" /> <!-- google -->
-		<property name="port" value="587"/><!-- default -->
+		<property name="port" value="465"/><!-- ssl -->
+		<!-- <property name="port" value="587"/> --><!-- tls -->
 		<property name="username" value="kevinyh18@gmail.com" />
 		<property name="password" value="nlul uldq wefw yzjj" /> <!-- 구글 앱비밀번호 -->
-		<!-- 보안연결TLS -->
+		<!-- 보안연결TLS/SSL -->
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
+				<!-- ssl사용시에 tls는 주석처리 -->
+				<prop key="mail.smtp.ssl.enable">true</prop>				
+				<!-- <prop key="mail.smtp.starttls.enable">true</prop> -->
 			</props>
 		</property>
 	</bean>

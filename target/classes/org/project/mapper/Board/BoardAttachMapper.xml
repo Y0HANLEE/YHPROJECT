@@ -3,23 +3,23 @@
 <mapper namespace="org.project.mapper.Board.BoardAttachMapper">	
 	<!-- 첨부파일 등록 -->
 	<insert id="insert"> 
-		insert into BOARD_ATTACH (uuid, uploadpath, filename, filetype, bno) values (#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{bno}) 
+		insert into board_attach (uuid, uploadpath, filename, filetype, bno) values (#{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{bno}) 
 	</insert>
 	
 	
 	<!-- 특정 게시물에 달린 첨부파일 찾기 -->	
 	<select id="findByBno" resultType="BoardAttachVO">
-		select * from BOARD_ATTACH where bno = #{bno}
+		select * from board_attach where bno = #{bno}
 	</select>
 	
 	<!-- 오래된(하루전) 파일들 가져오기 : task를 이용하여 검사하기 위함. -->
 	<select id="getOldFiles" resultType="BoardAttachVO">
-		select * from BOARD_ATTACH where uploadpath = date_format(date_sub(CURDATE(), interval 1 day), '%y/%m/%d');
+		select * from board_attach where uploadpath = date_format(date_sub(CURDATE(), interval 1 day), '%y/%m/%d');
 	</select>
 
 	
 	<!-- 특정 게시물에 달린 모든 첨부파일 삭제 -->
 	<delete id="deleteAll">
-		delete from BOARD_ATTACH where bno = #{bno}
+		delete from board_attach where bno = #{bno}
 	</delete>	
 </mapper>

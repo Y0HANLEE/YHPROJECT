@@ -45,17 +45,17 @@
 					<div class="col-lg-6">				
 						<div class="form-group">						
 							<p>
-								<label for="userid">아이디</label> 
+								<label for="userid">아이디</label><span class="essential pull-right">*영문자 6~8자</span> 
 								<button id="idCheck" class="btn btn-outline btn-danger btn-xs" value="N">CHECK</button>
 							</p>
 							<input id="userid" class="form-control" name="userid" placeholder="ID" autofocus>							
 						</div>						
 						<div class="form-group">
-							<label for="userpw">비밀번호</label>
+							<label for="userpw">비밀번호</label><span class="essential pull-right">*숫자,영문자,특수문자(!,@,#,$,%,^,&,*) 포함 6~12자</span>
 							<input id="userpw" class="form-control" name="userpw" type="password" placeholder="Password">
 						</div>
 						<div class="form-group">
-							<div><label for="pwconfirm">비밀번호확인</label> 
+							<div><label for="pwconfirm">비밀번호확인</label><span class="essential pull-right">*입력하신 비밀번호를 다시 입력해주세요</span> 
 							<button type="button" class="btn btn-outline btn-danger btn-xs" id="pwCheck" value="N">CHECK</button></div>
 							<input id="pwconfirm" class="form-control" name="pwconfirm" type="password" placeholder="Password Again">
 						</div>
@@ -72,11 +72,11 @@
 							</select>
 						</div>
 						<div class="form-group">
-							<label for="phone">전화번호</label>
+							<label for="phone">전화번호</label><span class="essential pull-right">예시) 010-1234-5678</span>
 							<input id="phone" class="form-control" name="phone" placeholder="Phone Number">
 						</div>
 						<div class="form-group">							
-							<div><label for="email">이메일</label><button type="button" class="btn btn-outline btn-danger btn-xs" id="checkModalBtn" value="N">SEND MAIL</button></div>
+							<div><label for="email">이메일</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="checkModalBtn" value="N">SEND MAIL</button></label>&nbsp;&nbsp;&nbsp;<span class="essential pull-right">예시) admin@console.log</span></div>
 							<input id="email" class="form-control" name="email" type="email" placeholder="Email Address">
 						</div>
 						<div class="form-group">
@@ -127,13 +127,14 @@
 <!-- Modal -->
 <div id="checkModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-	<div class="modal-content">
+	<!-- <div class="modal-content"> -->
 		<div class="modal-body" style="position:absolute; top: 200px; padding: 30px; background-color: white; border-radius: 4px;">
-			인증번호 : <input id="checkStr" placeholder="인증번호를 입력해주세요." style="width: 300px; margin: 0 10px;">
-			<button id="checkMailSend" class="btn btn-default">메일전송</button>
+			인증번호 : <input id="checkStr" placeholder="인증번호를 입력해주세요." style="width: 250px; margin: 0 10px;">
+			<button id="checkMailSend" class="btn btn-info">메일전송</button>
 			<button id="checkBtn" class="btn btn-default">확인</button>
+			<button id="closeBtn" class="btn btn-default">닫기</button>
 		</div>
-	</div>			
+	<!-- </div>		 -->	
 	</div>
 </div>
 <!-- KAKAO 주소검색 -->
@@ -188,15 +189,15 @@ $(document).ready(function(){
 	/* 프로필사진 업로드 */
 	//업로드 상세처리(확장자, 크기 등) 
 	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)$"); //업로드 가능 확장자
-	var maxSize = 5242880; //5MB	
+	var maxSize = 5242880; //5MB
 	
 	function checkFile(fileName, fileSize){
 		if(fileSize >= maxSize){
-			alert("파일 사이즈 초과");
+			alert("파일 사이즈 초과 : 최대 5MB까지 업로드 가능합니다.");
 			return false;
 		}
 		if(!regex.test(fileName)){
-			alert("해당 확장자는 업로드 할 수 없습니다.");
+			alert("jpg,jpeg,png,gif 확장자만 업로드 가능합니다.");
 			return false;
 		}		
 		return true; 
@@ -218,9 +219,9 @@ $(document).ready(function(){
         formData.append('singleFile', file);
                 
         //파일 검증
-        if(!checkFile(fileName, fileSize)) {            
-            $(this).val("");
-            return;
+        if(!checkFile(fileName, fileSize)) {
+            //uploadProfile.html("<img id='profile_small' src='/display?fileName="+prevFile+"'>");	
+            return false;
         }
        
      	//파일을 서버로 전송
@@ -241,7 +242,7 @@ $(document).ready(function(){
                 var uploadPath = Img.find('uploadPath').text();
                 var uuid = Img.find('uuid').text();
                 var fileName = Img.find('fileName').text();
-                var fileType = (Img.find('img').text() === "true") ? true : false;
+                var fileType = (Img.find('fileType').text() === "true") ? true : false;
                 //화면출력
                 var reader = new FileReader();                                
                 reader.onload = function(){
@@ -249,6 +250,8 @@ $(document).ready(function(){
 					var DeleteFilePath = encodeURIComponent(uploadPath+"/s_"+uuid+"_"+fileName); //기존의 /deleteFile는 썸네일을 지우는 용도, 파일명 쪼개서 "s_"를 붙이는것보단 지우는게 쉽다.
 					//var DeleteFilePath = uploadPath+"/s_"+uuid+"_"+fileName; //기존의 /deleteFile는 썸네일을 지우는 용도, 파일명 쪼개서 "s_"를 붙이는것보단 지우는게 쉽다.
 					var ImgTag = fileType === true ? '<img id="profile" src="/display?fileName='+fileCallPath+'">' : '<img id="profile" src="/resources/img/Default-Profile.png">'; //그럴리없겠지만 이미지타입이 아닌 경우, 기본프로필사진
+					console.log(ImgTag);
+					console.log(fileType);
                     $(".uploadProfile").attr({"data-path":uploadPath, "data-uuid":uuid, "data-filename":fileName, "data-type":fileType, "data-file":fileCallPath});
                     $(".uploadProfile").html(ImgTag);
                     $("#resetImgBtn").attr({"data-file": DeleteFilePath, "data-type": fileType});//초기화버튼으로 정보전달
@@ -262,6 +265,7 @@ $(document).ready(function(){
                 reader.readAsDataURL(file);
              
                 $(".uploadProfile").css('background-image', 'none');//기본프로필사진 화면에서 삭제
+
             },
             error: function(xhr, status, error) {
                 console.error('프로필 사진 업로드 실패:', error);
@@ -443,15 +447,24 @@ $(document).ready(function(){
 		    return;				
 		}
 		
-		//전화번호
-		if(phone != null){
-			if(!reg_phone.test(phone)){
-				$("#myModalBody").html("<div align='center'><p>전화번호 형식에 맞게 입력해주세요</p><br><p>ex)xxx-xxxx-xxxx</p></div>");
-				modal("input[name='email']"); 	        
-			   	return;
-			}
+		//성별
+		if (gender === null || gender === "") {				
+			$("#myModalBody").html("<p>성별을 체크해주세요</p>");
+			modal("select[name='gender']");
+		    return;				
 		}
 		
+		//연락처
+		if (phone === "") {				
+			$("#myModalBody").html("<p>전화번호를 입력해주세요</p>");
+			modal("input[name='phone']");
+		    return;				
+		} else if(!reg_phone.test(phone)){
+			$("#myModalBody").html("<div align='center' style='font-size:16px; margin:15px'>전화번호 형식에 맞게 입력해주세요<br>ex)010-1234-5678</div>");
+			modal("input[name='phone']"); 	        
+		   	return;
+		}
+				
 		//이메일
 		if (email === "") {				
 			$("#myModalBody").html("<p>이메일을 입력해주세요</p>");
@@ -470,29 +483,14 @@ $(document).ready(function(){
 		    return;					
 		}
 		
-		/* 필요시 사용 */
-		if (gender === null || gender === "") {				
-			$("#myModalBody").html("<p>성별을 체크해주세요</p>");
-			modal("select[name='gender']");
-		    return;				
-		}
-		
-		if (phone === "") {				
-			$("#myModalBody").html("<p>전화번호를 입력해주세요</p>");
-			modal("input[name='phone']");
-		    return;				
-		} else if(!reg_phone.test(phone )){
-			$("#myModalBody").html("<div align='center' style='font-size:16px; margin:15px'>전화번호 형식에 맞게 입력해주세요<br>ex)010-1234-5678</div>");
-			modal("input[name='phone']"); 	        
-		   	return;
-		}
-		
+		//주소
 		if (address === "") {				
 			$("#myModalBody").html("<p>주소를 입력해주세요</p>");
 			modal("input[name='address']"); 
 		    return;				
 		}
 		
+		//생년월일
 		if (birth === "") {				
 			$("#myModalBody").html("<p>생년월일을 입력해주세요</p>");
 			modal("input[name='birth']"); 
@@ -686,6 +684,13 @@ $(document).ready(function(){
 			}
 		});		
     });
+	
+ // 이벤트위임
+    $("#checkModal").on("click", "#closeBtn", function(e) {
+    	e.preventDefault();
+    	$("#checkStr").val("");
+    	setTimeout(function() { $("#checkModal").modal("hide"); }, 100);
+    });    
 });	
 </script>
 

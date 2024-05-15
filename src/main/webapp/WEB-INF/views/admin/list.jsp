@@ -193,6 +193,8 @@
 		        $("#userForm input[name='userid']").val(userid); //userid값을 input_hidden(userid)값으로 전달
 		        $("#userForm input[name='auth']").val(auth);     //auth값을 input_hidden(auth)값으로 전달
 		        userForm.attr("action", "/admin/auth").submit();
+		    } else {
+		    	return false;
 		    }				
 		});
 		
@@ -200,14 +202,17 @@
 		    var userid = $(this).data("userid");		    
 		    var msg = "계정을 삭제하시려면 해당 회원의 ID를 입력해주십시오.";		    
 		    var userInput = prompt(msg);
-			
-		    if (userInput === userid) { // 최종체크(아이디 재입력)
+					    
+		    if (userInput === null) { //취소
+		        return; 
+		    } else if (userInput === userid) { //최종체크(아이디 재입력)
 		        $("#userForm input[name='userid']").val(userid); //userid값을 input_hidden(userid)값으로 전달			        
-			    userForm.attr("action", "/admin/delete").submit();
+		        userForm.attr("action", "/admin/delete").submit();
+		    } else if (userInput === ""){
+		        alert("아이디를 입력해주세요");
 		    } else {
 		        alert("일치하지 않습니다.");
-		        return false;
-		    }
+		    } 
 		});
 		
 		/* MODAL창 설정 */

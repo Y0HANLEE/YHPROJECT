@@ -183,8 +183,6 @@ $(document).ready(function(){
 	function showList(page) {
 		replyService.getList({ano:anoValue, page:page||1}, 
 			function(replyCnt, list){
-				console.log("replyCnt:"+replyCnt);
-				console.log("list:"+list);
 				if(page == -1){
 					pageNum = Math.ceil(replyCnt/10.0);
 					showList(pageNum);
@@ -219,7 +217,15 @@ $(document).ready(function(){
 				
 				replyUl.html(str);
 				
-				showReplyPage(replyCnt);
+				showReplyPage(replyCnt);			
+				
+				// 프로필사진 클릭시 이벤트 처리 
+				$(".reply_ProfileFrame").on("click", function(e){				
+					var img = $(this);
+					var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));					
+					console.log("------"+img.data("path"));
+					showImage(path.replace(new RegExp(/\\/g),"/"));
+				});	
 			}
 		);	
 	}
@@ -274,8 +280,10 @@ $(document).ready(function(){
 	});
 	
 	/* 댓글 조회(특정 댓글 클릭 이벤트) */
-	$(".chat").on("click", "li", function(e){
-		var rno = $(this).data("rno");
+	$(".chat").on("click", "li div[id='replyB']", function(e){
+		var parentLi = $(this).closest('li');
+	    var rno = parentLi.data('rno');
+		//var rno = $(this).data("rno");
 		
 		replyService.get(rno, 
 			function(reply){

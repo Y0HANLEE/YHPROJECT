@@ -59,7 +59,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand main" href="/"><i class="fa fa-flask"></i>YH.LAB</a>
+			<a class="navbar-brand main" href="/" style="font-size: 22px; font-weight: bolder;">Console.log(YH)</a>
 		</div>
 		
 		<!-- 좌측 사이드바 -->
@@ -109,7 +109,7 @@
 					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear fa-fw"></i> 운영자페이지<span class="fa fa-caret-down"></span></a>
 						<ul class="nav nav-second-level">
 							<!-- 로그인된 상태(운영자, 일반회원) -->							
-							<li><a href="../manager/list"><i class="fa fa-user fa-fw"></i> 회원목록</a></li>							
+							<li><a href="../mgr/list"><i class="fa fa-user fa-fw"></i> 회원목록</a></li>							
 						</ul>
 					</li>
 					</sec:authorize>
@@ -128,8 +128,11 @@
 		$("#logout").on("click", function(e){
 		    e.preventDefault(); // 이벤트의 기본 동작 방지
 		    console.log("click");
-		    confirm("로그아웃하시겠습니까?");
-		    $("#logoutForm").submit();
+		    if(confirm("로그아웃하시겠습니까?")){		    	
+			    $("#logoutForm").submit();
+		    } else {
+		    	return false;
+		    };
 		});
 	</script>
 	<!-- 본문화면 -->

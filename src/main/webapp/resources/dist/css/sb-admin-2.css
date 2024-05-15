@@ -18,9 +18,8 @@ body {
 }
 @media (min-width: 768px) {
   #page-wrapper {
-    position: inherit;
-    /*margin: 0 0 0 250px;*/
-    margin: 0 0 0 200px;
+    position: inherit;    
+    margin: 0 0 0 250px;
     padding: 0 30px;
     border-left: 1px solid #e7e7e7;
     min-height: 638px;
@@ -79,7 +78,7 @@ body {
   padding: 15px;
 }
 .sidebar ul li {
-  width: 200px;
+  width: 250px;
   border-bottom: 1px solid #e7e7e7;
 }
 @media (max-width: 767px){

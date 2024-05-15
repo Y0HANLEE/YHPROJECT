@@ -201,10 +201,10 @@ $(document).ready(function(){
 				showReplyPage(replyCnt);			
 				
 				// 프로필사진 클릭시 이벤트 처리 
-				$(".reply_ProfileFrame").on("click", "img", function(e){				
-					var img = $(this);
-					var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));					
-					console.log(path);
+				$(".reply_ProfileFrame").on("click", function(e){				
+					var img = $(this);					
+					var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));
+					console.log("------"+img.data("path"));
 					showImage(path.replace(new RegExp(/\\/g),"/"));
 				});	
 			}

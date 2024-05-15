@@ -42,12 +42,12 @@
 							<input class="form-control" name="gender" value="${user.gender=='M'?'남자':'여자'}" readonly>
 						</div>
 						<div class="form-group">
-							<label for="phone">전화번호</label>
+							<label for="phone">전화번호</label><span class="essential pull-right">예시) 010-1234-5678</span>
 							<input class="form-control" name="phone" value="${user.phone}" placeholder="전화번호를 입력해주세요">
 						</div>
 						<div class="form-group">
-							<label for="email">이메일</label>
-							<input class="form-control" type="email" name="email" value="${user.email}">
+							<label for="email">이메일</label><span class="essential pull-right">예시) admin@console.log</span>
+							<input class="form-control" type="email" name="email" value="${user.email}" placeholder="이메일 주소를 입력해주세요">
 						</div>
 						<div class="form-group">
 								<label for="address">주소</label>
@@ -64,8 +64,10 @@
 						</div>					
 						<div id="buttonZone" class="form-group">
 							<button id="updateBtn" class="btn btn-lg btn-info btn-lg">수정완료</button>
-							<button id="passBtn" class="btn btn-lg btn-default btn-lg">비밀번호변경</button>						
-							<button id="backBtn" class="btn btn-lg btn-default btn-lg">뒤로가기</button>
+							<sec:authorize access="hasAnyRole('ROLE_MANAGER','ROLE_USER')">
+								<button id="passBtn" class="btn btn-lg btn-default btn-lg">비밀번호변경</button>						
+							</sec:authorize>
+							<button id="backBtn" class="btn btn-lg btn-default btn-lg" style="margin-left:5px;">뒤로가기</button>
 						</div>			
 						<input type="hidden" name="profileImg.uploadPath" value="${user.profileImg.uploadPath}">
 						<input type="hidden" name="profileImg.uuid" value="${user.profileImg.uuid}">
@@ -107,11 +109,11 @@
 			        <input id="oldPw" class="form-control" name="oldPw" type="password">
 		    	</div>        
 		    	<div class="form-group">
-			        <label for="newPw">새 비밀번호</label>
+			        <label for="newPw">새 비밀번호</label><span class="essential pull-right">*숫자,영문자,특수문자(!,@,#,$,%,^,&,*)를 포함한 6~12자</span>
 			        <input id="newPw" class="form-control" name="newPw" type="password">
 		        </div>
 		        <div class="form-group">
-			        <label for="pwconfirm">새 비밀번호 확인</label>
+			        <label for="pwconfirm">새 비밀번호 확인</label><span class="essential pull-right">*입력하신 비밀번호를 다시 입력해주세요</span>
 			        <input id="pwconfirm" class="form-control" name="pwconfirm" type="password">
 		        </div>			       			        
 		    </div>
@@ -277,14 +279,14 @@ $(document).ready(function(){
 	//업로드 상세처리(확장자, 크기 등) 
 	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)$"); //업로드 가능 확장자
 	var maxSize = 5242880; //5MB	
-	
+		
 	function checkFile(fileName, fileSize){
 		if(fileSize >= maxSize){
-			alert("파일 사이즈 초과");
+			alert("파일 사이즈 초과 : 최대 5MB까지 업로드 가능합니다.");
 			return false;
 		}
 		if(!regex.test(fileName)){
-			alert("해당 확장자는 업로드 할 수 없습니다.");
+			alert("jpg,jpeg,png,gif 확장자만 업로드 가능합니다.");
 			return false;
 		}		
 		return true; 
@@ -315,6 +317,7 @@ $(document).ready(function(){
 			var filePath = encodeURIComponent(result.uploadPath+"/"+result.uuid+"_"+result.fileName);			
             uploadProfile.attr({"data-path":result.uploadPath, "data-uuid":result.uuid, "data-filename":result.fileName, "data-type":result.fileType, "data-file":filePath});
             uploadProfile.html('<img id="profile_big" src="/display?fileName='+filePath+'">');
+            console.log(filePath);
 		});
 	})();
 	
@@ -332,8 +335,8 @@ $(document).ready(function(){
         formData.append('singleFile', file);
         //파일 검증 : 검증실패시 이전 프로필사진으로
         if(!checkFile(file.name, file.size)) {            
-            uploadProfile.html("<img id='profile_big' src='/display?fileName="+prevFile+"'>");
-            return;
+            //uploadProfile.html("<img id='profile_big' src='/display?fileName="+prevFile+"'>");
+            return false;
         }
      	//파일을 서버로 전송
         $.ajax({
@@ -352,7 +355,7 @@ $(document).ready(function(){
                 var uploadPath = Img.find('uploadPath').text();
                 var uuid = Img.find('uuid').text();
                 var fileName = Img.find('fileName').text();
-                var fileType = Img.find('img').text();                                
+                var fileType = Img.find('fileType').text();                                
                 var reader = new FileReader();        
                 
                 reader.onload = function(){
@@ -371,6 +374,7 @@ $(document).ready(function(){
             		inputName.val(fileName);            		           		
                 }
                 reader.readAsDataURL(file);
+                $(".uploadProfile").css('background-image', 'none');//기본프로필사진 화면에서 삭제
             },
             error: function(xhr, status, error) {
                 console.error('프로필 사진 업로드 실패:', error);                
@@ -456,16 +460,26 @@ $(document).ready(function(){
 	function checkInfo() {		
 		//입력칸
 		var phone=$("input[name='phone']").val();
-		var email=$("input[name='email']").val();
-		var phone=$("input[name='address']").val();
+		var email=$("input[name='email']").val();		
 		var address=$("input[name='address']").val();	
 		
 		//입력규칙	
 		var reg_email = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
 		var reg_phone = /^\d{2,3}-\d{3,4}-\d{4}$/;
 		
+		//전화번호
+		if (phone == "") {				
+			$(".modal-body").html("<p>전화번호를 입력해주세요</p>");
+			modal("input[name='phone']");
+		    return;				
+		} else if(!reg_phone.test(phone)){
+			$(".modal-body").html("<div align='center'><p>전화번호 형식에 맞게 입력해주세요</p><br><p>ex) 010-1234-5678</p></div>");
+			modal("input[name='phone']"); 	        
+		   	return;
+		}
+		
 		//이메일
-		if (email === "") {				
+		if (email == "") {				
 			$(".modal-body").html("<p>이메일을 입력해주세요</p>");
 			modal("input[name='email']"); 
 		    return;				
@@ -474,32 +488,13 @@ $(document).ready(function(){
 			modal("input[name='email']"); 	        
 		   	return;
 		}
-
-		/*//전화번호 - 이유를 모르겠지만 정규식검사 결과에 부합해도 모달창생성. 빈칸이거나 올바르거나, 틀리거나 무조건 생김		
-		if(phone != "" && !reg_phone.test(phone)){			
-		    $(".modal-body").html("<div align='center' style='font-size:16px; margin:15px'>전화번호 형식에 맞게 입력해주세요<br>ex)010-1234-5678</div>");
-			modal("input[name='phone']"); 	        
-		   	return;
-		}*/
-				
-		/* 필요시 사용
-		//전화번호
-		if (phone === "") {				
-			$(".modal-body").html("<p>전화번호를 입력해주세요</p>");
-			modal("input[name='phone']");
-		    return;				
-		} else if(!reg_phone.test(phone)){
-			$(".modal-body").html("<div align="center"><p>전화번호 형식에 맞게 입력해주세요</p><br><p>ex)xxx-xxxx-xxxx</p></div>");
-			modal("input[name='phone']"); 	        
-		   	return;
-		}
 		
 		//주소
 		if (address === "") {				
 			$(".modal-body").html("<p>주소를 입력해주세요</p>");
 			modal("input[name='address']"); 
 		    return;				
-		}*/
+		}
 		
 		//기본프로필로 변경 2단계 : 이전 프로필사진 서버삭제
 	    if(inputUuid.val() == "ed87212c-4e79-4813-be6c-8c73ac58ac33" && prevUuid !== "ed87212c-4e79-4813-be6c-8c73ac58ac33"){

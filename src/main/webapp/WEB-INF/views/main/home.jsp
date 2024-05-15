@@ -9,8 +9,15 @@
 	<!-- 페이지 설명 -->
 	<div class="row">
 		<div class="col-lg-12">
-			<div>
-				<h1 class="page-header">${home.title_title}</h1>
+			<div style="display:flex; align-items:center;">
+				<div style="width:90%">
+					<h1 class="page-header">${home.title_title}</h1>				
+				</div>
+				<div style="width:10%">
+					<sec:authorize access="hasRole('ROLE_ADMIN')" >				
+						<a href="/admin/home" class="btn btn-lg btn-info">수정하기</a>
+					</sec:authorize>					
+				</div>
 			</div>
 		    <p class="pull-right"><a href="#board"><i class="fa fa-edit fa-fw"></i>게시판</a>  <a href="#map" style="margin-left: 20px"><i class="fa fa-map-marker fa-fw"></i>지도</a></p>    			
 			<p class="mb-4">${home.title_intro}</p>

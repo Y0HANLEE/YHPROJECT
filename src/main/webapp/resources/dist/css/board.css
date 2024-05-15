@@ -46,14 +46,16 @@
 /* 네비게이션 */
 .navbar-brand.main{
 	font-size: 2.5em;
-    width: 200px;
+    width: 250px;
     height: 50px;
     justify-content: center;
     display: flex;
     align-items: center;
     margin: 0;
     padding: 0;
-    color: buttontext;
+    color: #337AB7;
+    text-align: center;
+    font-size: 25px;
 }
 .navbar-brand.main>i{
 	color: darkcyan;	
@@ -226,6 +228,7 @@ td.thumb img{
 	margin: 1px;
 }
 #profile_small{
+	width:60px; height:60px;
 	max-width:70px; max-height:70px;
 }
 #replyZone{
@@ -234,6 +237,7 @@ td.thumb img{
 #replyA{width:8%; display:flex; align-items:center;}
 #replyB{width:77%;}
 #replyC{width: 15%;}
+
 @media screen and (max-width: 768px) {
 	#replyA{width:14%; display:flex; align-items:center;}
 	#replyB{width:71%;}
@@ -259,6 +263,10 @@ td.thumb img{
     align-items: center;    
 }
 .uploadProfile img {
+	width: 300px;
+    height: 300px;
+    max-width:500px;
+    max-height:500px;
     display: block; /* 이미지를 블록 요소로 설정하여 가운데 정렬을 용이하게 합니다. */
     margin: 0 auto; /* 가운데 정렬을 설정합니다. */
 }
@@ -296,11 +304,13 @@ td.thumb img{
 	display:flex; justify-content: center; align-items: center; 
 	margin: 11px;
 	border: 5px solid white; box-sizing: border-box; /* 프레임. 테두리를 기준으로 크기 조정 */
+	box-shadow: 0px 0px 12px 0px rgb(193 181 181);
 }
 #singleFile{
 	display: none;
 }
 #profile{
+	width:200px; height:200px;
 	max-width:350px; max-height:350px;
 }
 #profileZone{
@@ -331,7 +341,7 @@ td.thumb img{
 }
 
 /* update.jsp */
-#update_PRofileLabel{
+#update_ProfileLabel{
 	margin:30px 0; font-size: 25px;
 }
 #findImgBtn,#resetImgBtn,#removeImgBtn{
@@ -341,6 +351,7 @@ td.thumb img{
 	width: 32.5%;	
 }
 #profile_big {
+	width:400px; height:400px;
 	max-width:700px; max-height:700px;
 }
 

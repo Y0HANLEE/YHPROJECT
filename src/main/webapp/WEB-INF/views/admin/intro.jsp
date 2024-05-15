@@ -141,21 +141,20 @@ $(document).ready(function(){
 	/* 업로드 상세처리(확장자, 크기 등) */
 	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)"); // 업로드 가능 확장자
 	var maxSize = 31457280; // 30MB		
-	var cloneObj = $(".uploadDiv").clone(); // 클론
 	
 	function checkFile(fileName, fileSize){
 		// 파일사이즈 검토
 		if(fileSize >= maxSize){
-			alert("파일 사이즈 초과");
+			alert("파일 사이즈 초과 : 파일당 최대 30MB까지 업로드 가능합니다.");
 			return false;
 		}
 		
 		// 파일이름(확장자) 검토
 		if(!regex.test(fileName)){
-			alert("해당 확장자는 업로드 할 수 없습니다.");
+			alert("jpg,jpeg,png,gif 확장자만 업로드 가능합니다.");
 			return false;
 		}
-		
+			
 		return true; // 성공시
 	}
 		
@@ -166,8 +165,7 @@ $(document).ready(function(){
 		var files = inputFile[0].files;
 		
 		for(i=0; i<files.length; i++){
-			if(!checkFile(files[i].name, files[i].size)){
-				$(".uploadDiv").html(cloneObj.html()); // 제한에 걸릴 시, 초기상태("선택 파일 없음")로 보여지기 위해 초기화면을 clone으로 복사하여 붙여넣기함.
+			if(!checkFile(files[i].name, files[i].size)){				
 				return false;
 			}
 			formData.append("uploadFile", files[i]);
@@ -185,6 +183,7 @@ $(document).ready(function(){
 			dataType:'json',
 			success:function(result){					
 				showUploadResult(result);
+				
 			}
 		});
 	});
@@ -209,7 +208,7 @@ $(document).ready(function(){
 	}
 	
 	/* 업로드 취소 기능 구현*/
-	$(".uploadResult").on("click", "button", function(e){
+	$(".uploadResult").on("click", ".btn-danger", function(e){
 		var target = $(this).data("file");
 		var type = $(this).data("type");
 		var targetLi = $(this).closest("li"); // target(삭제 파일)이 속한 li태그

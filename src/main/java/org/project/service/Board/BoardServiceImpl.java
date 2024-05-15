@@ -14,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 
 @Service
 @AllArgsConstructor
+@Log4j
 public class BoardServiceImpl implements BoardService{
 	
 	@Setter(onMethod_ = @Autowired)
@@ -77,11 +79,13 @@ public class BoardServiceImpl implements BoardService{
 		amapper.deleteAll(board.getBno()); // 전부 삭제
 		
 		boolean modifyResult = bmapper.update(board) == 1;
+		log.info("[BoardService]--------------------------delete");
 		
 		if(modifyResult && board.getAttachList()!=null && board.getAttachList().size()>0) {
 			board.getAttachList().forEach(attach -> {
 				attach.setBno(board.getBno());
 				amapper.insert(attach); // 다시 등록
+				log.info("[BoardService]--------------------------"+attach);
 			});
 		}
 		

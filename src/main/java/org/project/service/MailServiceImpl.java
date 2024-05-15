@@ -1,5 +1,7 @@
 package org.project.service;
 
+import java.util.Date;
+
 import javax.mail.internet.MimeMessage;
 
 import org.project.domain.Mail;
@@ -44,7 +46,10 @@ public class MailServiceImpl implements MailService{
 		mail.setFromUser("kevinyh18@gmail.com");
 		mail.setToUser(email);                    
 		mail.setTitle("[YH_PROJECT] 회원가입 본인인증 메일");
-		mail.setContent("안녕하세요 고객님,<br>당신의 인증번호는 "+ranStr+"입니다. 회원가입을 진행해주시기 바랍니다.");
+		mail.setContent(
+				"안녕하세요 고객님,"
+				+ "당신의 인증번호는 "+ranStr+" 입니다."
+				+ "회원가입을 진행해주시기 바랍니다.");
 		
 		log.info("-------------------------mail:"+mail);
 		
@@ -52,10 +57,10 @@ public class MailServiceImpl implements MailService{
             MimeMessage msg = mailSender.createMimeMessage();
             MimeMessageHelper message = new MimeMessageHelper(msg, true, "UTF-8");
             message.setTo(mail.getToUser());
-            message.setText(mail.getContent());
+            message.setText(mail.getContent(), true);
             message.setFrom(mail.getFromUser());
             message.setSubject(mail.getTitle());
-            
+            message.setSentDate(new Date());
             mailSender.send(msg);
 
         } catch(Exception e){
@@ -78,7 +83,7 @@ public class MailServiceImpl implements MailService{
             MimeMessage msg = mailSender.createMimeMessage();
             MimeMessageHelper message = new MimeMessageHelper(msg, true, "UTF-8");
             message.setTo(mail.getToUser());
-            message.setText(mail.getContent());
+            message.setText(mail.getContent(), true); // HTML 형식 ok
             message.setFrom(mail.getFromUser());
             message.setSubject(mail.getTitle());
             

@@ -205,6 +205,8 @@ $(document).ready(function(){
 							if(confirm("탈퇴하시겠습니까?")){								
 								$("#deleteForm").attr("method", "post").attr("action", "/user/delete");
 								$("#deleteForm").submit();								
+							} else {
+								return false;
 							}						
 						}else{
 							alert("일치하는 비밀번호가 없습니다.");

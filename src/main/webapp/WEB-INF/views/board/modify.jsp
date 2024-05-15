@@ -51,7 +51,7 @@
 							</c:if>					
 						</sec:authorize>
 						<button type="submit" data-oper="list" class="btn btn-default">목록으로</button>
-						<button type="button" class="btn btn-default" onclick="history.back()">뒤로가기</button>
+						<a href="/board/get?bno=<c:out value='${board.bno}'/>" class="btn btn-default">뒤로가기</a>
 					</div>
 					
 					<!-- BoardController get()_modify의 @ModelAttribute("cri")로 인해 수집된 정보 -->
@@ -158,19 +158,19 @@ function checkBlank() {
 $(document).ready(function(){
 	
 	/* 첨부파일의 추가 - 업로드 상세처리(확장자, 크기 등) */ 
-	var regex = new RegExp("(.*?)\.(exe|sh|alz)"); // 업로드 불가 확장자
-	var maxSize = 1073741824; // 1GB	
+	var regex = new RegExp("(.*?)\.(exe|sh|alz|bat)"); // 업로드 불가 확장자
+	var maxSize = 31457280; // 30MB			
 	
 	function checkFile(fileName, fileSize){
 		// 파일사이즈 검토
 		if(fileSize >= maxSize){
-			alert("파일 사이즈 초과");
+			alert("파일 사이즈 초과 : 파일당 최대 30MB까지 업로드 가능합니다.");
 			return false;
 		}
 		
 		// 파일이름(확장자) 검토
 		if(regex.test(fileName)){
-			alert("해당 확장자는 업로드 할 수 없습니다.");
+			alert("exe,sh,alz,bat 확장자는 업로드 할 수 없습니다.");
 			return false;
 		}
 		
@@ -178,13 +178,13 @@ $(document).ready(function(){
 	}	
 	
 	/* 등록버튼 없이 변화가 감지되면 처리할 기능 */
-	$("input[type='file']").change(function(e){
+	$("input[type='file']").change(function(e){	
 		var formData = new FormData();
 		var inputFile = $("input[name='uploadFile']");//첨부된 파일
 		var files = inputFile[0].files;
 		
 		for(i=0; i<files.length; i++){
-			if(!checkFile(files[i].name, files[i].size)){
+			if(!checkFile(files[i].name, files[i].size)){				
 				return false;
 			}
 			formData.append("uploadFile", files[i]);
@@ -201,7 +201,7 @@ $(document).ready(function(){
 			data:formData,
 			dataType:'json',
 			success:function(result){					
-				showUploadResult(result);
+				showUploadResult(result);				
 			}
 		});
 	});
@@ -260,7 +260,7 @@ $(document).ready(function(){
 	})();
 
 	// x버튼 이벤트 처리
-	$(".uploadResult").on("click", "button", function(e){		
+	$(".uploadResult").on("click", ".btn-danger", function(e){		
 		console.log("delete file!!!");
 		var targetLi = $(this).closest("li");
 		targetLi.remove();

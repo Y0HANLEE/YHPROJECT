@@ -5,20 +5,17 @@
 <!-- 페이지 제목 -->
 <div class="row">		
 	<div class="col-lg-12">
-		<h1 class="page-header">Error</h1>
+		<h1 class="page-header"><i style="top:6px; color:rgba(255,0,0,0.5);" class="glyphicon glyphicon-exclamation-sign"></i>  403 Error</h1>
 	</div>
-	<p class="mb-4" style="margin-left: 20px">
-		403 Forbidden_접근권한 에러입니다.
-	</p>
 </div>
 <!-- 본문-->
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
-			<div class="panel-heading">	<c:out value="${SPRING_SECURITY_403_EXCEPTION.getMessage()}"/> </div>
+			<div class="panel-heading">	접근권한에러 </div>
 			<div class="panel-body">			
-				<h2><c:out value="${msg}"/></h2>
-				<button onclick="history.back()">이전화면</button>				
+				<h2><c:out value="${user.userid}"/>회원님꼐서는 현재 페이지에 접근권한이 없습니다.</h2>				
+				<button class="pull-right" onclick="history.back()">이전화면</button>				
 			</div>
 		</div>
 	</div>
