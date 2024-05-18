@@ -2,9 +2,9 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-
+<title>Console.log(YH)</title>
 <%@ include file="../includes/header.jsp"%>
-<title>메인페이지</title>
+	
 
 	<!-- 페이지 설명 -->
 	<div class="row">
@@ -42,7 +42,7 @@
 		<div id="board" class="col-lg-6">
 			<div class="panel panel-success">
 				<div class="panel-heading HpanelHeading">
-					<span><i class="fa fa-edit fa-fw"></i>Board</span><a href="/board/list"><i class="fa fa-compass fa-fw"></i>더보기</a>			
+					<span><i class="fa fa-edit fa-fw"></i>일반게시판</span><a href="/board/list"><i class="fa fa-compass fa-fw"></i>더보기</a>			
 				</div>			
 				<div class="panel-body" style="padding:8px; max-height: 244px;">
 					<table class="table table-striped table-bordered table-hover tableList">
@@ -71,7 +71,7 @@
 		<div id="album" class="col-lg-6">
 			<div class="panel panel-info">
 				<div class="panel-heading HpanelHeading">
-					<span><i class="fa fa-camera-retro fa-fw"></i>Photo Album</span>
+					<span><i class="fa fa-camera-retro fa-fw"></i>사진게시판</span>
 					<sec:authorize access="isAuthenticated()">
 						<a href="/album/list"><i class="fa fa-compass fa-fw"></i>더보기</a>
 		   			</sec:authorize>
@@ -112,7 +112,7 @@
 		<div id="boardReply" class="col-lg-6">
 			<div class="panel panel-warning">
 				<div class="panel-heading HpanelHeading">
-					<span><i class="fa fa-wechat fa-fw"></i>Board Reply (No:게시글번호)</span><a href="/board/list"><i class="fa fa-compass fa-fw"></i>더보기</a>			
+					<span><i class="fa fa-wechat fa-fw"></i>일반게시판 댓글 (No:게시글번호)</span><a href="/board/list"><i class="fa fa-compass fa-fw"></i>더보기</a>			
 				</div>			
 				<div class="panel-body" style="padding:8px; max-height: 244px;">
 					<table class="table table-striped table-bordered table-hover tableList">
@@ -141,7 +141,7 @@
 		<div id="albumReply" class="col-lg-6">
 			<div class="panel panel-danger">
 				<div class="panel-heading HpanelHeading">
-					<span><i class="fa fa-wechat fa-fw"></i>Photo Album Reply (No:게시글번호)</span>
+					<span><i class="fa fa-wechat fa-fw"></i>사진게시판 댓글 (No:게시글번호)</span>
 					<sec:authorize access="isAuthenticated()">
 						<a href="/album/list"><i class="fa fa-compass fa-fw"></i>더보기</a>
 		   			</sec:authorize>
@@ -207,7 +207,7 @@
 			</div>
 			<div class="modal-body"><!-- msg --></div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>							
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>							
 			</div>
 		</div>
 	</div>
@@ -337,7 +337,7 @@ $(document).ready(function(){
 	    });
 	
 	    // 자동 슬라이드 기능 추가
-	    // setInterval(() => { showSlide(slideIndex + 1); }, 10000); // 10초마다 슬라이드 변경
+	    setInterval(() => { showSlide(slideIndex + 1); }, 5000); // 5초마다 슬라이드 변경
 	}
 	
 	//이미지 추가 함수

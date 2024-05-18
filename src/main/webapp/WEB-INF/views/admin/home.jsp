@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<title>메인페이지 관리</title>
+<title>Console.log(YH)_메인페이지 관리</title>
 <%@ include file="../includes/header.jsp"%>
 
 <form id="introForm" action="/admin/home" method="post">

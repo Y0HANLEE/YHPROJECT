@@ -2,32 +2,32 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ include file="../includes/header.jsp"%>
-<title>게시글수정 no.<c:out value="${board.bno}"/></title>
+<title>Console.log(YH)_게시글 수정</title>
 
 <!-- 본문-->
 <div class="row">
 	<div class="col-lg-12" style="margin-top: 30px">
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
-			<div class="panel-heading">	Board Modify Page</div>			
+			<div class="panel-heading">일반게시판 - 게시글 수정</div>			
 			<!-- 본문내용 -->	
 			<div class="panel-body">
 				<form role="form" action="/board/modify" method="post">	
 					<div class="form-group">					
-						<i class="fa fa-folder fa-fw"></i> <label>Title</label>
+						<i class="fa fa-folder fa-fw"></i> <label>제목</label>
 						<input class="form-control" name="title" value="<c:out value="${board.title}"/>">
 					</div>
 					<hr>
 					<div class="form-group" style="display: flex;justify-content: space-between;">
 						<div><i class="fa fa-user fa-fw"></i> @<c:out value="${board.writer}"/></div>						 
 						<div>
-							<i class="fa fa-check fa-fw"></i><label>Register</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${board.regdate}"/>&nbsp;&nbsp;&nbsp;
-							<i class="fa fa-refresh fa-fw"></i><label>Update</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${board.updateDate}"/>
+							<i class="fa fa-check fa-fw"></i><label>등록일</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${board.regdate}"/>&nbsp;&nbsp;&nbsp;
+							<i class="fa fa-refresh fa-fw"></i><label>수정일</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${board.updateDate}"/>
 						</div>						
 					</div>
 					<hr>
 					<div class="form-group uploadDiv">
-						<i class="fa fa-tags fa-fw"></i> <label>File</label>
+						<i class="fa fa-tags fa-fw"></i> <label>첨부파일</label>
 						<input type="file" name="uploadFile" multiple>
 					</div>
 					<div class="uploadResult">												
@@ -37,7 +37,7 @@
 					</div>
 					<hr>
 					<div class="form-group">
-						<i class="fa fa-pencil fa-fw"></i><label>Content</label>
+						<i class="fa fa-pencil fa-fw"></i><label>내용</label>
 						<textarea class="form-control" rows="10" name="content"><c:out value="${board.content}"/></textarea>
 					</div>										
 					

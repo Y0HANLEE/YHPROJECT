@@ -3,25 +3,25 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ include file="../includes/header.jsp"%>
-<title>게시글 등록</title>
+<title>Console.log(YH)_새 게시글 작성</title>
 
 <!-- 본문-->
 <div class="row">
 	<div class="col-lg-12" style="margin-top: 30px">
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
-			<div class="panel-heading">	Album Register Page</div>			
+			<div class="panel-heading">사진게시판 - 새 게시글 작성</div>			
 			<!-- 본문내용 -->	
 			<div class="panel-body">			
 				<form role="form" action="/album/register" method="post">				
 					<div class="form-group">					
-						<i class="fa fa-folder fa-fw"></i> <label>Title</label>
+						<i class="fa fa-folder fa-fw"></i> <label>제목</label>
 						<input class="form-control" name="title">
 					</div>
 					<hr>
 					<div class="form-group" style="display: flex;justify-content: space-between;">
 						<div><i class="fa fa-user fa-fw"></i> @<sec:authentication property='principal.username'/></div>						 
-						<div><i class="fa fa-check fa-fw"></i><label>Register</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${now}"/></div>						
+						<div><i class="fa fa-check fa-fw"></i><label>등록일</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${now}"/></div>						
 					</div>
 					<hr>
 					<div class="form-group" style="display: flex; justify-content: space-between;">
@@ -40,7 +40,7 @@
 					</div>
 					<hr>
 					<div class="form-group uploadDiv">
-						<i class="fa fa-tags fa-fw"></i> <label>File</label>
+						<i class="fa fa-tags fa-fw"></i> <label>첨부파일</label>
 						<input type="file" name="uploadFile" multiple>
 					</div>
 					<div class="uploadResult">												
@@ -50,7 +50,7 @@
 					</div>
 					<hr>
 					<div class="form-group">
-						<i class="fa fa-pencil fa-fw"></i><label>Content</label>
+						<i class="fa fa-pencil fa-fw"></i><label>내용</label>
 						<textarea class="form-control" rows="10" name="content"></textarea>						
 					</div>							
 					<div class="pull-right">
@@ -175,7 +175,7 @@ $(document).ready(function(e){
 	}
 	
 	/* 업로드 상세처리(확장자, 크기 등) */
-	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif)"); // 업로드 가능 확장자	
+	var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif|mp4)"); // 업로드 가능 확장자	
 	var maxSize = 31457280; // 30MB	
 	
 	function checkFile(fileName, fileSize){
@@ -187,7 +187,7 @@ $(document).ready(function(e){
 		
 		// 파일이름(확장자) 검토
 		if(!regex.test(fileName)){
-			alert("jpg,jpeg,png,gif 확장자만 업로드 가능합니다.");
+			alert("jpg,jpeg,png,gif,mp4 확장자만 업로드 가능합니다.");
 			return false;
 		}
 			
@@ -232,19 +232,19 @@ $(document).ready(function(e){
 	    	     
 		$(uploadResultArr).each(
 			function(i,obj){
-				if(!obj.fileType){
+				if(!obj.fileType){ //mp4
 					var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);						
 
 					str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uuid, uploadpath, filename, type(img)을 추가한다.
-					str += "<img src='/resources/img/attach.png'>";	// 첨부파일 이미지(attach.png)
-					str += "<span>"+obj.fileName+"</span>"; // 파일명
+					str += "<i class='fa fa-film'></i>";	
+					str += " <span id='film'>"+obj.fileName+"</span>"; // 파일명
 					str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file='"+fileCallPath+"' data-type='file'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> file:그냥삭제
 				} else {
 					var fileCallPath = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);													
 					
 					str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, type(img)을 추가한다.
 					str += "<img src='/display?fileName="+fileCallPath+"'>"; // 첨부파일 이미지(썸네일)						
-					str += "<span>"+obj.fileName+"</span>"; // 파일명 
+					str += " <span id='img'>"+obj.fileName+"</span>"; // 파일명 
 					str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file='"+fileCallPath+"' data-type='image'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> image:원본+썸네일 삭제						
 				}
 			});
@@ -254,9 +254,7 @@ $(document).ready(function(e){
 	/* 업로드 취소 기능 구현*/
 	$(".uploadResult").on("click", ".btn-danger", function(e){
 		var target = $(this).data("file");
-		console.log("file-----------"+target);
 		var type = $(this).data("type");
-		console.log("type-----------"+type);
 		var targetLi = $(this).closest("li"); // target(삭제 파일)이 속한 li태그
 		
 		$.ajax({
@@ -275,24 +273,29 @@ $(document).ready(function(e){
 		});	
 	});		
 	
-	/* 첨부파일 클릭시 이벤트 처리 */
+	/* 첨부파일(image) 클릭시 이벤트 처리 */
 	$(".uploadResult").on("click", "li", function(e){
 		var element = $(e.target);
 		var liObj = $(this);
 		var path = encodeURIComponent(liObj.data("path")+"/"+liObj.data("uuid")+"_"+liObj.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
 		
-		//span이나 img일경우만 이벤트 >> x버튼은 삭제만 처리
-		if(element.is("span") || element.is("img")){
-			if(liObj.data("type")){
-				showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
-			}
+		if(element.is("img") || element.is("span#img")){
+			showImage(path.replace(new RegExp(/\\/g),"/"), "img");			
+		} else if (element.is("i") || element.is("span#film")) {
+			showImage(path.replace(new RegExp(/\\/g),"/"), "video");
 		}
 	});
 	
 	// 원본사진 확대보기 on
-	function showImage(fileCallPath){			
+	function showImage(fileCallPath, type){
 		$(".picWrap").css("display","flex").show(); // none > flex 설정 변경
-		$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행 
+		if(type === "img"){
+			console.log(type);
+			$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행
+		} else if(type === "video"){
+			console.log(type);
+			$(".pic").html("<video controls autoplay><source src='/display?fileName="+fileCallPath+"' type='video/mp4'></video>").animate({width:'100%', height:'100%'}, 0);			
+		}
 	}
 	
 	// 원본사진 확대보기 off 

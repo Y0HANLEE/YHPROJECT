@@ -2,14 +2,24 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ include file="../includes/header.jsp"%>
-<title>회원관리</title>
+<title>Console.log(YH)_회원관리</title>
 
+<!-- 페이지 제목 -->
+<div class="row">		
+	<div class="col-lg-12">
+		<h1 class="page-header"><i class="fa fa-user fa-fw"></i>회원목록</h1>
+	</div>
+	<p class="mb-4">
+		<sec:authentication property="principal" var="id"/>
+		º안녕하세요 <b>@<c:out value="${id.username}"/></b> 관리자님, Console.log(YH) 커뮤니티 회원목록입니다.
+	</p>
+</div>
 <!-- 본문-->
-<div class="row">
+<div class="row" style="margin-top: 0px">
 	<div id="userCol12" class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				User List Page				
+				Console.log(YH) 회원목록			
 			</div>
 			<!-- 본문 및 부가기능 -->
 			<div class="panel-body">

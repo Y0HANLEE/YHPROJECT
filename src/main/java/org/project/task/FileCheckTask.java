@@ -39,8 +39,8 @@ public class FileCheckTask {
 	@Setter(onMethod_ = @Autowired)
 	private IntroAttachMapper imapper;
 	
-	private static final String UPLOAD_PATH = "C:\\upload";
-	//private static final String UPLOAD_PATH = "/opt/tomcat/upload"; //AWS
+	//private static final String UPLOAD_PATH = "C:\\upload";
+	private static final String UPLOAD_PATH = "/opt/tomcat/upload"; //AWS
 	
 	private String getFolderYesterDay() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

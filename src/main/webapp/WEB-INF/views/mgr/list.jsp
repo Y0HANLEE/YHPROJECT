@@ -4,12 +4,22 @@
 <%@ include file="../includes/header.jsp"%>
 <title>회원관리</title>
 
+<!-- 페이지 제목 -->
+<div class="row">		
+	<div class="col-lg-12">
+		<h1 class="page-header"><i class="fa fa-user fa-fw"></i>회원목록</h1>
+	</div>
+	<p class="mb-4">
+		<sec:authentication property="principal" var="id"/>
+		º안녕하세요 <b>@<c:out value="${id.username}"/></b> 운영자님, Console.log(YH) 커뮤니티 회원목록입니다.
+	</p>
+</div>
 <!-- 본문-->
 <div class="row">
 	<div class="col-lg-12" style="margin-top:30px;">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				User List Page
+				Console.log(YH) 회원목록
 				<!-- <button type="button" id="regBtn" class="btn btn-primary btn-xs pull-right">register</button> -->
 			</div>
 			<!-- 본문 및 부가기능 -->

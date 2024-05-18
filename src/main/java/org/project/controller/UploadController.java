@@ -35,10 +35,10 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Controller
 @Log4j
 public class UploadController {
-	//private static final String UPLOAD_FOLDER = "/opt/tomcat/upload"; //AWS
-	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
-	private static final String UPLOAD_FOLDER = "C:\\upload"; 
-	private static final String UPLOAD_PATH = "C:\\upload\\";
+	private static final String UPLOAD_FOLDER = "/opt/tomcat/upload"; //AWS
+	private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
+	//private static final String UPLOAD_FOLDER = "C:\\upload"; 
+	//private static final String UPLOAD_PATH = "C:\\upload\\";
 	
 	/* 폴더 생성 규칙 */
 	private String getFolder() {
@@ -180,7 +180,7 @@ public class UploadController {
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 		
-	/* 썸네일 전송하기 */
+	/* 사진 전송하기 */
 	@GetMapping("/display")
 	@ResponseBody
 	public ResponseEntity<byte[]> getFile(String fileName){

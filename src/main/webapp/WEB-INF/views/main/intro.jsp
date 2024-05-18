@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-<title>Intro Page</title>
+<title>Console.log(YH)_Intro</title>
 <%@ include file="../includes/header.jsp"%>
 
 <!-- 페이지 제목 -->
@@ -25,7 +25,7 @@
 	</div>	
 	<!-- 본문-->
 	<div class="panel panel-default" style="margin-left: 20px; width: 88.3%">
-		<div class="panel-heading">	Intro </div>
+		<div class="panel-heading">Console.log(YH)_Intro</div>
 		<div class="panel-body" style="white-space: pre-wrap;">
 <c:out value="${intro.intro}"/>
 		</div>				
@@ -58,12 +58,12 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="myModalLabel" style="position: left;">Modal Title</h4>
+				<h4 class="modal-title" id="myModalLabel" style="position: left;">알림</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="position: right;">×</button>
 			</div>
-			<div class="modal-body">수정이 완료되었습니다.</div>
+			<div class="modal-body">소개화면 수정이 완료되었습니다.</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>							
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>							
 			</div>
 		</div>
 	</div>
@@ -142,7 +142,7 @@ $(document).ready(function(){
 	    });
 	
 	    // 자동 슬라이드 기능 추가
-	    // setInterval(() => { showSlide(slideIndex + 1); }, 10000); // 10초마다 슬라이드 변경
+	    setInterval(() => { showSlide(slideIndex + 1); }, 5000); // 5초마다 슬라이드 변경
 	}
 	
 	//이미지 추가 함수

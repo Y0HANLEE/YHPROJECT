@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,6 +80,7 @@ public class MainController {
 	}
 	
 	/*로그인*/
+	@PreAuthorize("isAnonymous()")
 	@GetMapping("/loginPage")
 	public void loginPage(String error, String logout, Model model) {		
 		if(error != null) {//로그인에러발생
@@ -111,17 +113,18 @@ public class MainController {
 	
 	/* 비밀번호 초기화 */
 	@PostMapping("/renewalPw")
-	public ResponseEntity<String> renewalPw(String randomPw, @RequestParam("userid") String userid, @RequestParam("email") String email, Model model){
+	public ResponseEntity<String> renewalPw(String randomPw, @RequestParam("userid") String userid, @RequestParam("email") String email){
 		String ranPw = RandomStringUtils.randomAlphanumeric(8); //8자리 영어+숫자 난수
 		String encodePw = pwEncoder.encode(ranPw);
 		
 		if(uservice.renewalPw(encodePw, userid, email) == 1) {			
-			log.info("[SecurityController]ranPw----------------------------------------"+ranPw);
-			log.info("[SecurityController]mail to--------------------------------------"+email);
-			mservice.renewalPwMail(email, ranPw);	        
-			return new ResponseEntity<>("success", HttpStatus.OK);
+			log.warn("[SecurityController]ranPw----------------------------------------"+ranPw+", "+encodePw);
+			log.warn("[SecurityController]mail to--------------------------------------"+email);
+			//mservice.renewalPwMail(email, ranPw);
+			//return new ResponseEntity<>("success", HttpStatus.OK);
+			return new ResponseEntity<>(ranPw, HttpStatus.OK);
 		} else {
-			log.info("[SecurityController]fail renewal password------------------------------");
+			log.warn("[SecurityController]fail renewal password------------------------------");
 			return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}		  
 	}

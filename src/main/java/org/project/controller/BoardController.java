@@ -39,8 +39,8 @@ public class BoardController {
 	@Setter(onMethod_=@Autowired)
 	private BoardService bservice;
 	
-	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
-	private static final String UPLOAD_PATH = "c:\\upload\\";
+	private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
+	//private static final String UPLOAD_PATH = "c:\\upload\\";
 	
 	private void deleteFiles(List<BoardAttachVO> attachList) {
 		if(attachList == null || attachList.size() == 0) {

@@ -76,7 +76,7 @@
 							<input id="phone" class="form-control" name="phone" placeholder="Phone Number">
 						</div>
 						<div class="form-group">							
-							<div><label for="email">이메일</label> <button type="button" class="btn btn-outline btn-danger btn-xs" id="checkModalBtn" value="N">SEND MAIL</button></label>&nbsp;&nbsp;&nbsp;<span class="essential pull-right">예시) admin@console.log</span></div>
+							<div><label for="email">이메일</label> <!-- <button type="button" class="btn btn-outline btn-danger btn-xs" id="checkModalBtn" value="N">SEND MAIL</button> --></label>&nbsp;&nbsp;&nbsp;<span class="essential pull-right">예시) admin@console.log</span></div>
 							<input id="email" class="form-control" name="email" type="email" placeholder="Email Address">
 						</div>
 						<div class="form-group">
@@ -476,12 +476,12 @@ $(document).ready(function(){
 		   	return;
 		}
 		
-		//이메일 본인인증 여부 확인
+		/*//이메일 본인인증 여부 확인
 		if($("#checkModalBtn").val() == "N"){
 			$("#myModalBody").html("<p>이메일 본인인증을 진행해주세요</p>");
 			modal("#checkModalBtn");
 		    return;					
-		}
+		}*/
 		
 		//주소
 		if (address === "") {				

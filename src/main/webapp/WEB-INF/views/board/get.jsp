@@ -4,33 +4,33 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ include file="../includes/header.jsp"%>
 <script type="text/javascript" src="../resources/js/board_reply.js"></script>
-<title>게시글조회 no.<c:out value="${board.bno}"/></title>
+<title>Console.log(YH)_<c:out value="${board.title}"/></title>
 
 <!-- 본문-->
 <div class="row">
 	<div id="userCol12" class="col-lg-12">
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
-			<div class="panel-heading">	Board Read Page</div>	
+			<div class="panel-heading">일반게시판 - 게시글 조회</div>	
 					
 			<!-- 본문내용 -->	
 			<div class="panel-body">				
 				<div class="form-group">					
-					<h3><i class="fa fa-folder-open fa-fw"></i> [<c:out value="${board.bno}"/>] <c:out value="${board.title}"/></h3>
+					<h3><i class="fa fa-folder-open fa-fw"></i> <c:out value="${board.title}"/></h3>
 				</div>
 				<hr>
 				<div class="pull-right">
 					<i class="fa fa-user fa-fw"></i> @<c:out value="${board.writer}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<i class="fa fa-arrow-circle-o-up fa-fw"></i> Hit:<c:out value="${board.hit}"/> 
 				</div>
-				<i class="fa fa-tags fa-fw"></i> <label>File</label>
+				<i class="fa fa-tags fa-fw"></i> <label>첨부파일</label>
 				<div class="uploadResult" style="margin-bottom: 5px">
 					<ul>
 						<!-- function showUploadResult(uploadResultArr) -->
 					</ul>
 				</div>
 				<p class="attachInfo">[사진파일] 썸네일을 클릭하시면 이미지 확대, 파일명을 클릭하시면 다운로드가 진행됩니다.</p>
-				<i class="fa fa-pencil fa-fw"></i> <label>Content</label>
+				<i class="fa fa-pencil fa-fw"></i> <label>내용</label>
 				<div class="textArea">	<!-- 입력한 그대로 출력: 엔터/띄어쓰기 적용, 대신 공백 -->				
 <c:out value="${board.content}"/>
 				</div>				
@@ -65,10 +65,10 @@
 	<div class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<i class="fa fa-comments fa-fw"></i> Reply
+				<i class="fa fa-comments fa-fw"></i> 댓글
 				<!-- 로그인된 사용자만 댓글달기 버튼이 활성화됨. -->
 				<sec:authorize access="isAuthenticated()">
-					<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New</button>
+					<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">댓글쓰기</button>
 				</sec:authorize>
 			</div>			
 			<!-- 댓글 목록 -->
@@ -90,27 +90,27 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button  class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Reply Modal</h4>
+                <h4 class="modal-title" id="myModalLabel">댓글창</h4>
             </div>
             <div class="modal-body">
             	<div class="form-group">
-					<label>Reply</label>
+					<label>내용</label>
 					<textarea class="form-control" name='reply'></textarea>
 				</div>	
                 <div class="form-group">
-					<label>Replyer</label>
+					<label>작성자</label>
 					<input class="form-control" name='replyer' value='Replyer'>
 				</div>
 				<div class="form-group">
-					<label>Reply Date</label>
+					<label>작성일</label>
 					<input class="form-control" name='replyDate' value=''>
 				</div>
             </div>
             <div class="modal-footer">
-                <button id="modalModBtn" class="btn btn-warning">Modify</button>
-                <button id="modalRemoveBtn" class="btn btn-danger">Remove</button>
-                <button id="modalRegisterBtn" class="btn btn-default">Register</button>
-                <button id="modalCloseBtn" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="modalModBtn" class="btn btn-warning">수정</button>
+                <button id="modalRemoveBtn" class="btn btn-danger">삭제</button>
+                <button id="modalRegisterBtn" class="btn btn-default">등록</button>
+                <button id="modalCloseBtn" class="btn btn-default" data-dismiss="modal">닫기</button>
             </div>
         </div>      
     </div>

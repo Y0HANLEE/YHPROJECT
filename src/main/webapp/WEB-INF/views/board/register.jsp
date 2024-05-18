@@ -3,28 +3,28 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ include file="../includes/header.jsp"%>
-<title>게시글 등록</title>
+<title>Console.log(YH)_게시글등록</title>
 
 <!-- 본문-->
 <div class="row">
 	<div class="col-lg-12" style="margin-top:30px">
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
-			<div class="panel-heading">	Board Register Page</div>			
+			<div class="panel-heading">일반게시판 - 새 게시글 등록</div>			
 			<!-- 본문내용 -->	
 			<div class="panel-body">			
 				<form role="form" action="/board/register" method="post">				
 					<div class="form-group">
-						<i class="fa fa-folder fa-fw"></i><label>Title</label>
+						<i class="fa fa-folder fa-fw"></i><label>제목</label>
 						<input class="form-control" name="title">
 					</div>				
 					<hr>
 					<div class="form-group" style="display: flex;justify-content: space-between;">
 						<div><i class="fa fa-user fa-fw"></i> @<sec:authentication property='principal.username'/></div>												 
-						<div><i class="fa fa-check fa-fw"></i><label>Register</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${now}"/></div>						
+						<div><i class="fa fa-check fa-fw"></i><label>등록일</label> <fmt:formatDate pattern="YY/MM/dd hh:mm:ss" value="${now}"/></div>						
 					</div>	
 					<hr>
-					<i class="fa fa-tags fa-fw"></i><label>File</label>
+					<i class="fa fa-tags fa-fw"></i><label>첨부파일</label>
 					<div class="form-group uploadDiv">
 						<input type="file" name="uploadFile" multiple>
 					</div>
@@ -36,7 +36,7 @@
 					</div>
 					<hr>
 					<div class="form-group">
-						<i class="fa fa-pencil fa-fw"></i><label>Text Area</label>
+						<i class="fa fa-pencil fa-fw"></i><label>내용</label>
 						<textarea class="form-control" rows="10" name="content"></textarea>
 					</div>
 					<div class="pull-right">

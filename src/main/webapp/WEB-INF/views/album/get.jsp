@@ -4,14 +4,14 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ include file="../includes/header.jsp"%>
 <script type="text/javascript" src="../resources/js/album_reply.js"></script>
-<title>게시글조회 no.<c:out value="${album.ano}"/></title>
+<title>Console.log(YH)_<c:out value="${album.title}"/></title>
 
 <!-- 본문-->
 <div class="row">
 	<div class="col-lg-12" style="margin-top:30px">
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
-			<div class="panel-heading">	Album Read Page</div>	
+			<div class="panel-heading">사진게시판 - 게시글 조회</div>	
 					
 			<!-- 본문내용 -->	
 			<div class="panel-body">	
@@ -29,14 +29,14 @@
 				</div>		
 				<hr>			
 				<div class="form-group">
-					<i class="fa fa-tags fa-fw"></i> <label>Files</label>
+					<i class="fa fa-tags fa-fw"></i> <label>첨부파일</label>
 					<div class="uploadResult" style="margin-bottom: 0px">
 						<ul><!-- $.getJSON("/Album/getAttachList",ano,function) --></ul>					
 					</div>
 				</div>
-				<p class="attachInfo">[사진파일] <i class="fa fa-image fa-fw"></i>를 클릭하시면 이미지 확대, 파일명을 클릭하시면 다운로드가 진행됩니다.</p>
+				<p class="attachInfo">[첨부파일] <i class="fa fa-image fa-fw"></i>, <i class='fa fa-film'></i>를 클릭하시면 전체화면 미리보기, 파일명을 클릭하시면 다운로드가 진행됩니다.</p>
 				<hr>
-				<i class="fa fa-pencil fa-fw"></i> <label>Content</label>
+				<i class="fa fa-pencil fa-fw"></i> <label>내용</label>
 				<div class="textArea"> <!-- 입력한 그대로 출력: 엔터/띄어쓰기 적용, 대신 공백 -->					
 <c:out value="${album.content}"/>
 					<div class="mediaContents">
@@ -84,10 +84,10 @@
 	<div class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<i class="fa fa-comments fa-fw"></i> Reply
+				<i class="fa fa-comments fa-fw"></i> 댓글
 				<!-- 로그인된 사용자만 댓글달기 버튼이 활성화됨. -->
 				<sec:authorize access="isAuthenticated()">
-					<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New</button>
+					<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">댓글쓰기</button>
 				</sec:authorize>
 			</div>			
 			<!-- 댓글 목록 -->
@@ -110,27 +110,27 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Reply Modal</h4>
+                <h4 class="modal-title" id="myModalLabel">댓글창</h4>
             </div>
             <div class="modal-body">
             	<div class="form-group">
-					<label>Reply</label>
+					<label>내용</label>
 					<textarea class="form-control" name='reply'></textarea>
 				</div>	
                 <div class="form-group">
-					<label>Replyer</label>
+					<label>작성자</label>
 					<input class="form-control" name='replyer' value='Replyer'>
 				</div>
 				<div class="form-group">
-					<label>Reply Date</label>
+					<label>작성일</label>
 					<input class="form-control" name='replyDate' value=''>
 				</div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="modalModBtn" class="btn btn-warning">Modify</button>
-                <button type="button" id="modalRemoveBtn" class="btn btn-danger">Remove</button>
-                <button type="button" id="modalRegisterBtn" class="btn btn-default">Register</button>
-                <button type="button" id="modalCloseBtn" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="modalModBtn" class="btn btn-warning">수정</button>
+                <button type="button" id="modalRemoveBtn" class="btn btn-danger">삭제</button>
+                <button type="button" id="modalRegisterBtn" class="btn btn-default">등록</button>
+                <button type="button" id="modalCloseBtn" class="btn btn-default" data-dismiss="modal">닫기</button>
             </div>
         </div>      
     </div>
@@ -224,7 +224,7 @@ $(document).ready(function(){
 					var img = $(this);
 					var path = encodeURIComponent(img.data("path")+"/"+img.data("uuid")+"_"+img.data("filename"));					
 					console.log("------"+img.data("path"));
-					showImage(path.replace(new RegExp(/\\/g),"/"));
+					showImage(path.replace(new RegExp(/\\/g),"/"), "img");
 				});	
 			}
 		);	
@@ -420,17 +420,17 @@ $(document).ready(function(){
 				if(attach.fileType){					
 					var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);						
 					uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
-					uStr += "<div><i class='fa fa-image'></i>"+" <a>"+attach.fileName+"</a></div> </li>"; // 첨부파일 이미지(썸네일)
+					uStr += "<div><i id='img' class='fa fa-image'></i> <a>"+attach.fileName+"</a></div> </li>"; // 첨부파일 이미지(썸네일)
 					
 					mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
 					mStr += "<img src='/display?fileName="+fileCallPath+"'> </li>"; // 첨부파일 이미지(썸네일)
 				} else {
 					var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);
 					uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
-					uStr += "<div><i class='fa fa-film'></i><a><span>"+" "+attach.fileName+"</span></a></div> </li>"; // 첨부파일 이미지
+					uStr += "<div><i id='film' class='fa fa-film'></i> <a>"+attach.fileName+"</a></div> </li>"; // 첨부파일 이미지
 					
-					mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
-					mStr += "<img src='/resources/img/attach.png'> </li>"; // 첨부파일 이미지		
+					mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					
+					mStr += "<video controls><source src='/display?fileName="+fileCallPath+"' type='video/mp4'></video>";
 				}
 				
 				$(".uploadResult ul").html(uStr);	
@@ -445,8 +445,10 @@ $(document).ready(function(){
 		var liObj = $(this);
 		var path = encodeURIComponent(liObj.data("path")+"/"+liObj.data("uuid")+"_"+liObj.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
 
-		if(liObj.data("type") && element.is("i")){ //type이 이미지, 요소가 i일경우만 이벤트				
-			showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행				
+		if(element.is("i#img")){ 				
+			showImage(path.replace(new RegExp(/\\/g),"/"), "img"); // 이미지파일 : showImage함수 실행				
+		} else if(element.is("i#film")){
+			showImage(path.replace(new RegExp(/\\/g),"/"), "video"); // 이미지파일 : showImage함수 실행
 		} else {
 			self.location="/download?fileName="+path; // 기타파일 : 현재창에서 다운로드
 		}
@@ -457,15 +459,23 @@ $(document).ready(function(){
 		var liObj = $(this);
 		var path = encodeURIComponent(liObj.data("path")+"/"+liObj.data("uuid")+"_"+liObj.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
 		
-		if(liObj.data("type")){
-			showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
-		} 
+		if(element.is("i#img")){
+			showImage(path.replace(new RegExp(/\\/g),"/"), "img");			
+		} else if (element.is("i#film")) {
+			showImage(path.replace(new RegExp(/\\/g),"/"), "video");
+		}
 	});
 	
 	// 원본사진 확대보기 on
-	function showImage(fileCallPath){			
-		$(".picWrap").css("display","flex").show(); // none > flex 설정 변경
-		$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행		
+	function showImage(fileCallPath, type){			
+		$(".picWrap").css("display","flex").show(); // none > flex 설정 변경		
+		if(type === "img"){
+			console.log(type);
+			$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행
+		} else if(type === "video"){
+			console.log(type);
+			$(".pic").html("<video controls autoplay><source src='/display?fileName="+fileCallPath+"' type='video/mp4'></video>").animate({width:'100%', height:'100%'}, 0);			
+		}
 	}
 	
 	// 원본사진 확대보기 off 

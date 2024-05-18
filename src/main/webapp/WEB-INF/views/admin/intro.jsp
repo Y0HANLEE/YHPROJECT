@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<title>소개페이지 관리</title>
+<title>Console.log(YH)_소개페이지 관리</title>
 <%@ include file="../includes/header.jsp"%>
 <!-- 페이지 제목 -->
 <div class="row">		

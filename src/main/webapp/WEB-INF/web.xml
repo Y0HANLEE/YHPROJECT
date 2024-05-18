@@ -38,9 +38,9 @@
 		<!-- File Upload -->
 		<multipart-config>
 			<!-- 업로드 경로 -->
-			<location>C:\\upload\\temp</location>
+			<!-- <location>C:\\upload\\temp</location> -->
 			<!-- AWS 업로드 경로 -->
-			<!-- <location>/opt/tomcat/upload/temp</location> -->
+			<location>/opt/tomcat/upload/temp</location>
 			<!-- 개별 최대사이즈 : 30MB -->
 			<max-file-size>31457280</max-file-size>
 			<!-- 전체 최대사이즈 : 100MB -->

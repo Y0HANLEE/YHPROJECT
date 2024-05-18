@@ -2,29 +2,23 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-
+<title>Console.log(YH)_로그인페이지</title>
 <%@ include file="../includes/header.jsp"%>
 
 <!-- 페이지 제목 -->
 <div class="row">		
-	<div class="col-lg-12">
-		<h1 class="page-header">Login Page</h1>
+	<div class="col-lg-12" align="center">
+		<h1 class="page-header" style="font-weight: bolder; font-style: italic;">function login(ID, PW)</h1>
 	</div>
-	<p class="mb-4" style="padding-left: 20px">
-		로그인을 하시면 더 많은 컨텐츠를 즐길 수 있습니다.
-		<br>
-	</p>	
-	<h6 style="color: red; padding-left:20px"><c:out value="${error}"/></h6>
-	<h6 style="color: red; padding-left:20px"><c:out value="${logout}"/></h6>
-</div>
-<div>
-	
 </div>
 <!-- 본문-->
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
-			<div class="panel-heading">Login</div>
+			<div class="panel-heading" style="display:flex; align-items:center;">
+				<div style="width: 20%">로그인</div>
+				<div style="width: 80%"><h6 class="pull-right" style="color: red; padding-left:20px"><c:out value="${error}"/></h6></div>
+			</div>
 			<div class="panel-body">				
 				<!-- action:login 은 spring security 기본제공 / username, password도 spring security의 기본설정명 -->
 				<form role="form" id="loginForm" method="post" action="/login">
@@ -82,7 +76,7 @@
 				<div class="modal-footer" id="id_modal_footer">
 					<div class="form-group" style="display:flex; justify-content:flex-end;">
 						<button type="button" id="findIdBtn" class="btn btn-info">아이디찾기</button>
-						<button type="button" class="btn btn-default" id="closeBtn">닫기</button>
+						<button type="button" class="btn btn-default closeBtn">닫기</button>
 					</div>					
 				</div>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
@@ -97,10 +91,10 @@
 		<div class="modal-content">
 			<div class="modal-header" style="padding:15px 0 5px 15px;"> 
 				<h3 class="modal-title" style="margin-bottom:4px; font-weight:bolder;">임시비밀번호 발급</h3> 
-				<p style="font-size:14px; margin-left:0px;">회원님의 아이디와 가입시 입력했던 이메일주소를 입력해주세요</p>
+				<p id="pw_modal_title" style="font-size:14px; margin-left:0px;">회원님의 아이디와 가입시 입력했던 이메일주소를 입력해주세요</p>
 			</div>
 			<form id="renewalPwForm" method="post" action="/user/renewalPw">
-				<div class="modal-body">
+				<div id="pw_modal_body" class="modal-body">
 					<div class="form-group">
 						<label>ID</label>
 						<input class="form-control" id="userid" name="userid" placeholder="ID">
@@ -113,7 +107,8 @@
 				<div class="modal-footer">
 					<div class="form-group" style="display:flex; justify-content:flex-end;">
 						<button type="button" id="sendMailBtn" class="btn btn-info">메일보내기</button>
-						<button type="button" class="btn btn-default" id="closeBtn">닫기</button>
+						<button type="button" id="copyBtn" class="btn btn-info">복사하기</button>
+						<button type="button" class="btn btn-default closeBtn">닫기</button>
 					</div>					
 				</div>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
@@ -255,7 +250,7 @@ $(document).ready(function(){
 			error: function(){	    	
 				var btn = '<div class="form-group" style="display:flex; justify-content:flex-end;">';
 				btn += '<button type="button" id="backBtn" class="btn btn-info">다시찾기</button>';
-				btn += '<button type="button" class="btn btn-default" id="closeBtn">닫기</button></div>';
+				btn += '<button type="button" class="btn btn-default closeBtn">닫기</button></div>';
 			
 				$("input[name='name'], input[name='email']").val("");
 	    		$("#id_modal_body").html("<p>일치하는 아이디가 없습니다.</p>");
@@ -281,7 +276,8 @@ $(document).ready(function(){
 		
 	/* 비밀번호 초기화 */
 	$("#renewalPwBtn").on("click", function(e){
-		e.preventDefault();				
+		e.preventDefault();			
+		$("#copyBtn").hide();
 	    $("#pwModal").modal("show");
 	});
 	
@@ -291,6 +287,7 @@ $(document).ready(function(){
     	var inputEmail = $("#email2").val();
 	    var reg_id = /^[a-zA-Z][0-9a-zA-Z].{4,6}$/;
 	    var reg_email = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
+	    
 	    
 		if(inputId == ""){				
 			alert("ID를 입력해주세요");
@@ -323,12 +320,20 @@ $(document).ready(function(){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},
 			success: function(result){
-				if(result === "success"){	
+				/*local:이메일전송 문제없음*/
+				/* if(result === "success"){	
 					alert(inputId+"님의 이메일("+inputEmail+")로 임시비밀번호가 발송되었습니다.");					
 					$("input[name='userid']").val("");
 					$("input[name='email']").val("");					
-					setTimeout(function() { $("#pwModal").modal("hide"); }, 200);					
-				} 				
+					setTimeout(function() { $("#pwModal").modal("hide"); }, 200);		
+				} */ 				
+				/*AWS:포트를 설정해도 이메일 전송이 제대로 안됨. AWS SES로 하기엔 시간이 없어 보류*/
+			    var pstr = "회원님의 임시 비밀번호는 <span id='ranPw' style='font-weight: bolder;'/>"+result+"</span> 입니다.";
+				$("#pw_modal_body").html(pstr);
+				$("#pw_modal_title").html("아래 임시비밀번호로 다시 로그인을 시도해주세요")
+				$("#sendMailBtn").hide();
+				$("#copyBtn").show();
+		        $("#pwModal").modal('show');
 			},
 			error:function(request, status, error){
 				alert("일치하는 회원이 없습니다.");
@@ -340,11 +345,26 @@ $(document).ready(function(){
 		});	    	
     });
 	
+	/* AWS용 */
+    $("#pwModal").on("click", "#copyBtn", function() {    	
+        alert("임시 비밀번호가 복사되었습니다.");
+        var ranPw = $("#ranPw").text();        
+        var tempInput = $("<input>");
+        
+        // 임시 비밀번호를 클립보드로 복사
+        $("body").append(tempInput);
+        tempInput.val(ranPw).select();
+        tempInput.focus(); 
+        document.execCommand("copy");
+        tempInput.remove();
+    });
+
+	
 	var originIdModal = $("#idModal").html();
 	var originPwModal = $("#pwModal").html();
 	
 	// 모달창 닫기 버튼	
-	$("#idModal, #pwModal").on("click", "#closeBtn", function(e) {
+	$("#idModal, #pwModal").on("click", ".closeBtn", function(e) {
 	    e.preventDefault();
 	    $("input[name='userid']").val("");
 	    $("input[name='name']").val("");

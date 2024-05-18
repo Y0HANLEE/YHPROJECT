@@ -3,15 +3,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ include file="../includes/header.jsp"%>
 <script type="text/javascript" src="../resources/js/album_reply.js"></script>
-<title>사진게시판</title>
+<title>Console.log(YH)_사진게시판</title>
 
 <!-- 페이지 제목 -->
 <div class="row">		
 	<div class="col-lg-12">
-		<h1 class="page-header">Album</h1>
+		<h1 class="page-header"><i class="fa fa-camera-retro fa-fw"></i>사진게시판</h1>
 	</div>
 	<p class="mb-4">
-		자유롭게 게시글을 작성하는 사진게시판입니다.
+		커뮤니티 회원을 위한 사진게시판이며, 사진과 동영상을 업로드할 수 있습니다.
 	</p>
 </div>
 <!-- 본문-->
@@ -19,8 +19,8 @@
 	<div class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				Album List Page
-				<button type="button" id="regBtn" class="btn btn-primary btn-xs pull-right">register</button>
+				사진게시판 리스트
+				<button type="button" id="regBtn" class="btn btn-primary btn-xs pull-right">글쓰기</button>
 			</div>
 			<!-- 본문 및 부가기능 -->
 			<div class="panel-body">
@@ -84,7 +84,7 @@
 								</select>
 	
 								<input type="text" name="keyword" placeholder="Search for...">								
-								<button class="btn btn-default" type="button">Search</button>														
+								<button class="btn btn-default" type="button">찾기</button>														
 							</form>
 						</div>								
 					</div>
@@ -132,12 +132,12 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="myModalLabel" style="position: left;">Modal Title</h4>
+				<h4 class="modal-title" id="myModalLabel" style="position: left;">알림</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="position: right;">×</button>
 			</div>
 			<div class="modal-body">처리가 완료되었습니다.</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>							
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>							
 			</div>
 		</div>
 	</div>
