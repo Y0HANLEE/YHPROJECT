@@ -31,11 +31,11 @@ public class IntroServiceTests {
 	@Test
 	public void updateIntroTest() {
 		IntroVO home = iservice.read(1);
-		home.setTScript("");
+		home.setTscript("");
 		home.setAddress(""); 
 		home.setAddressdetail("");
 		home.setCaption(""); 
-		home.setMScript(""); 
+		home.setMscript(""); 
 		home.setMap("");
 		home.setIntro("update HomePage Intro_Service");
 		iservice.update(home);
@@ -44,11 +44,11 @@ public class IntroServiceTests {
 		
 		IntroVO intro = iservice.read(2);		
 		
-		intro.setTScript("");
+		intro.setTscript("");
 		intro.setAddress(""); 
 		intro.setAddressdetail("");
 		intro.setCaption(""); 
-		intro.setMScript(""); 
+		intro.setMscript(""); 
 		intro.setMap("");
 		intro.setIntro("update IntroPage Intro_Service");
 		iservice.update(intro);		
