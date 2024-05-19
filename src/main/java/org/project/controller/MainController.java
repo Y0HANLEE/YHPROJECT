@@ -114,8 +114,8 @@ public class MainController {
 		
 		if(uservice.renewalPw(encodePw, userid, email) == 1) {			
 			mservice.renewalPwMail(email, ranPw);
-			return new ResponseEntity<>("success", HttpStatus.OK); //메일이용
-			//return new ResponseEntity<>(ranPw, HttpStatus.OK); //화면출력용
+			//return new ResponseEntity<>("success", HttpStatus.OK); //메일이용(로컬)
+			return new ResponseEntity<>(ranPw, HttpStatus.OK); //화면출력용(AWS)
 		} else {
 			return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}		  

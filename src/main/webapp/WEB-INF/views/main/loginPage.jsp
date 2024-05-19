@@ -108,7 +108,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="form-group" style="display:flex; justify-content:flex-end;">
-						<button type="button" id="sendMailBtn" class="btn btn-info">메일보내기</button>
+						<button type="button" id="sendMailBtn" class="btn btn-info">초기화</button>
 						<button type="button" id="copyBtn" class="btn btn-info">복사하기</button>
 						<button type="button" class="btn btn-default closeBtn">닫기</button>
 					</div>					
@@ -324,7 +324,7 @@ $(document).ready(function(){
 					$("input[name='email']").val("");					
 					setTimeout(function() { $("#pwModal").modal("hide"); }, 200);		
 				}*/  				
-				/*AWS:포트를 설정해도 이메일 전송이 제대로 안됨. > 메일서버 사용시 AWS SES고려*/
+				/*AWS:포트를 설정해도 이메일 전송이 제대로 안됨. > 메일서버 사용시 AWS SES고려*/				
 			    var pstr = "회원님의 임시 비밀번호는 <span id='ranPw' style='font-weight: bolder;'/>"+result+"</span> 입니다.";
 				$("#pw_modal_body").html(pstr);
 				$("#pw_modal_title").html("아래 임시비밀번호로 다시 로그인을 시도해주세요")
@@ -342,7 +342,7 @@ $(document).ready(function(){
 		});	    	
     });
 	
-	/* AWS용
+	/* AWS용*/
     $("#pwModal").on("click", "#copyBtn", function() {    	
         alert("임시 비밀번호가 복사되었습니다.");
         var ranPw = $("#ranPw").text();        
@@ -354,7 +354,7 @@ $(document).ready(function(){
         tempInput.focus(); 
         document.execCommand("copy");
         tempInput.remove();
-    });*/
+    });
 
 	
 	var originIdModal = $("#idModal").html();
