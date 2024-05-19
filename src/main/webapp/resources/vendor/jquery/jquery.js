@@ -9129,7 +9129,7 @@ jQuery.extend( {
 		return jQuery.get( url, data, callback, "json" );
 	},
 
-	getScript: function( url, callback ) {
+	getscript: function( url, callback ) {
 		return jQuery.get( url, undefined, callback, "script" );
 	}
 } );

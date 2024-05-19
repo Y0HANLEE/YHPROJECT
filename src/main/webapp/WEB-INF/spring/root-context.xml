@@ -17,7 +17,7 @@
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">		
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
 		<!-- mysql연결 -->
-    	<!-- <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test?useSSL=false&amp;useUnicode=true&amp;serverTimezone=Asia/Seoul"/>
+    	<!-- <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Seoul&amp;autoReconnect=true"/>
     	<property name="username" value="test"/>
 		<property name="password" value="1234"/> -->
 		<!-- mysql : AWS연결 -->

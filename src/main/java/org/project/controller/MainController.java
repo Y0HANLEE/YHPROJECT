@@ -30,9 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 
-@Log4j
 @Controller
 @RequestMapping("/main/*")
 public class MainController {
@@ -89,6 +87,7 @@ public class MainController {
 		if(logout != null) {//로그아웃
 			model.addAttribute("logout", "로그아웃되었습니다.");
 		}
+		model.addAttribute("footer", iservice.read(1).getIntro());
 	}	
 		
 	/* 아이디 찾기 */
@@ -96,17 +95,13 @@ public class MainController {
 	@RequestMapping(value="/findId", method = RequestMethod.POST)
 	public ResponseEntity<List<String>> findId(@RequestParam("name") String name, @RequestParam("email") String email) throws Exception {
 		try {
-	        List<String> userids = uservice.findId(name, email); // 아이디 저장
-	        log.info("[SecurityController]List<String>userids------------------------------"+userids);	
-	        if (userids.isEmpty()) {
-	        	log.info("[SecurityController]cant search your id---------------------");
+	        List<String> userids = uservice.findId(name, email); // 아이디 저장	        	
+	        if (userids.isEmpty()) {	        	
 	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	        } else {
-	        	log.info("[SecurityController]this is user id-------------------------"+userids);
+	        } else {	        	
 	            return ResponseEntity.ok(userids);
 	        } 
-	    } catch (Exception e) {	       
-	    	log.info("[SecurityController]fail search userid------------------------------");
+	    } catch (Exception e) {
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
@@ -118,13 +113,10 @@ public class MainController {
 		String encodePw = pwEncoder.encode(ranPw);
 		
 		if(uservice.renewalPw(encodePw, userid, email) == 1) {			
-			log.warn("[SecurityController]ranPw----------------------------------------"+ranPw+", "+encodePw);
-			log.warn("[SecurityController]mail to--------------------------------------"+email);
-			//mservice.renewalPwMail(email, ranPw);
-			//return new ResponseEntity<>("success", HttpStatus.OK);
-			return new ResponseEntity<>(ranPw, HttpStatus.OK);
+			mservice.renewalPwMail(email, ranPw);
+			return new ResponseEntity<>("success", HttpStatus.OK); //메일이용
+			//return new ResponseEntity<>(ranPw, HttpStatus.OK); //화면출력용
 		} else {
-			log.warn("[SecurityController]fail renewal password------------------------------");
 			return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}		  
 	}

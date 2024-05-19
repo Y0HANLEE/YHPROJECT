@@ -1,34 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.project.mapper.Intro.IntroMapper">	
-	<resultMap type="IntroVO" id="introMap">		
-		<id property="boardtype" column="boardtype"/>		
-		<result property="boardtype" column="uno"/>
-		<result property="title_title" column="title_title"/>
-		<result property="title_intro" column="title_intro"/>
-		<result property="map_title" column="map_title"/>
-		<result property="map_intro" column="map_intro"/>
-		<result property="map_caption" column="map_caption"/>
-		<result property="map_address" column="map_address"/>
-		<result property="map_addressdetail" column="map_addressdetail"/>
-		<result property="intro" column="intro"/>
-		<result property="regdate" column="regdate"/>
-		<result property="updateDate" column="updatedate"/>
-		<collection property="attachList" resultMap="attachMap"/>
-	</resultMap>
-	<resultMap type="IntroAttachVO" id="attachMap">		
-		<id property="uuid" column="uuid"/>
-		<result property="uuid" column="uuid"/>		
-		<result property="uploadPath" column="uploadpath"/>
-		<result property="fileName" column="filename"/>
-		<result property="fileType" column="filetype"/>
-		<result property="boardtype" column="boardtype"/>		
-	</resultMap>
-	
 	<!-- 소개정보 등록 : 최초등록시만 필요 -->
 	<insert id="insert">
-		insert into intro (title_title, title_intro, map_title, map_intro, map_caption, map_address, map_addressdetail, intro, boardtype)  
-		values (#{title_title}, #{title_intro}, #{map_title}, #{map_intro}, #{map_caption}, #{map_address}, #{map_addressdetail}, #{intro}, #{boardtype})			   
+		insert into intro (title, tscript, map, mscript, caption, address, addressdetail, intro, boardtype)  
+		values (#{title}, #{tscript}, #{map}, #{mscript}, #{caption}, #{address}, #{addressdetail}, #{intro}, #{boardtype})			   
 	</insert>
 	<!-- 소개정보조회 -->
 	<select id="read" resultType="IntroVO">
@@ -36,8 +12,8 @@
 	</select>		
 	<!-- 소개정보 수정 -->
 	<update id="update">		
-		update intro set title_title=#{title_title}, title_intro=#{title_intro}, 
-			   map_title=#{map_title}, map_intro=#{map_intro}, map_caption=#{map_caption}, map_address=#{map_address}, map_addressdetail=#{map_addressdetail}, 
+		update intro set title=#{title}, tscript=#{tscript}, 
+			   map=#{map}, mscript=#{mscript}, caption=#{caption}, address=#{address}, addressdetail=#{addressdetail}, 
 			   intro=#{intro}, updatedate=current_timestamp 
 		where boardtype=#{boardtype}		
 	</update>	

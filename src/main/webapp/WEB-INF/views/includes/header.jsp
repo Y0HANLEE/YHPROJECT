@@ -22,8 +22,7 @@
     <link href="/resources/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="/resources/dist/css/sb-admin-2.css" rel="stylesheet">
-    <link href="/resources/dist/css/board.css" rel="stylesheet">
-    <!-- <link href="/resources/dist/css/sb-admin-2.min.css" rel="stylesheet"> -->
+    <link href="/resources/dist/css/board.css" rel="stylesheet">    
     <!-- Custom Fonts -->
     <link href="/resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- jQuery -->
@@ -136,5 +135,5 @@
 		});
 	</script>
 	<!-- 본문화면 -->
-	<div id="page-wrapper" style="min-height:639px">
+	<div id="page-wrapper" style="min-height:100%; height:auto;">
 		<div id="top"></div>

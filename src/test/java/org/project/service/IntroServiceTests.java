@@ -31,12 +31,12 @@ public class IntroServiceTests {
 	@Test
 	public void updateIntroTest() {
 		IntroVO home = iservice.read(1);
-		home.setTitle_intro("");
-		home.setMap_address(""); 
-		home.setMap_addressdetail("");
-		home.setMap_caption(""); 
-		home.setMap_intro(""); 
-		home.setMap_title("");
+		home.setTScript("");
+		home.setAddress(""); 
+		home.setAddressdetail("");
+		home.setCaption(""); 
+		home.setMScript(""); 
+		home.setMap("");
 		home.setIntro("update HomePage Intro_Service");
 		iservice.update(home);
 		log.info("[IntroServiceTest] HomePage----------------"+iservice.read(1));
@@ -44,13 +44,12 @@ public class IntroServiceTests {
 		
 		IntroVO intro = iservice.read(2);		
 		
-		intro.setTitle_intro(""); 
-		intro.setMap_address("");
-		intro.setMap_addressdetail(""); 
-		intro.setMap_caption("");
-		intro.setMap_intro(""); 
-		intro.setMap_title("");
-		 
+		intro.setTScript("");
+		intro.setAddress(""); 
+		intro.setAddressdetail("");
+		intro.setCaption(""); 
+		intro.setMScript(""); 
+		intro.setMap("");
 		intro.setIntro("update IntroPage Intro_Service");
 		iservice.update(intro);		
 		log.info("[IntroServiceTest] IntroPage---------------"+iservice.read(2));

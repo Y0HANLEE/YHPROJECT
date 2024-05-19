@@ -32,23 +32,23 @@ public class IntroMapperTests {
 	@Test
 	public void updateIntro() {
 		IntroVO home = imapper.read(1); //DB에서 null을 허용했지만 jdbc에서 오류로 빈칸허용을 하지 않음. test를 위해 빈칸 적용.
-		home.setTitle_intro("");
-		home.setMap_address(""); 
-		home.setMap_addressdetail("");
-		home.setMap_caption(""); 
-		home.setMap_intro(""); 
-		home.setMap_title("");
+		home.setTScript("");
+		home.setAddress(""); 
+		home.setAddressdetail("");
+		home.setCaption(""); 
+		home.setMScript(""); 
+		home.setMap("");
 		home.setIntro("update HomePage Intro");
 		imapper.update(home);
 		log.info("[IntroMapperTest] HomePage------------------"+imapper.read(1));		
 		
 		IntroVO intro = imapper.read(2);
-		intro.setTitle_intro("");
-		intro.setMap_address(""); 
-		intro.setMap_addressdetail("");
-		intro.setMap_caption(""); 
-		intro.setMap_intro(""); 
-		intro.setMap_title("");
+		intro.setTScript("");
+		intro.setAddress(""); 
+		intro.setAddressdetail("");
+		intro.setCaption(""); 
+		intro.setMScript(""); 
+		intro.setMap("");
 		intro.setIntro("update IntroPage Intro");
 		imapper.update(intro);		
 		log.info("[IntroMapperTest] IntroPage------------------"+imapper.read(2));

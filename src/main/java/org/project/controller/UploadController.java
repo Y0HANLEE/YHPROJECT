@@ -29,11 +29,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
-@Log4j
 public class UploadController {
 	private static final String UPLOAD_FOLDER = "/opt/tomcat/upload"; //AWS
 	private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
@@ -144,9 +142,6 @@ public class UploadController {
 		
 		for(MultipartFile file : uploadFile) {
 			FileDTO attach = new FileDTO();
-			log.info("File Name:"+file.getOriginalFilename());
-			log.info("File Size:"+file.getSize());
-			
 			String uploadFileName = file.getOriginalFilename();
 			
 			//IE브라우저 파일 경로
@@ -218,15 +213,11 @@ public class UploadController {
 		try {
 			String downloadName = null; //다운로드이름 지정(브라우저별로 상이)
 			if(userAgent.contains("Trident")){ //IE
-				log.info("IE browser");
 				downloadName = URLEncoder.encode(resourceOriginName,"UTF-8").
 				replaceAll("\\+", " ");
 			} else if(userAgent.contains("Edge")) { //Edge
-				log.info("Edge browser");
 				downloadName = URLEncoder.encode(resourceOriginName,"UTF-8");
-				log.info("Edge name: " + downloadName);
-			}else {
-				log.info("Chrome browser"); //Chrome
+			}else { //Chrome
 				downloadName = new String(resourceOriginName.getBytes("UTF-8"), "ISO-8859-1");
 			}
 			headers.add("Content-Disposition", "attachment; filename="+downloadName); //헤더에 정보저장
@@ -241,8 +232,7 @@ public class UploadController {
 	@ResponseBody
 	@PostMapping("/deleteFile")
 	public ResponseEntity<String> deleteFile(String fileName, String type){
-		//기본사진이 썸네일인 경우 : 게시판의 첨부파일목록에 있는 사진들. (register, modify에서 사용)
-		log.info("[UploadController]Delete file-------------"+fileName);
+		//기본사진이 썸네일인 경우 : 게시판의 첨부파일목록에 있는 사진들. (register, modify에서 사용)		
 		File file;
 		
 		try {
@@ -252,9 +242,7 @@ public class UploadController {
 			if(type.equals("image")) { // 이미지 타입의 파일이라면,
 				String largeFileName = file.getAbsolutePath().replace("s_", ""); // 절대경로에서 s_를 지워버림.
 				file = new File(largeFileName); // largeFileName을 새 File객체로 생성
-				file.delete(); // 파일삭제 : 원본파일 + largeFile(s_를 지운 썸네일) 모두 삭제
-				log.info("[UploadController]---------------------------경로"+file);
-				log.info("[UploadController]---------------------------삭제성공");
+				file.delete(); // 파일삭제 : 원본파일 + largeFile(s_를 지운 썸네일) 모두 삭제		
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

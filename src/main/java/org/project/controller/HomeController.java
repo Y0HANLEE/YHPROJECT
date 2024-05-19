@@ -40,7 +40,7 @@ public class HomeController {
     /* 홈화면 */    
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Locale locale, Criteria cri, Model model) {
-        logger.info("어서오세요, 혼돈의 카오스. YH Project에! [Client locale {}]", locale);
+        logger.warn("어서오세요 개발자여, 혼돈의 카오스 YH Project에! [Client locale {}]", locale);
     	
         Criteria criteria = new Criteria(1,5);        
         model.addAttribute("boardList", bservice.getList(criteria)); 

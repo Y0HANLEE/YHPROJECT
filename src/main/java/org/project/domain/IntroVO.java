@@ -7,14 +7,14 @@ import lombok.Data;
 
 @Data
 public class IntroVO {
-	private int boardtype;				//1:main, 2:intro, not null
-	private String title_title;			//not null
-	private String title_intro;
-	private String map_title;
-	private String map_intro;
-	private String map_caption;
-	private String map_address;
-	private String map_addressdetail;
+	private int boardtype; //1:main, 2:intro, not null
+	private String title;  //not null
+	private String tscript;	
+	private String map;
+	private String mscript;
+	private String caption;
+	private String address;
+	private String addressdetail;
 	private String intro;
 	private Date regdate;
 	private Date updateDate;

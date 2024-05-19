@@ -4,7 +4,6 @@ import java.security.Principal;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.project.domain.MyCriteria;
-import org.project.domain.PageDTO;
 import org.project.domain.User.AuthVO;
 import org.project.domain.User.CheckVO;
 import org.project.domain.User.ProfileImageVO;
@@ -32,10 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 
 @Controller
-@Log4j
 @RequestMapping("/user/*")
 public class UserController {
 	
@@ -60,8 +57,7 @@ public class UserController {
 	public String join(UserVO user, AuthVO auth, RedirectAttributes rttr) {
 		user.setUserpw(pwEncoder.encode(user.getUserpw()));
 		uservice.join(user, auth);
-		rttr.addFlashAttribute("result", user.getUserid()+"님 회원가입을 축하드립니다.");
-		log.info("[controller]------------------------------"+user);
+		rttr.addFlashAttribute("result", user.getUserid()+"님 회원가입을 축하드립니다.");		
 		return "redirect:/";
 	}
 	
@@ -71,24 +67,18 @@ public class UserController {
 	@PostMapping("/checkMailSend")
 	public ResponseEntity<String> checkMailSend(@RequestParam("email") String email){
 		String checkStr = RandomStringUtils.randomAlphanumeric(10); //8자리 영어+숫자 난수
-		log.info("isMailExist-------------------------------"+uservice.isMailExist(email));
-
+	
 	    if(uservice.isMailExist(email) == 0) { // 최초 버튼 클릭 시, DB에 email, checkStr 저장
 	        CheckVO vo = new CheckVO();
 	        vo.setCheckStr(checkStr);
 	        vo.setEmail(email);
 	        uservice.checkStr(vo);
 	        mservice.joinMail(checkStr, email);
-	        log.info("[UserController]insert CheckVO----------------------------------"+vo);
-	        log.info("[UserController]mail to-----------------------------------------"+email);
 	        return new ResponseEntity<>("success", HttpStatus.OK);
 	    } else if (uservice.isMailExist(email) == 1 && uservice.ranStr(checkStr, email) == 1) { // 이메일이 있고(=기존에 발송된 인증번호가 있다), 인증번호 수정이 이루어졌다면 - 메일전송  
 	        mservice.joinMail(checkStr, email);
-	        log.info("[UserController]checkStr----------------------------------------"+checkStr);
-	        log.info("[UserController]mail to-----------------------------------------"+email);
 	        return new ResponseEntity<>("success", HttpStatus.OK);
 	    } else {
-	        log.info("[UserController]fail-------------------------------------------------");
 	        return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
@@ -126,8 +116,6 @@ public class UserController {
 	@Transactional
 	@PostMapping("/update")
 	public String updateUser(UserVO user, RedirectAttributes rttr) {
-		log.info("[UserController]------------------user : "+user);
-		log.info("[UserController]------------------profile : "+user.getProfileImg());
 		int result = uservice.modify(user);
 		if(result>0) {        	
             rttr.addFlashAttribute("result", user.getUserid()+"님의 회원정보가 수정되었습니다.");
@@ -200,8 +188,8 @@ public class UserController {
 		model.addAttribute("userid", user);
 				
 		model.addAttribute("board", uservice.findBoardByUserid(cri));
-		//model.addAttribute("boardPage", new PageDTO(cri, uservice.getBoardCnt(user)));
 		model.addAttribute("album", uservice.findAlbumByUserid(cri));
+		//model.addAttribute("boardPage", new PageDTO(cri, uservice.getBoardCnt(user)));
 		//model.addAttribute("albumPage", new PageDTO(cri, uservice.getAlbumCnt(user)));
 	}
 	
@@ -216,9 +204,9 @@ public class UserController {
 		model.addAttribute("userid", user);
 				
 		model.addAttribute("boardReply", uservice.findBoardReplyByUserid(cri));
-		model.addAttribute("boardReplyPage", new PageDTO(cri, uservice.getBoardReplyCnt(user)));
 		model.addAttribute("albumReply", uservice.findAlbumReplyByUserid(cri));
-		model.addAttribute("albumReplyPage", new PageDTO(cri, uservice.getAlbumReplyCnt(user)));		
+		//model.addAttribute("boardReplyPage", new PageDTO(cri, uservice.getBoardReplyCnt(user)));
+		//model.addAttribute("albumReplyPage", new PageDTO(cri, uservice.getAlbumReplyCnt(user)));		
 	}	
 	
 	

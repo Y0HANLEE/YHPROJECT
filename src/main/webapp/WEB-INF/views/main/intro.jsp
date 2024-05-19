@@ -10,8 +10,8 @@
 	<!-- 소개 -->
 	<div class="col-lg-12" style="display: flex; align-content: center; align-items: center;">
 		<div style="width: 75%;">
-			<h1 class="page-header" style="display: flex; justify-content: flex-start; align-items: center; width: 99.7%;">
-				<i class="fa fa-bookmark-o"></i>&nbsp;&nbsp;<c:out value="${intro.title_title}"/>
+			<h1 class="page-header" style="font-weight:bolder;font-weight:bolder;display: flex;align-items: flex-end; color: #26ea0b">
+				<i class="glyphicon glyphicon-console" style="font-size:28px;"></i><b> Console.log(YH)</b><i class="glyphicon glyphicon-menu-right"></i><b><c:out value="${intro.title}"/></b>
 			</h1>
 		</div>		
 		<sec:authorize access="hasRole('ROLE_ADMIN')">			
@@ -21,31 +21,32 @@
 		</sec:authorize>
 	</div>
 	<div class="mb-4" style="margin: 0 0 20px 20px; width:73.5%; white-space: pre-wrap">		
-		- <c:out value="${intro.title_intro}"/>
+		- <c:out value="${intro.tscript}"/>
 	</div>	
-	<!-- 본문-->
-	<div class="panel panel-default" style="margin-left: 20px; width: 88.3%">
-		<div class="panel-heading">Console.log(YH)_Intro</div>
-		<div class="panel-body" style="white-space: pre-wrap;">
-<c:out value="${intro.intro}"/>
-		</div>				
-	</div>
+	
 	<!-- 사진 슬라이드 -->	
-	<div class="slider" style="margin: 50px 0 0 20px; width:88.3%">
+	<div class="slider" style="justify-content: center;margin-top: 50px;width: 95%;display: flex;">
 		<div class="slides">		
 			<!-- upload photo -->
 		</div>
 		<button id="prevBtn" class="button prev"><i class="fa fa-chevron-left fa-fw"></i></button>
 		<button id="nextBtn" class="button next"><i class="fa fa-chevron-right fa-fw"></i></button>
 	</div>
+	<!-- 본문-->
+	<div class="panel panel-default" style="margin: 50px 0 0 20px; width: 95%">
+		<div class="panel-heading">Console.log(YH)_Intro</div>
+		<div class="panel-body" style="white-space: pre-wrap;">
+<c:out value="${intro.intro}"/>
+		</div>				
+	</div>
 	<!-- 지도 -->	
-	<div class="form-group" style="margin: 50px 0 5px 20px; width: 72.3%; display: flex; align-items: center;">
-		<label><c:out value="${intro.map_title}"></c:out>(<i class="fa fa-map-marker fa-fw"></i>address_<c:out value="${intro.map_address}"/>. <c:out value="${intro.map_addressdetail}"/>)</label>		 
+	<div class="form-group" style="margin: 50px 0 5px 20px; width: 95%; display: flex; align-items: center;">
+		<label><c:out value="${intro.map}"></c:out>(<i class="fa fa-map-marker fa-fw"></i>address_<c:out value="${intro.address}"/>. <c:out value="${intro.addressdetail}"/>)</label>		 
 	</div>
 	
-	<div id="map" style="border-radius:5px;  width:88.3%; height:350px; margin: 0 0 0 20px;"></div>
+	<div id="map" style="border-radius:5px;  width:95%; height:350px; margin: 0 0 0 20px;"></div>
 	<div class="form-group" style="margin: 10px 0 70px 20px;">		
-	&nbsp;&nbsp;&nbsp;&nbsp;- <c:out value="${intro.map_intro}"/>
+	&nbsp;&nbsp;&nbsp;&nbsp;- <c:out value="${intro.mscript}"/>
 	</div>	
 		
 	<!-- 이동용 화살표 -->
@@ -77,12 +78,9 @@
 	
 	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 객체	
 	var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
-	
-	
-	var inputAddress = $('#address_kakao').val();
-	var inputPlace = $("input[name='map_caption']").val();
-	var mapCaption = '<c:out value="${intro.map_caption}"/>',
-		mapAddress = '<c:out value="${intro.map_address}"/>';			
+		
+	var mapCaption = '<c:out value="${intro.caption}"/>',
+		mapAddress = '<c:out value="${intro.address}"/>';			
 
 	// 주소로 좌표를 검색합니다
 	geocoder.addressSearch(mapAddress, function(result, status) {	     

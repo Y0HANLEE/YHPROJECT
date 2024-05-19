@@ -7,53 +7,56 @@
 
 <!-- 페이지 제목 -->
 <div class="row">		
-	<div class="col-lg-12" align="center">
-		<h1 class="page-header" style="font-weight: bolder; font-style: italic;">function login(ID, PW)</h1>
+	<div class="col-lg-12" align="center" style="display:flex; justify-content: center; margin-top:3%; ">
+		<h1 class="page-header col-lg-6" style="font-weight: bolder; font-style: italic;">function login(ID, PW)</h1>
 	</div>
 </div>
 <!-- 본문-->
-<div class="row">
-	<div class="col-lg-12">
+<div class="row" style="display:flex; align-items:center; justify-content: center; margin-top:10px;">
+	<div class="col-lg-6" style="min-width: 436px;">
 		<div class="panel panel-default">
 			<div class="panel-heading" style="display:flex; align-items:center;">
 				<div style="width: 20%">로그인</div>
-				<div style="width: 80%"><h6 class="pull-right" style="color: red; padding-left:20px"><c:out value="${error}"/></h6></div>
+				<div style="width: 80%"><h6 class="pull-right" style="color: red;"><c:out value="${error}"/></h6></div>
 			</div>
-			<div class="panel-body">				
+			<div class="panel-body" style="padding: 15px 15px 0 15px;">				
 				<!-- action:login 은 spring security 기본제공 / username, password도 spring security의 기본설정명 -->
 				<form role="form" id="loginForm" method="post" action="/login">
 					<fieldset>
 						<div class="form-group">
+							<div>
+								<label>ID</label>								
+							</div>
 							<input class="form-control" type="text" name="username" placeholder="ID" autofocus>
 						</div>
-						<div>
+						<div class="form-group" style="margin-bottom: 5px;">
+							<div>
+								<label>Password</label>
+								<abbr id="showPw" class="pull-right" title="마우스를 올리면 비밀번호가 보여요" style="display: flex; align-items: center; margin: 0 0 10px 10px;" ontoggle="Y"><i class="fa fa-search"></i>&nbsp;<span style="font-size:12px; margin: 0px">Show me the password</span></abbr>
+							</div>
 							<input class="form-control" type="password" name="password" placeholder="Password">
-							<div id="showPw" style="display: flex; align-items: center; margin: 0 0 10px 10px;" ontoggle="Y"><i class="fa fa-search"></i>&nbsp;<p style="font-size:12px; margin: 0px">Show me the password</p></div>
-						</div>
-						<div class="form-group" style="display:flex; align-items:flex-end;">
-							<input type="checkbox" name="remember-me" class="checkbox">&nbsp;<label id="remember-me"> Remember me</label>
-						</div>
-						<a href="/" class="btn btn-lg btn-success btn-block" id="loginBtn">로그인</a>
-						<%-- <div class="col-lg-12 text-center mt-3">
-						    <button class="btn btn-block waves-effect waves-light btn-rounded btn-outline-info mb-3">로그인하기</button>
-						    <img alt="카카오로그인" src="${pageContext.request.contextPath}/resources/assets/img/kakao_login_medium_wide.png" onclick="loginWithKakao()">
-						</div> --%>
+							<div style="display:flex; align-items:flex-end; justify-content:flex-end; height:30px;">
+								<input type="checkbox" name="remember-me" class="checkbox">&nbsp;<label id="remember-me"> Remember me</label>
+							</div>
+						</div>						
+						<a href="/" class="btn btn-lg btn-success btn-block" id="loginBtn">로그인</a>						
 						<a href="/user/join" class="btn btn-lg btn-default btn-block">회원가입</a>
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					</fieldset>
 				</form>		
-				<div style="display:flex; justify-content: center; padding-top:8px; ">	
-					<div style="display: flex; justify-content: space-between; align-items:center; width:300px;">
-						<a id="searchIdBtn" class="text-primary" style="margin-top: 5px; font-size: 15px;"><i class="fa fa-key fa-fw"></i>아이디찾기</a>
-						<p></p>					
-						<a id="renewalPwBtn" class="text-primary" style="margin-top: 5px; font-size: 15px;"><i class="fa fa-lock fa-fw"></i>비밀번호초기화</a>												
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
-</div>	
-
+</div>
+<div class="row" style="display:flex; align-items:center; justify-content: center;">
+	<div class="col-lg-6" style="display:flex; justify-content: space-between; width:300px; align-items:center;">		
+		<a id="searchIdBtn" class="text-primary"><i class="fa fa-key fa-fw"></i>아이디찾기</a>
+		<a id="renewalPwBtn" class="text-primary"><i class="fa fa-lock fa-fw"></i>비밀번호초기화</a>	
+	</div>	
+</div>
+<div class="row">
+	<div class="col-lg-12" align="center" style="color: gray; font-size: 14px; top:108px;">${footer}</div>
+</div>
 <!-- findId Modal -->
 <div class="modal fade" id="idModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -84,7 +87,6 @@
 		</div>
 	</div>
 </div>	
-
 <!-- renewalPw Modal -->
 <div class="modal fade" id="pwModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -116,22 +118,7 @@
 		</div>
 	</div>
 </div>	
-<!-- 카카오 로그인 -->
-<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js" charset="utf-8"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        Kakao.init('3b70d3d0a8a684def18821cba38c489e');
-        Kakao.isInitialized();
-    });
-
-    function loginWithKakao() {
-        Kakao.Auth.authorize({ 
-        	redirectUri: 'http://localhost:8080/' 
-        }); // 등록한 리다이렉트uri 입력
-    }
-</script>
-
-	
+<!-- 본문 -->	
 <script type="text/javascript">
 $(document).ready(function(){
 	/* 로그인 */
@@ -151,7 +138,7 @@ $(document).ready(function(){
 			check.prop("checked", true);  // 아니면 체크
 		}
 	});
-	
+			
 	// id, pw칸 엔터 > Login
 	var idInput = $('input[name="usename"]');
 	var pwInput = $('input[name="password"]');
@@ -171,7 +158,7 @@ $(document).ready(function(){
    
 	//비번 보이기/숨기기    
     var pwInput = $('input[name="password"]');    
-
+	/*//클릭
     $("#showPw").on("click", function() {
 		if ($("#showPw").data("ontoggle") == "Y") {
 			$("#showPw").data("ontoggle", "N");
@@ -180,6 +167,16 @@ $(document).ready(function(){
 			$("#showPw").data("ontoggle", "Y");
 			pwInput.attr("type", "password");
 		}
+    });*/
+    
+    $("#showPw").on("mouseover", function() {
+		$("#showPw").data("ontoggle", "N");
+		pwInput.attr("type", "text");		
+    });
+    
+    $("#showPw").on("mouseout", function() {
+		$("#showPw").data("ontoggle", "Y");
+		pwInput.attr("type", "password");		
     });
     
 	/* 아이디찾기 */
@@ -320,14 +317,14 @@ $(document).ready(function(){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},
 			success: function(result){
-				/*local:이메일전송 문제없음*/
-				/* if(result === "success"){	
+				/*local:이메일전송 문제없음
+				if(result === "success"){	
 					alert(inputId+"님의 이메일("+inputEmail+")로 임시비밀번호가 발송되었습니다.");					
 					$("input[name='userid']").val("");
 					$("input[name='email']").val("");					
 					setTimeout(function() { $("#pwModal").modal("hide"); }, 200);		
-				} */ 				
-				/*AWS:포트를 설정해도 이메일 전송이 제대로 안됨. AWS SES로 하기엔 시간이 없어 보류*/
+				}*/  				
+				/*AWS:포트를 설정해도 이메일 전송이 제대로 안됨. > 메일서버 사용시 AWS SES고려*/
 			    var pstr = "회원님의 임시 비밀번호는 <span id='ranPw' style='font-weight: bolder;'/>"+result+"</span> 입니다.";
 				$("#pw_modal_body").html(pstr);
 				$("#pw_modal_title").html("아래 임시비밀번호로 다시 로그인을 시도해주세요")
@@ -345,7 +342,7 @@ $(document).ready(function(){
 		});	    	
     });
 	
-	/* AWS용 */
+	/* AWS용
     $("#pwModal").on("click", "#copyBtn", function() {    	
         alert("임시 비밀번호가 복사되었습니다.");
         var ranPw = $("#ranPw").text();        
@@ -357,7 +354,7 @@ $(document).ready(function(){
         tempInput.focus(); 
         document.execCommand("copy");
         tempInput.remove();
-    });
+    });*/
 
 	
 	var originIdModal = $("#idModal").html();

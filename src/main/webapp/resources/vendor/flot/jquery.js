@@ -7519,7 +7519,7 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 
 jQuery.extend({
 
-	getScript: function( url, callback ) {
+	getscript: function( url, callback ) {
 		return jQuery.get( url, undefined, callback, "script" );
 	},
 

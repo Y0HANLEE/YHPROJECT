@@ -5,13 +5,14 @@
 <title>Console.log(YH)</title>
 <%@ include file="../includes/header.jsp"%>
 	
-
 	<!-- 페이지 설명 -->
 	<div class="row">
 		<div class="col-lg-12">
 			<div style="display:flex; align-items:center;">
 				<div style="width:90%">
-					<h1 class="page-header">${home.title_title}</h1>				
+					<h1 class="page-header" style="font-weight:bolder;font-weight:bolder;display: flex;align-items: flex-end; color: #26ea0b">
+						<i class="glyphicon glyphicon-console" style="font-size:36px;"></i><b> Console.log(YH)</b><i class="glyphicon glyphicon-menu-right"></i><b><c:out value="${home.title}"/></b>
+					</h1>				
 				</div>
 				<div style="width:10%">
 					<sec:authorize access="hasRole('ROLE_ADMIN')" >				
@@ -20,14 +21,14 @@
 				</div>
 			</div>
 		    <p class="pull-right"><a href="#board"><i class="fa fa-edit fa-fw"></i>게시판</a>  <a href="#map" style="margin-left: 20px"><i class="fa fa-map-marker fa-fw"></i>지도</a></p>    			
-			<p class="mb-4">${home.title_intro}</p>
+			<p class="mb-4">${home.tscript}</p>
 		</div>
 	</div>	
 	<!-- 사진 슬라이드 -->
 	<div class="row">
 	    <div class="col-lg-12">
 	        <!-- 사진 슬라이드 -->	
-			<div class="slider" style="margin: 50px 0 0 50px; width:88.3%">
+			<div class="slider" style="justify-content: center;margin-top: 50px;width: 100%;display: flex;">
 				<div class="slides">		
 					<!-- upload photo -->
 				</div>
@@ -177,10 +178,10 @@
 	<!-- 지도 -->
 	<div class="col-lg-12" style="padding: 0">	
 		<div class="form-group" style="margin: 80px 0 5px 0; width: 100%; display: flex; align-items: center;">
-			<label><i class="fa fa-bookmark fa-fw"></i><c:out value="${home.map_title}"></c:out>&nbsp;_&nbsp;<i class="fa fa-map-marker fa-fw"></i>address: <c:out value="${home.map_address}"/>. <c:out value="${home.map_addressdetail}"/></label>					 
+			<label><i class="fa fa-bookmark fa-fw"></i><c:out value="${home.map}"></c:out>&nbsp;_&nbsp;<i class="fa fa-map-marker fa-fw"></i>address: <c:out value="${home.address}"/>. <c:out value="${home.addressdetail}"/></label>					 
 		</div>	
 		<div id="map" style="border-radius:5px;  width:100%; height:350px; margin-bottom: 10px;"></div>
-		- <c:out value="${home.map_intro}"/>
+		- <c:out value="${home.mscript}"/>
 	</div>
 	<!-- 소개 -->
 	<div class="row">
@@ -225,12 +226,9 @@
 	
 	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 객체	
 	var geocoder = new kakao.maps.services.Geocoder(); // 주소-좌표 변환 객체를 생성합니다
-	
-	
-	var inputAddress = $('#address_kakao').val();
-	var inputPlace = $("input[name='map_caption']").val();
-	var mapCaption = '<c:out value="${intro.map_caption}"/>',
-		mapAddress = '<c:out value="${intro.map_address}"/>';			
+			
+	var mapCaption = '<c:out value="${home.caption}"/>',
+		mapAddress = '<c:out value="${home.address}"/>';			
 
 	// 주소로 좌표를 검색합니다
 	geocoder.addressSearch(mapAddress, function(result, status) {	     
@@ -359,42 +357,40 @@ $(document).ready(function(){
 
         initializeSlide(); // 슬라이드 초기화
     });	
-});
-</script>
-<script type="text/javascript">
-/* 첨부파일 조회화면 : 즉시실행함수*/
-(function(){
-	var ano = '<c:out value="${album.ano}"/>';
-	
-	$.getJSON("/album/getAttachList", {ano:ano}, function(arr){						
-		var uStr="";
-		var mStr="";
-		
-		
-		$(arr).each(function(i, attach){					
-			
-			if(attach.fileType){					
-				var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);						
-				uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
-				uStr += "<div><i class='fa fa-image'></i>"+" <a>"+attach.fileName+"</a></div> </li>"; // 첨부파일 이미지(썸네일)
-				
-				mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
-				mStr += "<img src='/display?fileName="+fileCallPath+"'> </li>"; // 첨부파일 이미지(썸네일)
-			} else {
-				var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);
-				uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
-				uStr += "<div><i class='fa fa-film'></i><a><span>"+" "+attach.fileName+"</span></a></div> </li>"; // 첨부파일 이미지
-				
-				mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
-				mStr += "<img src='/resources/img/attach.png'> </li>"; // 첨부파일 이미지		
-			}
-			
-			$(".uploadResult ul").html(uStr);	
-			$(".mediaContents ul").html(mStr);
-		});			
-	});
-})();
 
+	/* 첨부파일 조회화면 : 즉시실행함수*/
+	(function(){
+		var ano = '<c:out value="${album.ano}"/>';
+		
+		$.getJSON("/album/getAttachList", {ano:ano}, function(arr){						
+			var uStr="";
+			var mStr="";
+			
+			
+			$(arr).each(function(i, attach){					
+				
+				if(attach.fileType){					
+					var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);						
+					uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
+					uStr += "<div><i class='fa fa-image'></i>"+" <a>"+attach.fileName+"</a></div> </li>"; // 첨부파일 이미지(썸네일)
+					
+					mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.					 
+					mStr += "<img src='/display?fileName="+fileCallPath+"'> </li>"; // 첨부파일 이미지(썸네일)
+				} else {
+					var fileCallPath = encodeURIComponent(attach.uploadPath+"/"+attach.uuid+"_"+attach.fileName);
+					uStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
+					uStr += "<div><i class='fa fa-film'></i><a><span>"+" "+attach.fileName+"</span></a></div> </li>"; // 첨부파일 이미지
+					
+					mStr += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
+					mStr += "<img src='/resources/img/attach.png'> </li>"; // 첨부파일 이미지		
+				}
+				
+				$(".uploadResult ul").html(uStr);	
+				$(".mediaContents ul").html(mStr);
+			});			
+		});
+	})();
+});
 </script>
 
 <%@ include file="../includes/footer.jsp"%>
