@@ -274,7 +274,7 @@ $(document).ready(function(){
 					var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);						
 					
 					str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uuid, uploadpath, filename, type(img)을 추가한다.
-					str += "<i class='fa fa-film'></i>";	
+					str += "<i id='film' class='fa fa-film'></i>";	
 					str += "<span id='film'>"+obj.fileName+"</span>"; // 파일명
 					str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file='"+fileCallPath+"' data-type='file'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> file:그냥삭제
 				} else {				
@@ -306,7 +306,7 @@ $(document).ready(function(){
 					str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file='"+fileCallPath+"' data-type='image'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> image:원본,썸네일삭제					
 				} else {						
 					str += "<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
-					str += "<i class='fa fa-film'></i> <span id='film'>"+attach.fileName+"</span> "; // 첨부파일 이미지 + 파일명
+					str += "<i id='film' class='fa fa-film'></i> <span id='film'>"+attach.fileName+"</span> "; // 첨부파일 이미지 + 파일명
 					str += "<button type='button' class='btn btn-danger btn-circle btn-xs' data-file='"+fileCallPath+"' data-type='file'><i class='fa fa-times'></i></button> </li>"; // x버튼 data-file:삭제할 경로, data-type:삭제할 파일의 타입 >> file:그냥삭제					
 				}
 			});
@@ -329,7 +329,7 @@ $(document).ready(function(){
 		
 		if(element.is("img") || element.is("span#img")){
 			showImage(path.replace(new RegExp(/\\/g),"/"), "img");			
-		} else if (element.is("i") || element.is("span#film")) {
+		} else if (element.is("i#film") || element.is("span#film")) {
 			showImage(path.replace(new RegExp(/\\/g),"/"), "video");
 		}
 	});
