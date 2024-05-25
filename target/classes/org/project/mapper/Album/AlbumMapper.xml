@@ -43,6 +43,18 @@
 		delete from album where ano=#{ano}
 	</delete>
 	
+	
+	<!-- 게시글 이동 -->
+	<select id="move" parameterType="Long" resultType="AlbumVO">
+		<![CDATA[ select * from (
+		    select 
+		        ano, (select ano from album where ano > a.ano order by ano limit 1) next, (select ano from album where ano < a.ano order by ano desc limit 1) prev,
+		        title, (select title from album where ano > a.ano order by ano limit 1) nexttitle, (select title from album where ano < a.ano order by ano desc limit 1) prevtitle
+	    	from album a order by ano desc
+		)sub
+		where ano = #{ano}]]>
+	</select>
+	
 	<!-- 공통 사용 퀴리문 -->
 	<sql id="criteria">
 		<trim prefix="(" suffix=") AND " prefixOverrides="OR">

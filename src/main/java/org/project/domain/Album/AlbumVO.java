@@ -24,4 +24,9 @@ public class AlbumVO {
 	private Date endDate;	
 	private List<AlbumAttachVO> attachList;
 	private String boardType;	//default 2
+	
+	private int next; //다음
+	private int prev; //이전
+	private String nexttitle; //다음글제목
+	private String prevtitle; //이전글제목
 }

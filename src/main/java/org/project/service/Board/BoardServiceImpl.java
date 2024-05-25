@@ -70,6 +70,12 @@ public class BoardServiceImpl implements BoardService{
 	public int getTotal(Criteria cri) {
 		return bmapper.getTotalCount(cri);
 	}
+	
+	/* 게시물 이동 */
+	@Override
+	public BoardVO move(Long bno) {
+		return bmapper.move(bno);
+	}
 		
 	/* 게시글 수정 + 첨부파일 수정(tx) */
 	@Transactional

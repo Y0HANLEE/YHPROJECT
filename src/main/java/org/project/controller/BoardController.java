@@ -97,7 +97,8 @@ public class BoardController {
 	/* 게시글 조회, 수정 화면 : 같은 파라미터 사용으로 함께 사용 */
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, Model model) {		
-		model.addAttribute("board", bservice.get(bno));		
+		model.addAttribute("board", bservice.get(bno));	
+		model.addAttribute("move", bservice.move(bno));
 	}	
 	
 	/* 게시글 수정 처리 (MODIFY) + 인증된 사용자(로그인=작성자), #:메서드의 파라미터를 받아옴.→ board로부터 writer정보를 받아옴. */

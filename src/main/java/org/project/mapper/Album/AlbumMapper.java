@@ -14,6 +14,7 @@ public interface AlbumMapper {
 	public AlbumVO read(Long ano); // 특정 게시글 조회
 	public List<AlbumVO> getListWithPaging(Criteria cri); // 게시글 목록 조회 | 조건(검색,페이징)을 위해 파라미터로 Criteria사용
 	public int getTotalCnt(Criteria cri); // 페이징처리를 위한 게시물의 총개수 파악 | 조건(검색,페이징)을 위해 파라미터로 Criteria사용
+	public AlbumVO move(Long ano); //게시글 이동
 	
 	//수정
 	public int update(AlbumVO album); // 특정 게시글 수정 

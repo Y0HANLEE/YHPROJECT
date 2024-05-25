@@ -15,7 +15,8 @@ public interface AlbumService {
 	public AlbumVO read(Long ano);
 	public List<AlbumVO> getList(Criteria cri); //게시물목록
 	public List<AlbumAttachVO> attachList(Long ano); //첨부파일목록
-	public int totalCnt(Criteria cri); //페이징 처리를 위한 게시글 총 개수 파악	
+	public int totalCnt(Criteria cri); //페이징 처리를 위한 게시글 총 개수 파악
+	public AlbumVO move(Long ano);	
 	//수정
 	public int modify(AlbumVO album);
 	public void upHit(Long ano); //조회수 증가	

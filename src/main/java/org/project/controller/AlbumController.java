@@ -74,6 +74,7 @@ public class AlbumController {
 	@GetMapping("/get")
 	public void get(@RequestParam("ano") Long ano, @ModelAttribute("cri") Criteria cri, Model model) {	
 		model.addAttribute("album", alservice.read(ano)); // 게시글 정보
+		model.addAttribute("move", alservice.move(ano)); // 게시글 정보
 	}
 	
 	/* 게시글 수정화면 */

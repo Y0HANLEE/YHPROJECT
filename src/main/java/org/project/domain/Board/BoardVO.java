@@ -17,4 +17,9 @@ public class BoardVO {
 	private int hit;
 	private List<BoardAttachVO> attachList;
 	private String boardType;	// default 1
+	
+	private int next; //다음
+	private int prev; //이전
+	private String nexttitle; //다음글제목
+	private String prevtitle; //이전글제목
 }

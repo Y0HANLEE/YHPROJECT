@@ -12,7 +12,7 @@
 	</select>
 
 	<!-- 게시물 목록 화면 출력(페이징) -->
-	<select id="getListWithPaging" resultType="org.project.domain.Board.BoardVO">
+	<select id="getListWithPaging" resultType="BoardVO">
 	    select * from (
 	        select row_number() over(order by bno desc) rn, bno, title, content, writer, regdate, updatedate, replycnt, hit
 	        from board where <include refid="criteria"/> bno>0
@@ -43,6 +43,17 @@
 	<delete id="delete">
 		delete from board where bno = #{bno}
 	</delete>
+	
+	<!-- 게시글 이동 -->
+	<select id="move" parameterType="Long" resultType="BoardVO">
+		<![CDATA[ select * from (
+		    select 
+		        bno, (select bno from board where bno > b.bno order by bno limit 1) next, (select bno from board where bno < b.bno order by bno desc limit 1) prev,
+		        title, (select title from board where bno > b.bno order by bno limit 1) nexttitle, (select title from board where bno < b.bno order by bno desc limit 1) prevtitle
+	    	from board b order by bno desc
+		)sub
+		where bno = #{bno}]]>
+	</select>
 	
 	<!-- 공통사용 sql문 -->
 	<sql id="criteria">

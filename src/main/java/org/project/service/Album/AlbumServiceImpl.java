@@ -68,6 +68,12 @@ public class AlbumServiceImpl implements AlbumService{
 		return almapper.getTotalCnt(cri);
 	}
 	
+	/* 게시물 이동 */
+	@Override
+	public AlbumVO move(Long ano) {
+		return almapper.move(ano);
+	}
+	
 	/* 수정 + 첨부파일 수정 */
 	@Transactional
 	@Override	

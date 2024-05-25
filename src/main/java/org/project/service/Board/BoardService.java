@@ -13,7 +13,8 @@ public interface BoardService {
 	public BoardVO get(Long bno);
 	public List<BoardVO> getList(Criteria cri); //게시글목록
 	public List<BoardAttachVO> getAttachList(Long bno); //첨부파일목록
-	public int getTotal(Criteria cri); //페이징처리를 위한 게시물 총개수 파악	
+	public int getTotal(Criteria cri); //페이징처리를 위한 게시물 총개수 파악
+	public BoardVO move(Long bno);
 	//수정
 	public boolean modify(BoardVO board);
 	public void upHit(Long bno); //조회수 증가	

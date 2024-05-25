@@ -12,9 +12,31 @@
 		<div class="panel panel-default">
 			<!-- 본문제목 -->
 			<div class="panel-heading">일반게시판 - 게시글 조회</div>	
-					
+			<!-- 페이지이동 -->		
+			<div style="display:flex; justify-content:space-between; margin:15px 15px 0 15px;">
+				<div>
+					<c:choose>
+						<c:when test="${move.next != 9999 && move.next != 0}">					
+							<a href="/board/get?bno=${move.next}"> <i class= "fa fa-arrow-circle-left"></i> 다음글: ${move.nexttitle}</a>
+						</c:when>				
+						<c:when test="${move.next == 0}">
+							<span style="color:#337ab7;">다음글이 없습니다</span>
+						</c:when>
+					</c:choose>					
+				</div>
+				<div>				
+					<c:choose>
+						<c:when test="${move.prev != 9999 && move.prev != 0}">						
+							<a href="/board/get?bno=${move.prev}"> 이전글: ${move.prevtitle} <i class= "fa fa-arrow-circle-right"></i></a>
+						</c:when>					
+						<c:when test="${move.prev == 0}">
+							<span style="color:#337ab7;">이전글이 없습니다</span> 
+						</c:when>
+					</c:choose>
+				</div>
+			</div>	
 			<!-- 본문내용 -->	
-			<div class="panel-body">				
+			<div class="panel-body" style="padding-top:0px; ">				
 				<div class="form-group">					
 					<h3><i class="fa fa-folder-open fa-fw"></i> <c:out value="${board.title}"/></h3>
 				</div>
