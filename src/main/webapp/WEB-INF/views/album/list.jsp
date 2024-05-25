@@ -11,7 +11,7 @@
 		<h1 class="page-header"><i class="fa fa-camera-retro fa-fw"></i>사진게시판</h1>
 	</div>
 	<p class="mb-4">
-		커뮤니티 회원을 위한 사진게시판이며, 사진과 동영상을 업로드할 수 있습니다.
+		º커뮤니티 회원을 위한 사진게시판이며, 사진과 동영상을 업로드할 수 있습니다.
 	</p>
 </div>
 <!-- 본문-->
@@ -69,22 +69,28 @@
 				<div class="row">		
 					<div class="col-lg-12">	
 						<div class="pull-right">
-							<form id="searchForm" action="/album/list" method='get'>							
-								<select name="type">
-									<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : '' }"/>>--</option>						
-									<option value="T" <c:out value="${pageMaker.cri.type eq 'T' ? 'selected' : '' }"/>>제목</option>							
-									<option value="C" <c:out value="${pageMaker.cri.type eq 'C' ? 'selected' : '' }"/>>내용</option>
-									<option value="W" <c:out value="${pageMaker.cri.type eq 'W' ? 'selected' : '' }"/>>작성자</option>
-									<option value="L" <c:out value="${pageMaker.cri.type eq 'L' ? 'selected' : '' }"/>>여행지</option>
-									<option value="D" <c:out value="${pageMaker.cri.type eq 'D' ? 'selected' : '' }"/>>여행기간</option>
-									<option value="TC" <c:out value="${pageMaker.cri.type eq 'TC' ? 'selected' : '' }"/>>제목+내용</option>
-									<option value="TW" <c:out value="${pageMaker.cri.type eq 'TW' ? 'selected' : '' }"/>>제목+작성자</option>
-									<option value="CW" <c:out value="${pageMaker.cri.type eq 'CW' ? 'selected' : '' }"/>>내용+작성자</option>
-									<option value="TWC" <c:out value="${pageMaker.cri.type eq 'TCW' ? 'selected' : '' }"/>>제목+내용+작성자</option>
-								</select>
-	
-								<input type="text" name="keyword" placeholder="Search for...">								
-								<button class="btn btn-default" type="button">찾기</button>														
+							<form id="searchForm" action="/album/list" method='get' style="display:flex;">	
+								<div>						
+									<select name="type">
+										<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : '' }"/>>--</option>						
+										<option value="T" <c:out value="${pageMaker.cri.type eq 'T' ? 'selected' : '' }"/>>제목</option>							
+										<option value="C" <c:out value="${pageMaker.cri.type eq 'C' ? 'selected' : '' }"/>>내용</option>
+										<option value="W" <c:out value="${pageMaker.cri.type eq 'W' ? 'selected' : '' }"/>>작성자</option>
+										<option value="L" <c:out value="${pageMaker.cri.type eq 'L' ? 'selected' : '' }"/>>여행지</option>
+										<option value="D" <c:out value="${pageMaker.cri.type eq 'D' ? 'selected' : '' }"/>>여행기간</option>
+										<option value="TC" <c:out value="${pageMaker.cri.type eq 'TC' ? 'selected' : '' }"/>>제목+내용</option>
+										<option value="TW" <c:out value="${pageMaker.cri.type eq 'TW' ? 'selected' : '' }"/>>제목+작성자</option>
+										<option value="CW" <c:out value="${pageMaker.cri.type eq 'CW' ? 'selected' : '' }"/>>내용+작성자</option>
+										<option value="TWC" <c:out value="${pageMaker.cri.type eq 'TCW' ? 'selected' : '' }"/>>제목+내용+작성자</option>
+									</select>
+								</div>							
+								<div style="margin:0 5px;">
+									<input id="keyword" name="keyword" placeholder="검색어를 입력해주세요" style="margin-bottom:15px;">
+									<br> <sup class="essential" style="float:right;">'--' + 빈칸 '찾기' → 전체리스트</sup>
+								</div>
+								<div>
+									<button class="btn btn-default" style="height:30px; padding: 0 12px;">찾기</button><br>												
+								</div>													
 							</form>
 						</div>								
 					</div>
@@ -120,7 +126,7 @@
 					<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
 					<!-- 검색조건 유지 -->
 					<input type="hidden" name="type" value='<c:out value="${pageMaker.cri.type}"/>'>
-					<input type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword}"/>'>			
+					<input  type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword}"/>'>			
 				</form>						
 			</div>
 		</div>
@@ -188,31 +194,67 @@
 			actionForm.submit();
 		});
 		
-		/* 검색버튼 이벤트 처리 */
-		var searchForm = $("#searchForm");
+		/*검색조건 '여행기간'*/
+		$("select[name='type']").change(function(){             
+            if($(this).val() === 'D') {
+                $("#keyword").attr('type', 'date');
+            } else {
+                $("#keyword").attr('type', 'text');
+            }
+        });
 		
-		$("#searchForm button").on("click", function(e){
-			e.preventDefault();
-			
-			if(!searchForm.find("option:selected").val() && !$("input[name='keyword']").val()){
-				window.location.href = "/album/list";
-				return;
-			} // 검색조건x + 검색어 미입력 > 전체 리스트 출력
-			
-			if(!searchForm.find("option:selected").val() && $("input[name='keyword']").val()){
-				alert("검색조건을 선택하세요");		
-				return;
-			} // 검색조건x + 검색어 입력 > 경고
-		
-			if(!searchForm.find("input[name='keyword']").val()){
-				alert("검색어를 입력하세요");
-				return false;
-			} // 검색어 미입력 경고
-				
-			searchForm.find("input[name='pageNum']").val("1"); // 검색시 무조건 1페이지로 이동
-		
-			searchForm.submit();
-		});
+		/* 검색버튼 이벤트 처리 */		
+		// 검색 조건이 변경될 때 hidden input 값을 업데이트
+	    $("#searchForm select[name='type']").change(function(){	        
+	        $("#actionForm input[name='type']").val($(this).val());
+	        if($(this).val() === ""){
+	        	$("#keyword").val("");
+	        }
+	    });
+
+	    // 검색 버튼 클릭 시 hidden input 값을 업데이트
+	    $("#searchForm button").on("click", function(e){
+	        e.preventDefault();
+	        
+	        var type = $("#searchForm select[name='type']").val();
+	        var keyword = $("#searchForm input[name='keyword']").val();
+	        
+	        $("#actionForm input[name='type']").val(type);
+	        $("#actionForm input[name='keyword']").val(keyword);
+
+	        if (!type && !keyword) {
+	            window.location.href = "/album/list";
+	            return;
+	        } // 검색 조건이 없고, 키워드가 비어 있으면 전체 리스트 출력
+	        
+	        if (!type && keyword) {
+	            alert("검색 조건을 선택하세요");
+	            return;
+	        } // 검색 조건이 없고, 키워드가 입력되었을 때 경고
+	        
+	        if (!keyword) {
+	            alert("검색어를 입력하세요");
+	            return false;
+	        } // 키워드가 입력되지 않았을 때 경고
+
+	        $("#actionForm input[name='pageNum']").val("1"); // 검색 시 무조건 1페이지로 이동
+
+	        $("#actionForm").submit();
+	    });
+	    
+	    //검색 후, 여행기간 검색 조건이 선택되었을 때 검색어 입력 폼을 날짜 타입으로 변경
+	    $(function(){
+	        var type = $('select[name="type"]').val();
+	        if (type === 'D') {
+	            $('#keyword').attr('type', 'date');
+	        } 
+	    });
+
+	    //검색 후 입력란 정보 유지
+	    $(function(){	        
+            var keyword = '${pageMaker.cri.keyword}';
+            $('#keyword').val(keyword);
+	    });
 		
 		/* 썸네일 출력 */
 		$(".thumb").each(function() {

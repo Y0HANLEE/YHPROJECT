@@ -27,10 +27,11 @@
 				<table class="table table-striped table-bordered table-hover tableList">
 					<thead>					
 						<tr>
-							<th class="adminListTh" style="width:10%">No</th>							
+							<th class="adminListTh" style="width:5%">No</th>							
 							<th class="adminListTh" style="width:10%">아이디</th>
 							<th class="adminListTh" style="width:10%">이름</th>
-							<th class="adminListTh" style="width:10%">성별</th>
+							<th class="adminListTh" style="width:5%">성별</th>
+							<th class="adminListTh" style="width:10%">생일</th>
 							<th class="adminListTh" style="width:20%">연락처</th>							
 							<th class="adminListTh" style="width:15%">등급</th>							
 							<th class="adminListTh" style="width:15%">가입일</th>
@@ -45,7 +46,8 @@
 								<a id="userid" href='/user/profile?userid=<c:out value="${user.userid}"/>'><c:out value="${user.userid}" /></a>
 							</td>							
 							<td><c:out value="${user.name}" /></td>
-							<td><c:out value="${user.gender == 'M'?'M':'F'}" /></td>							
+							<td><c:out value="${user.gender == 'M'?'M':'F'}" /></td>	
+							<td><fmt:formatDate pattern="yyyy.MM.dd" value="${user.birth}" /></td>						
 							<td><c:out value="${user.phone}"/></td>
 							<td>
 								<c:choose>
@@ -84,20 +86,27 @@
 				<div class="row">		
 					<div class="col-lg-12">	
 						<div class="pull-right">
-							<form id="searchForm" method='get' action="/admin/list">							
-								<select name="type">
-									<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : '' }"/>>전체</option>						
-									<option value="I" <c:out value="${pageMaker.cri.type eq 'I' ? 'selected' : '' }"/>>아이디</option>							
-									<option value="N" <c:out value="${pageMaker.cri.type eq 'N' ? 'selected' : '' }"/>>이름</option>
-									<option value="G" <c:out value="${pageMaker.cri.type eq 'G' ? 'selected' : '' }"/>>성별</option>
-									<option value="P" <c:out value="${pageMaker.cri.type eq 'P' ? 'selected' : '' }"/>>연락처</option>
-									<option value="A" <c:out value="${pageMaker.cri.type eq 'A' ? 'selected' : '' }"/>>주소</option>
-									<option value="M" <c:out value="${pageMaker.cri.type eq 'M' ? 'selected' : '' }"/>>이메일</option>
-									<option value="B" <c:out value="${pageMaker.cri.type eq 'B' ? 'selected' : '' }"/>>생일</option>
-									<%-- <option value="U" <c:out value="${pageMaker.cri.type eq 'U' ? 'selected' : '' }"/>>권한</option> --%>									
-								</select>	
-								<input name="keyword" placeholder="Search for...">								
-								<button class="btn btn-default">Search</button>														
+							<form id="searchForm" method='get' action="/admin/list" style="display:flex;">
+								<div>
+									<select name="type">
+										<option value="" <c:out value="${pageMaker.cri.type == null ? 'selected' : '' }"/>>--</option>						
+										<option value="I" <c:out value="${pageMaker.cri.type eq 'I' ? 'selected' : '' }"/>>아이디</option>							
+										<option value="N" <c:out value="${pageMaker.cri.type eq 'N' ? 'selected' : '' }"/>>이름</option>
+										<option value="G" <c:out value="${pageMaker.cri.type eq 'G' ? 'selected' : '' }"/>>성별</option>
+										<option value="P" <c:out value="${pageMaker.cri.type eq 'P' ? 'selected' : '' }"/>>연락처</option>
+										<option value="A" <c:out value="${pageMaker.cri.type eq 'A' ? 'selected' : '' }"/>>주소</option>
+										<option value="M" <c:out value="${pageMaker.cri.type eq 'M' ? 'selected' : '' }"/>>이메일</option>
+										<option value="B" <c:out value="${pageMaker.cri.type eq 'B' ? 'selected' : '' }"/>>생일</option>
+										<%-- <option value="U" <c:out value="${pageMaker.cri.type eq 'U' ? 'selected' : '' }"/>>권한</option> --%>									
+									</select>	
+								</div>
+								<div style="margin:0 5px;">
+									<input id="keyword" name="keyword" placeholder="검색어를 입력해주세요" style="margin-bottom:15px;">
+									<br> <sup class="essential" style="float:right;">'--' + 빈칸 '찾기' → 전체리스트</sup>
+								</div>
+								<div>
+									<button class="btn btn-default" style="height:30px; padding: 0 12px;">찾기</button><br>												
+								</div>
 							</form>
 						</div>								
 					</div>
@@ -244,75 +253,51 @@
 			actionForm.find("input[name='pageNum']").val($(this).attr("href"));
 			actionForm.submit();
 		});
-				
-		/* 검색버튼 이벤트 처리 */
-		var searchForm = $("#searchForm");
 		
-		$("#searchForm button").on("click", function(e){
-			e.preventDefault();
-			
-			if(!searchForm.find("option:selected").val() && !$("input[name='keyword']").val()){
-				window.location.href = "/admin/list";
-				return;
-			} // 검색조건x + 검색어 미입력 > 전체 리스트 출력
-			
-			if(!searchForm.find("option:selected").val() && $("input[name='keyword']").val()){
-				alert("검색조건을 선택하세요");		
-				return;
-			} // 검색조건x + 검색어 입력 > 경고
-		
-			if(!searchForm.find("input[name='keyword']").val()){
-				alert("검색어를 입력하세요");
-				return false;
-			} // 검색어 미입력 경고
-				
-			searchForm.find("input[name='pageNum']").val("1"); // 검색시 무조건 1페이지로 이동
-		
-			searchForm.submit();
-		});
-		
-		/* 썸네일 출력 */
-		$(".thumb").each(function() {
-		    var ano = $(this).data('ano');
-		    var thumbnail = $(this);
+		/* 검색버튼 이벤트 처리 */		
+		// 검색 조건이 변경될 때 hidden input 값을 업데이트
+	    $("#searchForm select[name='type']").change(function(){	        
+	        $("#actionForm input[name='type']").val($(this).val());
+	        if($(this).val() === ""){
+	        	$("#keyword").val("");
+	        }
+	    });
 
-		    $.getJSON("/album/getAttachList", {ano: ano}, function(attach) {
-		        var str = "";
+	    // 검색 버튼 클릭 시 hidden input 값을 업데이트
+	    $("#searchForm button").on("click", function(e){
+	        e.preventDefault();
+	        
+	        var type = $("#searchForm select[name='type']").val();
+	        var keyword = $("#searchForm input[name='keyword']").val();
+	        
+	        $("#actionForm input[name='type']").val(type);
+	        $("#actionForm input[name='keyword']").val(keyword);
 
-		        if (attach && attach.length > 0 && attach[0].fileType) { //첨부파일이 있고, 첫번째 첨부파일이 사진인 경우
-		            var fileCallPath = encodeURIComponent(attach[0].uploadPath + "/s_" + attach[0].uuid + "_" + attach[0].fileName);
-		            str += "<div data-path='"+attach[0].uploadPath+"' data-uuid='"+attach[0].uuid+"' data-filename='"+attach[0].fileName+"' data-type='"+attach[0].fileType+"'>"; // 게시물의 등록을 위해 첨부파일과 관련된 정보 uploadpath, uuid, filename, filetype을 추가한다.
-		            str += "<img src='/display?fileName=" + fileCallPath + "'></div>"; //있으면 출력
-		        } else {
-		            str += "<div><img src='/resources/img/Default-Thumbnail.png'></div>"; //그 외엔 기본썸네일
-		        }
-		        thumbnail.html(str);
-		    });
-		});
-		
-		/* 썸네일 클릭시 이벤트 처리 */
-		$(".thumb").on("click", "div", function(e){
-			var divObj = $(this);
-			var path = encodeURIComponent(divObj.data("path")+"/"+divObj.data("uuid")+"_"+divObj.data("filename"));//li태그에 저장되어있는 정보들 >> 경로/uuid_파일명
+	        if (!type && !keyword) {
+	            window.location.href = "/admin/list";
+	            return;
+	        } // 검색 조건이 없고, 키워드가 비어 있으면 전체 리스트 출력
+	        
+	        if (!type && keyword) {
+	            alert("검색 조건을 선택하세요");
+	            return;
+	        } // 검색 조건이 없고, 키워드가 입력되었을 때 경고
+	        
+	        if (!keyword) {
+	            alert("검색어를 입력하세요");
+	            return false;
+	        } // 키워드가 입력되지 않았을 때 경고
 
-			if(divObj.data("type")){
-				showImage(path.replace(new RegExp(/\\/g),"/")); // 이미지파일 : showImage함수 실행
-			}
-		});
+	        $("#actionForm input[name='pageNum']").val("1"); // 검색 시 무조건 1페이지로 이동
 
-		// 원본사진 확대보기 on
-		function showImage(fileCallPath){			
-			$(".picWrap").css("display","flex").show(); // none > flex 설정 변경
-			$(".pic").html("<img src='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 0);//pic의 html속성은 controller의 display메서드, animate는 크기변경(배경창 100%*100%) 0.3초 후 실행		
-		}
-		
-		// 원본사진 확대보기 off 
-		$(".picWrap").on("click", function(e){
-			$(".pic").animate({width:'0%', height:'0%'}, 0); // (0%*0%) 로 0초 후 크기변경
-			setTimeout(() => {$(this).hide();}, 0);	// chrome의 ES6화살표함수
-			//IE : setTimeout(function(){$('.picWrap').hide();}, 300);
-		});
-
+	        $("#actionForm").submit();
+	    });
+	    	    		
+		//검색 후 입력란 정보 유지
+	    $(function(){	        
+            var keyword = '${pageMaker.cri.keyword}';
+            $('#keyword').val(keyword);
+	    });		
 	});
 </script>
 

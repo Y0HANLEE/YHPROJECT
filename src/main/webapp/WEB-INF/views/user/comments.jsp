@@ -28,7 +28,7 @@
 								    <option value=""  ${boardReplyPage.cri.type == null ? 'selected' : ''}>전체</option>
 								    <option value="R" ${boardReplyPage.cri.type eq 'R' ? 'selected' : ''}>내용</option>							    
 								</select>
-								<input name="keyword" placeholder="Search for...">
+								<input name="keyword" placeholder="검색어를 입력해주세요">
 								<input type="hidden" name="userid" value="${userid}">
 								<input type="hidden" name="boardType" value="1.1">							
 								<button id="searchBtn" class="btn btn-default">Search</button>																				
