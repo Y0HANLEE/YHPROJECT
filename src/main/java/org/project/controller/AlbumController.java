@@ -40,8 +40,8 @@ public class AlbumController {
 	@Setter(onMethod_=@Autowired)
 	private AlbumService alservice;
 
-	private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
-	//private static final String UPLOAD_PATH = "c:\\upload\\";
+	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
+	private static final String UPLOAD_PATH = "c:\\upload\\";
 	
 	private void deleteFiles(List<AlbumAttachVO> attachList) {
 		if(attachList == null || attachList.size() == 0) {
@@ -63,55 +63,55 @@ public class AlbumController {
 		});			 
 	}
 	
-	/* ¸ñ·Ï Á¶È¸ */	
+	/* ëª©ë¡ ì¡°íšŒ */	
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {		
-		model.addAttribute("list", alservice.getList(cri)); // listÁ¤º¸
-		model.addAttribute("pageMaker", new PageDTO(cri, alservice.totalCnt(cri))); //ÆäÀÌÂ¡
+		model.addAttribute("list", alservice.getList(cri)); // listì •ë³´
+		model.addAttribute("pageMaker", new PageDTO(cri, alservice.totalCnt(cri))); //í˜ì´ì§•
 	}
 	
-	/* °Ô½Ã±Û Á¶È¸È­¸é */
+	/* ê²Œì‹œê¸€ ì¡°íšŒí™”ë©´ */
 	@GetMapping("/get")
 	public void get(@RequestParam("ano") Long ano, @ModelAttribute("cri") Criteria cri, Model model) {	
-		model.addAttribute("album", alservice.read(ano)); // °Ô½Ã±Û Á¤º¸
-		model.addAttribute("move", alservice.move(ano)); // °Ô½Ã±Û Á¤º¸
+		model.addAttribute("album", alservice.read(ano)); // ê²Œì‹œê¸€ ì •ë³´
+		model.addAttribute("move", alservice.move(ano)); // ê²Œì‹œê¸€ ì •ë³´
 	}
 	
-	/* °Ô½Ã±Û ¼öÁ¤È­¸é */
+	/* ê²Œì‹œê¸€ ìˆ˜ì •í™”ë©´ */
 	@GetMapping("/modify")
 	public void modify(@RequestParam("ano") Long ano, @ModelAttribute("cri") Criteria cri, Model model) {	
-		AlbumVO vo = alservice.read(ano); // ano¹ø ±Û Á¤º¸ ºÒ·¯¿À±â
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //³¯Â¥Æ÷¸ËÁöÁ¤
+		AlbumVO vo = alservice.read(ano); // anoë²ˆ ê¸€ ì •ë³´ ë¶ˆëŸ¬ì˜¤ê¸°
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //ë‚ ì§œí¬ë§·ì§€ì •
 
-		Date date = new Date(); //¿À´Ã ³¯Â¥Á¤º¸ °´Ã¼
+		Date date = new Date(); //ì˜¤ëŠ˜ ë‚ ì§œì •ë³´ ê°ì²´
 		String today = sdf.format(date);
 		
-		Date st = vo.getStartDate(); //ano¹ø ±ÛÀÇ ¿©Çà½ÃÀÛÀÏÀÚ ¼¼ÆÃ
-		Date ed = vo.getEndDate(); //ano¹ø ±ÛÀÇ ¿©ÇàÁ¾·áÀÏÀÚ ¼¼ÆÃ
+		Date st = vo.getStartDate(); //anoë²ˆ ê¸€ì˜ ì—¬í–‰ì‹œì‘ì¼ì ì„¸íŒ…
+		Date ed = vo.getEndDate(); //anoë²ˆ ê¸€ì˜ ì—¬í–‰ì¢…ë£Œì¼ì ì„¸íŒ…
  		
-		if(st==null && ed == null) {// µÑ ´Ù nullÀÏ°æ¿ì | µÑ ´Ù ºóÄ­À¸·Î ³Ñ°ÜÁÜ
+		if(st==null && ed == null) {// ë‘˜ ë‹¤ nullì¼ê²½ìš° | ë‘˜ ë‹¤ ë¹ˆì¹¸ìœ¼ë¡œ ë„˜ê²¨ì¤Œ
 			model.addAttribute("start", "");
 			model.addAttribute("end", "");
-		}else if(st == null) { // ½ÃÀÛÀÏÀÚ¸¸ null | start´Â ºóÄ­, ³¯Â¥Æ÷¸Ë¿¡ ¸Â°Ô end¸¦ ³Ñ°ÜÁÜ 
+		}else if(st == null) { // ì‹œì‘ì¼ìë§Œ null | startëŠ” ë¹ˆì¹¸, ë‚ ì§œí¬ë§·ì— ë§ê²Œ endë¥¼ ë„˜ê²¨ì¤Œ 
 			String end = sdf.format(vo.getEndDate()); 
 		    model.addAttribute("start", "");
 			model.addAttribute("end", end);
-		} else if(ed == null){ // Á¾·áÀÏÀÚ¸¸ null | end´Â ºóÄ­, ³¯Â¥Æ÷¸Ë¿¡ ¸Â°Ô start¸¦ ³Ñ°ÜÁÜ
+		} else if(ed == null){ // ì¢…ë£Œì¼ìë§Œ null | endëŠ” ë¹ˆì¹¸, ë‚ ì§œí¬ë§·ì— ë§ê²Œ startë¥¼ ë„˜ê²¨ì¤Œ
 			String start = sdf.format(vo.getStartDate());
 			model.addAttribute("start", start);
 			model.addAttribute("end", "");			
-		} else { // µÑ ´Ù Á¦´ë·Î ÀÔ·Â | ³¯Â¥Æ÷¸Ë¿¡ ¸Â°Ô start,end·Î ³Ñ°ÜÁÜ
+		} else { // ë‘˜ ë‹¤ ì œëŒ€ë¡œ ì…ë ¥ | ë‚ ì§œí¬ë§·ì— ë§ê²Œ start,endë¡œ ë„˜ê²¨ì¤Œ
 			String start = sdf.format(vo.getStartDate());
 			String end = sdf.format(vo.getEndDate());
 			model.addAttribute("start", start);
 			model.addAttribute("end", end);			
 		}
 		
-		model.addAttribute("today", today); // ¿À´Ã³¯Â¥Á¤º¸ 				
-		model.addAttribute("album", vo); // ano°Ô½Ã±Û Á¤º¸		
+		model.addAttribute("today", today); // ì˜¤ëŠ˜ë‚ ì§œì •ë³´ 				
+		model.addAttribute("album", vo); // anoê²Œì‹œê¸€ ì •ë³´		
 	}
 	
-	/* °Ô½Ã±Û µî·Ï È­¸é (REGISTER) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ) */
+	/* ê²Œì‹œê¸€ ë“±ë¡ í™”ë©´ (REGISTER) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸) */
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/register")
 	public void register(Model model) {
@@ -119,11 +119,11 @@ public class AlbumController {
 		model.addAttribute("now",now);
 	}
 	
-	/* °Ô½Ã±Û µî·Ï Ã³¸® (REGISTER) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ) */
+	/* ê²Œì‹œê¸€ ë“±ë¡ ì²˜ë¦¬ (REGISTER) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸) */
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
 	public String register(AlbumVO album, RedirectAttributes rttr) {
-		//Ã·ºÎÆÄÀÏÀÌ ÀÖ´Ù¸é
+		//ì²¨ë¶€íŒŒì¼ì´ ìˆë‹¤ë©´
 		if(album.getAttachList() != null) {
 			album.getAttachList().forEach(attach -> log.info(attach));
 		}
@@ -134,7 +134,7 @@ public class AlbumController {
 		return "redirect:/album/list";
 	}
 	
-	/* °Ô½Ã±Û ¼öÁ¤ Ã³¸® (MODIFY) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ=ÀÛ¼ºÀÚ), #:¸Ş¼­µåÀÇ ÆÄ¶ó¹ÌÅÍ¸¦ ¹Ş¾Æ¿È.¡æ board·ÎºÎÅÍ writerÁ¤º¸¸¦ ¹Ş¾Æ¿È. */
+	/* ê²Œì‹œê¸€ ìˆ˜ì • ì²˜ë¦¬ (MODIFY) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸=ì‘ì„±ì), #:ë©”ì„œë“œì˜ íŒŒë¼ë¯¸í„°ë¥¼ ë°›ì•„ì˜´.â†’ boardë¡œë¶€í„° writerì •ë³´ë¥¼ ë°›ì•„ì˜´. */
 	@PreAuthorize("principal.username == #album.writer")
 	@PostMapping("/modify")
 	public String modify(AlbumVO album, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
@@ -145,7 +145,7 @@ public class AlbumController {
 		return "redirect:/album/list" + cri.getListLink();
 	}
 	
-	/* °Ô½Ã±Û »èÁ¦ Ã³¸® (REMOVE) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ=ÀÛ¼ºÀÚ), #:¸Ş¼­µåÀÇ ÆÄ¶ó¹ÌÅÍ¸¦ ¹Ş¾Æ¿È.¡æ String writer Ãß°¡ ÈÄ ¹Ş¾Æ¿È. */
+	/* ê²Œì‹œê¸€ ì‚­ì œ ì²˜ë¦¬ (REMOVE) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸=ì‘ì„±ì), #:ë©”ì„œë“œì˜ íŒŒë¼ë¯¸í„°ë¥¼ ë°›ì•„ì˜´.â†’ String writer ì¶”ê°€ í›„ ë°›ì•„ì˜´. */
 	@PreAuthorize("principal.username == #writer")
 	@PostMapping("/remove")
 	public String remove(@RequestParam("ano") Long ano, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String writer) {
@@ -159,7 +159,7 @@ public class AlbumController {
 		return "redirect:/album/list" + cri.getListLink();
 	}	
 	
-	/* Ã·ºÎÆÄÀÏ °ü·Ã È­¸éÃ³¸® : jsonÀ¸·Î µ¥ÀÌÅÍ ¹İÈ¯ */
+	/* ì²¨ë¶€íŒŒì¼ ê´€ë ¨ í™”ë©´ì²˜ë¦¬ : jsonìœ¼ë¡œ ë°ì´í„° ë°˜í™˜ */
 	@GetMapping(value="/getAttachList", produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<AlbumAttachVO>> getAttachList(Long ano) {	
