@@ -39,8 +39,8 @@ public class BoardController {
 	@Setter(onMethod_=@Autowired)
 	private BoardService bservice;
 	
-	private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
-	//private static final String UPLOAD_PATH = "c:\\upload\\";
+	//private static final String UPLOAD_PATH = "/opt/tomcat/upload/"; //AWS
+	private static final String UPLOAD_PATH = "c:\\upload\\";
 	
 	private void deleteFiles(List<BoardAttachVO> attachList) {
 		if(attachList == null || attachList.size() == 0) {
@@ -62,7 +62,7 @@ public class BoardController {
 		});			 
 	}
 	
-	/* °Ô½Ã±Û ¸ñ·Ï È­¸é (LIST) : ÆäÀÌÂ¡ */
+	/* ê²Œì‹œê¸€ ëª©ë¡ í™”ë©´ (LIST) : í˜ì´ì§• */
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {		
 		model.addAttribute("list", bservice.getList(cri)); 
@@ -71,7 +71,7 @@ public class BoardController {
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 	}
 	
-	/* °Ô½Ã±Û µî·Ï È­¸é (REGISTER) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ) */
+	/* ê²Œì‹œê¸€ ë“±ë¡ í™”ë©´ (REGISTER) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸) */
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/register")
 	public void register(Model model) {
@@ -79,11 +79,11 @@ public class BoardController {
 		model.addAttribute("now", now);
 	}
 	
-	/* °Ô½Ã±Û µî·Ï Ã³¸® (REGISTER) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ) */
+	/* ê²Œì‹œê¸€ ë“±ë¡ ì²˜ë¦¬ (REGISTER) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸) */
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
-		//Ã·ºÎÆÄÀÏÀÌ ÀÖ´Ù¸é
+		//ì²¨ë¶€íŒŒì¼ì´ ìˆë‹¤ë©´
 		if(board.getAttachList() != null) {
 			board.getAttachList().forEach(attach -> log.info(attach));
 		}
@@ -94,14 +94,14 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	/* °Ô½Ã±Û Á¶È¸, ¼öÁ¤ È­¸é : °°Àº ÆÄ¶ó¹ÌÅÍ »ç¿ëÀ¸·Î ÇÔ²² »ç¿ë */
+	/* ê²Œì‹œê¸€ ì¡°íšŒ, ìˆ˜ì • í™”ë©´ : ê°™ì€ íŒŒë¼ë¯¸í„° ì‚¬ìš©ìœ¼ë¡œ í•¨ê»˜ ì‚¬ìš© */
 	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, Model model) {		
 		model.addAttribute("board", bservice.get(bno));	
 		model.addAttribute("move", bservice.move(bno));
 	}	
 	
-	/* °Ô½Ã±Û ¼öÁ¤ Ã³¸® (MODIFY) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ=ÀÛ¼ºÀÚ), #:¸Ş¼­µåÀÇ ÆÄ¶ó¹ÌÅÍ¸¦ ¹Ş¾Æ¿È.¡æ board·ÎºÎÅÍ writerÁ¤º¸¸¦ ¹Ş¾Æ¿È. */
+	/* ê²Œì‹œê¸€ ìˆ˜ì • ì²˜ë¦¬ (MODIFY) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸=ì‘ì„±ì), #:ë©”ì„œë“œì˜ íŒŒë¼ë¯¸í„°ë¥¼ ë°›ì•„ì˜´.â†’ boardë¡œë¶€í„° writerì •ë³´ë¥¼ ë°›ì•„ì˜´. */
 	@PreAuthorize("principal.username == #board.writer")
 	@PostMapping("/modify")
 	public String modify(BoardVO board, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
@@ -111,7 +111,7 @@ public class BoardController {
 		return "redirect:/board/list" + cri.getListLink();
 	}
 	
-	/* °Ô½Ã±Û »èÁ¦ Ã³¸® (REMOVE) + ÀÎÁõµÈ »ç¿ëÀÚ(·Î±×ÀÎ=ÀÛ¼ºÀÚ), #:¸Ş¼­µåÀÇ ÆÄ¶ó¹ÌÅÍ¸¦ ¹Ş¾Æ¿È.¡æ String writer Ãß°¡ ÈÄ ¹Ş¾Æ¿È. */
+	/* ê²Œì‹œê¸€ ì‚­ì œ ì²˜ë¦¬ (REMOVE) + ì¸ì¦ëœ ì‚¬ìš©ì(ë¡œê·¸ì¸=ì‘ì„±ì), #:ë©”ì„œë“œì˜ íŒŒë¼ë¯¸í„°ë¥¼ ë°›ì•„ì˜´.â†’ String writer ì¶”ê°€ í›„ ë°›ì•„ì˜´. */
 	@PreAuthorize("principal.username == #writer")
 	@PostMapping("/remove")
 	public String remove(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr, String writer) {
@@ -125,7 +125,7 @@ public class BoardController {
 		return "redirect:/board/list" + cri.getListLink();
 	}	
 	
-	/* Ã·ºÎÆÄÀÏ °ü·Ã È­¸éÃ³¸® : jsonÀ¸·Î µ¥ÀÌÅÍ ¹İÈ¯ */
+	/* ì²¨ë¶€íŒŒì¼ ê´€ë ¨ í™”ë©´ì²˜ë¦¬ : jsonìœ¼ë¡œ ë°ì´í„° ë°˜í™˜ */
 	@GetMapping(value="/getAttachList", produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno) {
